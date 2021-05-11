@@ -58,6 +58,7 @@ public class ValuesBase {
     public final static String SQLDBIP="localhost";
     public final static String SQLDBPort="3306";
     public final static String SQLDBPort2="3307";
+    public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "pi31415926","9130000000");
 
     public static void init(){}
 

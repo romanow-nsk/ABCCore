@@ -19,7 +19,7 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     private static int fieldCount=0;
     //-------------------------------------- РЕФЛЕКСИЯ -----------------------------------------------------------------
     public final static String dbTypes[]={"int","String","double","boolean","short","long","java.lang.String",
-            "firefighter.core.entity.EntityLink","firefighter.core.entity.EntityLinkList","firefighter.core.entity.EntityRefList"};
+            "romanow.abc.core.entity.EntityLink","romanow.abc.core.entity.EntityLinkList","romanow.abc.core.entity.EntityRefList"};
     public final static String dbTitle[] ={"int","String","double","boolean","short","long","String",
             "EntityLink","EntityLinkList","EntityRefList","DAOLink"};
     public final static byte dbInt=0,dbString=1,dbDouble=2,dbBoolean=3,dbShort=4,dbLong=5,dbString2=6,dbLink=7,dbLinkList=8,dbRefList=9,dbDAOLink=10;  //  ID-ы сериализуемых типов
