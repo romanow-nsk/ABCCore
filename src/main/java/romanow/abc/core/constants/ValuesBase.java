@@ -299,6 +299,33 @@ public class ValuesBase {
     public final static String DBOperationList[] = {"Очистка контента (заявки)","Обратные ссылки",
             "Сжать таблицы","Обновить поля","Сбор мусора","Наличие артефактов",
             "","Тест - задержка 60 сек"};
+    //------------- Уровни событий -----------------
+    public final static int ELInfo=0;
+    public final static int ELWarning=1;
+    public final static int ELError=2;
+    public final static int ELFailure=3;
+    public final static int ELCrash=4;
+    public final static String eventLevels[] = {"Информация","Предупреждение","Ошибка","Авария","Крах"};
+    //------------- Типы и подтипы событий -----------------
+    public final static int EventNone=0;            // Не определено
+    public final static int EventNotifycation=1;    // Уведомление
+    public final static int EventHostServer=2;      // Событие сервера СУ АГЭУ
+    public final static int EventExternal=3;        // Внешнее событие
+    public final static int EventSystem=4;          // Системное - сервер данных
+    public final static int EventState=5;           // Смена состояния
+    public final static int EventFailure=6;         // Авария/предупреждение
+    public final static int EventCommand=7;         // Выполение команды ПЛК
+    public final static int EventSetting=8;         // Запись уставки ПЛК
+    public final static int EventFile=9;            // Источник файлов-артефактов
+    //------------- Подтипы событий ----------------- EventFailure
+    public final static int EventDEStateReg=11;     // Дискретное - регистр состояний
+    public final static int EventDEBitReg=12;       // Дискретное - битовый регистр (бит)
+    public final static int EventFailBitReg=13;     // Авария - битовый регистр (бит)
+    public final static int EventFailSettingReg=14;
+    public final static String eventTypes[] = {"","Уведомление","Сервер СМУ","Внешнее","Системное",
+            "Соcтояние","Авария", "Команда","Уставка","Файл","",
+            "ДС регистровое","ДС битовое","Авария-бит","Авария-уставка"};
+
     //------------------------ Источники артефактов ------------------------------------------------------
     public final static String ArtifactParentList[] = {"ReportFile", "User"};
 }
