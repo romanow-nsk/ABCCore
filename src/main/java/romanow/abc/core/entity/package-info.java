@@ -1,0 +1,1 @@
+package romanow.abc.core.entity;
