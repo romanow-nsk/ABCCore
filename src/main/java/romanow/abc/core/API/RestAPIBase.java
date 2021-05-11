@@ -26,8 +26,8 @@ import java.util.ArrayList;
 public interface RestAPIBase {
     //======================== API настроек сервера данных
     /** Получить объект настроек сервера данных */
-    //@GET("/api/worksettings")
-    //Call<WorkSettings> workSettings(@Header("SessionToken") String token);
+    @GET("/api/worksettings")
+    Call<DBRequest> workSettings(@Header("SessionToken") String token);
     /** Получить int-поле настроек по имени */
     @GET("/api/worksettings/get/int")
     Call<JInt> getWorkSettingsInt(@Header("SessionToken") String token, @Query("field") String field);
@@ -38,8 +38,8 @@ public interface RestAPIBase {
     @GET("/api/worksettings/get/boolean")
     Call<JBoolean> getWorkSettingsBoolean(@Header("SessionToken") String token, @Query("field") String field);
     /** Обновить объект настроек */
-    //@POST("/api/worksettings/update")
-    //Call<JEmpty> updateWorkSettings(@Header("SessionToken") String token, @Body WorkSettings workSettings);
+    @POST("/api/worksettings/update")
+    Call<JEmpty> updateWorkSettings(@Header("SessionToken") String token, @Body DBRequest workSettings);
     /** Обновить int-поле настроек по имени */
     @POST("/api/worksettings/update/int")
     Call<JEmpty> updateWorkSettings(@Header("SessionToken") String token,@Query("field") String field, @Query("value") int value);

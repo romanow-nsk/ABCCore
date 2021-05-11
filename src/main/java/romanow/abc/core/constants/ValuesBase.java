@@ -58,6 +58,7 @@ public class ValuesBase {
     public final static String SQLDBIP="localhost";
     public final static String SQLDBPort="3306";
     public final static String SQLDBPort2="3307";
+    public final static String bashPath="/bin/";                // путь к bash для Linux
     public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "pi31415926","9130000000");
 
     public static void init(){}
@@ -83,7 +84,11 @@ public class ValuesBase {
             public int releaseNumber() { return 0; }
             @Override
             public String[] userTypes() { return new String[0]; }
-            };
+            @Override
+            public WorkSettingsBase currentWorkSettings() {
+                return new WorkSettingsBase();
+                }
+        };
         EntityFactory.put(new TableItem("Настройки_0", WorkSettingsBase.class));
         EntityFactory.put(new TableItem("Метка GPS", GPSPoint.class));
         EntityFactory.put(new TableItem("Адрес", Address.class));
