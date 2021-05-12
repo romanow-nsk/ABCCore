@@ -61,6 +61,8 @@ public class ValuesBase {
     public final static int MongoDBType=0;
     public final static int MongoDBType36=1;
     public final static int FatalExceptionStackSize=20;         // Стек вызовов при исключении
+    public final static int PopupMessageDelay=6;                // Тайм-аут всплывающего окна
+    public final static int PopupLongDelay=20;                  // Тайм-аут всплывающего окна
 
     public final static String SQLDBUser="UnityDataServer";
     public final static String SQLDBPass="Fireplace311";
