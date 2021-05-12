@@ -18,6 +18,7 @@ import romanow.abc.core.entity.users.User;
 import romanow.abc.core.help.HelpFactory;
 import romanow.abc.core.utils.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ValuesBase {
@@ -30,6 +31,7 @@ public class ValuesBase {
     public static String title(String group,int cid){
         return constMap.title(group,cid);
         }
+    public static ArrayList<ConstValue> title(String group){  return constMap.getValuesList(group); }
     static {
         constMap.createConstList(ValuesBase.class);
         }
@@ -275,17 +277,22 @@ public class ValuesBase {
     @CONST(group = "NotificationMode", title = "С подтверждением")
     public final static int NMUserAck = 2;
     //-------------------- Словарь подсказок ------------------------------------------------------------------------
-    public final static HelpFactory Glossary = new HelpFactory();
-    static    {
-        Glossary.put("Уведомление");
-        Glossary.put("Аудио");
-        Glossary.put("Видео");
-        Glossary.put("Фото");
-        Glossary.put("GPS");
-        Glossary.put("Общее");
-        Glossary.put("Сеть");
-        Glossary.put("Настройки");
-        }
+    @CONST(group = "HelpTopic", title = "Уведомление")
+    public final static int HelpNotify = 1;
+    @CONST(group = "HelpTopic", title = "Аудио")
+    public final static int HelpAudio = 2;
+    @CONST(group = "HelpTopic", title = "Видео")
+    public final static int HelpVideo = 3;
+    @CONST(group = "HelpTopic", title = "Фото")
+    public final static int HelpPhoto = 4;
+    @CONST(group = "HelpTopic", title = "GPS")
+    public final static int HelpGPS = 5;
+    @CONST(group = "HelpTopic", title = "Общее")
+    public final static int HelpCommon = 6;
+    @CONST(group = "HelpTopic", title = "Сеть")
+    public final static int HelpNetwork = 7;
+    @CONST(group = "HelpTopic", title = "Настройки")
+    public final static int HelpSettings = 8;
     //----------------------- Отчеты  ---------------------------------------------
     @CONST(group = "Report", title = "Прочее")
     public final static int RepOther = 0;

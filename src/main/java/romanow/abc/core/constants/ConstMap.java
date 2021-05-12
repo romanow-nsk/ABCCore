@@ -2,23 +2,25 @@ package romanow.abc.core.constants;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
-public class ConstMap extends HashMap<String, HashMap<Integer,String>>{
+public class ConstMap extends HashMap<String, HashMap<Integer,ConstValue>>{
     public String title(String group, int constId){
-        HashMap<Integer,String> gmap = get(group);
+        HashMap<Integer,ConstValue> gmap = get(group);
         if (gmap==null)
             return "???: "+group;
-        String ss = gmap.get(constId);
-        return ss!=null ? ss : "???: "+group+":"+constId;
+        ConstValue ss = gmap.get(constId);
+        return ss!=null ? ss.title() : "???: "+group+":"+constId;
         }
-    public void put(String group, int constId, String title){
-        HashMap<Integer,String> gmap = get(group);
+    public void put(String group, int constId, String title, String constName){
+        HashMap<Integer,ConstValue> gmap = get(group);
         if (gmap==null){
             gmap = new HashMap<>();
             put(group,gmap);
             }
-        gmap.put(constId,title);
+        gmap.put(constId,new ConstValue(group,constName,title,constId));
         }
     //------------------------------------------------------------------------------------------------------
     public void createConstList(Class cl){
@@ -43,8 +45,27 @@ public class ConstMap extends HashMap<String, HashMap<Integer,String>>{
                     vv=0;
                 }
                 //System.out.println(about.group()+":"+mname + " ="+vv+" "+about.title());
-                put(about.group(),vv,about.title());
+                put(about.group(),vv,about.title(),mname);
             }
         }
     }
+    //------------------------------------------------------------------------------------------------------------------
+    public ArrayList<ConstValue> getValuesList(String gName){
+        ArrayList<ConstValue> list = new ArrayList<>();
+        HashMap<Integer,ConstValue> gmap = get(gName);
+        if (gmap==null)
+            return list;
+        Object bb[] = gmap.values().toArray();
+        for(Object xx:bb){
+            ConstValue cc = (ConstValue)xx;
+            list.add(cc);
+            }
+        list.sort(new Comparator<ConstValue>() {
+            @Override
+            public int compare(ConstValue o1, ConstValue o2) {
+                return o1.value()-o2.value();
+                }
+            });
+        return list;
+        }
 }

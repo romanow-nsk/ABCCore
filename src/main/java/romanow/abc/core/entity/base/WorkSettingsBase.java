@@ -65,4 +65,5 @@ public class WorkSettingsBase extends Entity {
         return mailNotifycation; }
     public void setMailNotifycation(boolean mailNotifycation) {
         this.mailNotifycation = mailNotifycation; }
+    public boolean isMainServer(){ return false; }
 }
