@@ -23,14 +23,14 @@ public class Artifact extends EntityBack {
         }
     @Override
     public String getTitle() {
-        return ValuesBase.ArtifactTypeNames[type]+" "+name+" ["+getOriginalName()+"] "; }
+        return ValuesBase.title("ArtifactType",type)+" "+name+" ["+getOriginalName()+"] "; }
     public FileNameExt getOriginal() {
         return original; }
     public void setOriginal(FileNameExt original) {
         this.original = original; }
     public int type(){ return type; }
     public void setType(int type0){ type = type0; }
-    public String typeName() { return ValuesBase.ArtifactTypeNames[type]; }
+    public String typeName() { return ValuesBase.title("ArtifactType",type); }
     public String directoryName() { return ValuesBase.ArtifactDirNames[type]; }
     public Artifact(int id){ setOid(id); }
     public String getOriginalName() {

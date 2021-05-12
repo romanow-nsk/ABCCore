@@ -56,7 +56,7 @@ public class User extends Person implements I_Name {
     }
     public String typeName() {
         // 656 return "????";
-        return ValuesBase.env().userTypes()[typeId];
+        return ValuesBase.title("User",typeId);
     }
     public User(String log, String loginPh, String pass){
         this(ValuesBase.UndefinedType,"","","",log,pass,loginPh);
@@ -84,7 +84,7 @@ public class User extends Person implements I_Name {
         return shortUserName();
         }
     public String getHeader() {
-        return shortUserName()+" ["+ ValuesBase.env().userTypes()[typeId]+"]";
+        return shortUserName()+" ["+ ValuesBase.title("User",typeId)+"]";
         //return shortUserName();  // 656 БАГ
         }
     public EntityLink<Artifact >getPhoto() {

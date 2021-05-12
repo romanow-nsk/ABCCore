@@ -21,11 +21,20 @@ import romanow.abc.core.utils.*;
 import java.util.HashMap;
 
 public class ValuesBase {
-    protected static I_Environment env=null;        // Окружение приложения
+    protected static I_Environment env=null;                // Окружение приложения
     public static I_Environment env(){
         return env;
         }
+    public final static EntityIndexedFactory EntityFactory = new EntityIndexedFactory();
+    private final static ConstMap constMap = new ConstMap();
+    public static String title(String group,int cid){
+        return constMap.title(group,cid);
+        }
+    static {
+        constMap.createConstList(ValuesBase.class);
+        }
     //------------------------------------------------------------------------------------------------------
+    private final static int abcReleaseNumber=1;
     public final static String week[] = {"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"};
     public final static String mnt[] = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
     public final static String dataServerIP = "localhost";
@@ -63,32 +72,33 @@ public class ValuesBase {
 
     public static void init(){}
 
-    public final static EntityIndexedFactory EntityFactory = new EntityIndexedFactory();
     static {
         env = new I_Environment() {
             @Override
-            public String mongoDBName() { return ""; }
+            public String subjectAreaName() { return "ABCEmpty"; }
             @Override
-            public String mongoDBUser() { return ""; }
+            public String mongoDBName() { return "abc"; }
             @Override
-            public String mongoDBPassword() { return ""; }
+            public String mongoDBUser() { return "abc"; }
             @Override
-            public String apkName() { return ""; }
+            public String mongoDBPassword() { return "abc"; }
             @Override
-            public String serverName() { return ""; }
+            public String apkName() { return "ABSEmptyClient.apk"; }
             @Override
-            public User superUser() { return new User(); }
+            public String serverName() { return "ABCDataserver.jar"; }
             @Override
-            public Class valuesClass() { return Object.class; }
-            @Override
-            public int releaseNumber() { return 0; }
-            @Override
-            public String[] userTypes() { return new String[0]; }
-            @Override
-            public WorkSettingsBase currentWorkSettings() {
-                return new WorkSettingsBase();
+            public User superUser() {
+                return new User(ValuesBase.UserSuperAdminType, "Система", "", "", "ABCDataserver", "pi31415926","9130000000");
                 }
-        };
+            @Override
+            public Class valuesClass() { return ValuesBase.class; }
+            @Override
+            public int releaseNumber() { return abcReleaseNumber; }
+            @Override
+            public WorkSettingsBase currentWorkSettings() { return new WorkSettingsBase(); }
+            @Override
+            public String modulePackage() { return "romanow.abc.desktop.module"; }
+            };
         EntityFactory.put(new TableItem("Настройки_0", WorkSettingsBase.class));
         EntityFactory.put(new TableItem("Метка GPS", GPSPoint.class));
         EntityFactory.put(new TableItem("Адрес", Address.class));
@@ -111,7 +121,7 @@ public class ValuesBase {
         EntityFactory.put(new TableItem("Телефон", Phone.class,false));            // Сборка 623 - не таблица
         EntityFactory.put(new TableItem("Телефоны", PhoneList.class,false));       // Сборка 623 - не таблица
         EntityFactory.put(new TableItem("Сумма", MoneySum.class,false));           // Сборка 636
-        EntityFactory.put(new TableItem( "Аккаунт", Account.class));                         // Сборка 637
+        EntityFactory.put(new TableItem( "Аккаунт", Account.class));                        // Сборка 637
         }
     //------------- Префикся для встроенных объектов ------------------------------------------
     public final static HashMap<String,String> PrefixMap = new HashMap<>();
@@ -178,7 +188,6 @@ public class ValuesBase {
     public final static int OperationAdd = 1;     // Добавить ref и записать oid
     @CONST(group = "Operation", title = "Изменить")
     public final static int OperationUpdate = 2;  // Обновить по ref
-    public final static String Operations[] = {"", "Append", "Update"};
     public final static boolean DeleteMode = false;
     public final static boolean UndeleteMode = true;
     //------------- Типы пользователей -----------------------------------------------------
@@ -188,7 +197,6 @@ public class ValuesBase {
     public final static int UserSuperAdminType = 1;
     @CONST(group = "User", title = "Администратор")
     public final static int UserAdminType = 2;
-    public final static String UserTypeList[] = {"Гость", "Суперадмин", "Администратор"};
     //------------------- Вид уведомления  -------------------------------------------------------------------------
     @CONST(group = "NotificationType", title = "Не определено")
     public final static int NTUndefined = 0;
@@ -204,8 +212,6 @@ public class ValuesBase {
     public final static int NTObjectEvent = 5;
     @CONST(group = "NotificationType", title = "Система")                   //
     public final static int NTSystemEvent = 6;
-    public final static String NTypes[] = {"Не определено", "Управление клиентом", "Действие", "Изменение соcтояния", "Сообщение", "Событие","Система"};
-
     //------------------- Состояние уведомлнния  -------------------------------------------------------------------------
     @CONST(group = "NotificationState", title = "Не определено")
     public final static int NSUndefined = 0;
@@ -217,7 +223,6 @@ public class ValuesBase {
     public final static int NSInProcess = 3;
     @CONST(group = "NotificationState", title = "Закрыто")
     public final static int NSClosed = 4;
-    public final static String NState[] = {"Не определено", "Передано", "Просмотрено", "В работе", "Закрыто"};
     //--------------------------------------------------------------------------------------------------
     public final static int GeoNone = 0;                  // Координаты недоступны
     public final static int GeoNet = 1;                   // Координаты от сети (вышек)
@@ -246,7 +251,6 @@ public class ValuesBase {
     public final static int ArtifactDocType = 5;
     @CONST(group = "ArtifactType", title = "Прочее")
     public final static int ArtifactOtherType = 6;
-    public final static String ArtifactTypeNames[] = {"-----", "Фото", "Видео", "Аудио", "Текст", "Документ", "Прочее"};
     public final static String ArtifactDirNames[] = {"-----", "Image", "Video", "Audio", "Text", "Document", "Other"};
     public final static HashMap<String,String> ConvertList = new HashMap<String,String>();
         static {
@@ -261,7 +265,6 @@ public class ValuesBase {
     public final static int ReportXML = 2;
     @CONST(group = "ReportType", title = "html")
     public final static int ReportHTML = 3;
-    public final static String ReportTypes[] = {"Нет", "pdf", "xls","html"};
     //----------------------- Типы выполнения уведомлений ---------------------------------------------
     @CONST(group = "NotificationMode", title = "Принудительно")
     public final static int NMHard = 0;
@@ -269,7 +272,6 @@ public class ValuesBase {
     public final static int NMDeffered = 1;
     @CONST(group = "NotificationMode", title = "С подтверждением")
     public final static int NMUserAck = 2;
-    public final static String NModes[] = {"Принудительно", "После завершения операции", "С подтверждением"};
     //-------------------- Словарь подсказок ------------------------------------------------------------------------
     public final static HelpFactory Glossary = new HelpFactory();
     static    {
@@ -285,7 +287,6 @@ public class ValuesBase {
     //----------------------- Отчеты  ---------------------------------------------
     @CONST(group = "Report", title = "Прочее")
     public final static int RepOther = 0;
-    public final static String Reports[] = {"Прочее"};
     //------------------------ Препарирования БД --------------------------------------
     @CONST(group = "DBOperation", title = "Очистка контента (заявки)")
     public final static int DBOClearContent1 = 0;
@@ -301,36 +302,33 @@ public class ValuesBase {
     public final static int DBOTestArtifacts = 5;
     @CONST(group = "DBOperation", title = "Тест - задержка 60 сек")
     public final static int DBOTestDelay = 7;
-    public final static String DBOperationList[] = {"Очистка контента (заявки)","Обратные ссылки",
-            "Сжать таблицы","Обновить поля","Сбор мусора","Наличие артефактов",
-            "","Тест - задержка 60 сек"};
     //------------- Уровни событий -----------------
+    @CONST(group = "EventLevel", title = "Информация")
     public final static int ELInfo=0;
+    @CONST(group = "EventLevel", title = "Предупреждение")
     public final static int ELWarning=1;
+    @CONST(group = "EventLevel", title = "Ошибка")
     public final static int ELError=2;
+    @CONST(group = "EventLevel", title = "Авария")
     public final static int ELFailure=3;
+    @CONST(group = "EventLevel", title = "Крах")
     public final static int ELCrash=4;
-    public final static String eventLevels[] = {"Информация","Предупреждение","Ошибка","Авария","Крах"};
     //------------- Типы и подтипы событий -----------------
-    public final static int EventNone=0;            // Не определено
+    @CONST(group = "EventType", title = "Не определено")
+    public final static int EventNone=0;            //
+    @CONST(group = "EventType", title = "Уведомление")
     public final static int EventNotifycation=1;    // Уведомление
+    @CONST(group = "EventType", title = "Событие сервера")
     public final static int EventHostServer=2;      // Событие сервера СУ АГЭУ
+    @CONST(group = "EventType", title = "Внешнее событие")
     public final static int EventExternal=3;        // Внешнее событие
+    @CONST(group = "EventType", title = "Системное")
     public final static int EventSystem=4;          // Системное - сервер данных
-    public final static int EventState=5;           // Смена состояния
-    public final static int EventFailure=6;         // Авария/предупреждение
-    public final static int EventCommand=7;         // Выполение команды ПЛК
-    public final static int EventSetting=8;         // Запись уставки ПЛК
-    public final static int EventFile=9;            // Источник файлов-артефактов
-    //------------- Подтипы событий ----------------- EventFailure
-    public final static int EventDEStateReg=11;     // Дискретное - регистр состояний
-    public final static int EventDEBitReg=12;       // Дискретное - битовый регистр (бит)
-    public final static int EventFailBitReg=13;     // Авария - битовый регистр (бит)
-    public final static int EventFailSettingReg=14;
-    public final static String eventTypes[] = {"","Уведомление","Сервер СМУ","Внешнее","Системное",
-            "Соcтояние","Авария", "Команда","Уставка","Файл","",
-            "ДС регистровое","ДС битовое","Авария-бит","Авария-уставка"};
-
     //------------------------ Источники артефактов ------------------------------------------------------
     public final static String ArtifactParentList[] = {"ReportFile", "User"};
+    //----------------------------------------------------------------------------------------------------
+    public static void main(String a[]){
+        ValuesBase.init();
+        System.out.println(ValuesBase.title("User",ValuesBase.UserAdminType));
+        }
 }

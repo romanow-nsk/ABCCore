@@ -37,15 +37,15 @@ public class NTMessage extends Entity {
         }
     public String getTitle(){
         // 656 String ss = user.getTitle()+" "+ ValuesBase.NTypes[type]+": "+sndTime.timeToString()+" "+header;
-        String ss = ValuesBase.env().userTypes()[userSenderType]+" "+user.getTitle()+" "+ ValuesBase.NTypes[type]+": "+sndTime.timeToString()+" "+header;
+        String ss = ValuesBase.title("User",userSenderType)+" "+user.getTitle()+" "+ ValuesBase.title("NotificationType",type)+": "+sndTime.timeToString()+" "+header;
         return ss;
         }
     public String toShortString(){
-        return getOid()+" "+ ValuesBase.NState[state]+" "+ ValuesBase.NTypes[type];
+        return getOid()+" "+ ValuesBase.title("NotificationState",state)+" "+ ValuesBase.title("NotificationType",type);
         }
     public String toString(){
         // 656 String ss = toShortString();
-        String ss = toShortString()+ " "+ ValuesBase.env().userTypes()[userSenderType]+"-->"+ ValuesBase.env().userTypes()[userReceiverType];
+        String ss = toShortString()+ " "+ ValuesBase.title("User",userSenderType)+"-->"+ ValuesBase.title("User",userReceiverType);
         if (user.getOid()!=0) ss+=" "+user.getTitle();
         ss+="\n"+sndTime.timeToString()+" "+header+": "+message;
         return ss;

@@ -55,7 +55,7 @@ public class EntityLink<T extends Entity> {
     public T getRef() { return ref; }
     public void setRef(T ref) { this.ref = ref; }
     public String showHead(){
-        return (operation== ValuesBase.OperationNone ? "" : (ValuesBase.Operations[operation]+" "))+oid+" ";
+        return (operation== ValuesBase.OperationNone ? "" : (ValuesBase.title("Operation",operation)+" "))+oid+" ";
         }
     public String toString(){
         return showHead() + (ref==null ? "" : ":"+ref.toString()); }

@@ -67,7 +67,7 @@ public class ServerEvent extends Entity {      // Общий класс для �
     public EntityLink<User> getUser() {
         return user; }
     public String toString(){
-        return ValuesBase.eventTypes[type]+"["+ValuesBase.eventLevels[level]+"] "+title+(comment.length()!=0 ? "\n"+comment : "");
+        return ValuesBase.title("EventType",type)+"["+ValuesBase.title("EventLevel",level)+"] "+title+(comment.length()!=0 ? "\n"+comment : "");
         }
     public EntityLink<Artifact> getArtifact() {
         return artifact; }
