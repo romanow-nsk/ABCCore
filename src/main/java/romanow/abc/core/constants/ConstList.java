@@ -65,10 +65,10 @@ public class ConstList extends ArrayList<ConstValue> {
         Class cl = null;
         Object oo = null;
         try {
-            ValuesBase.env().applicationClass(ValuesBase.ClassNameValues);
+            cl = ValuesBase.env().applicationClass(ValuesBase.ClassNameValues);
             oo = cl.newInstance();
             } catch (Exception e) {
-                System.out.println("Не создан список констант");
+                System.out.println("Не создан список констант:"+e.toString());
                 return;
                 }
         Field[] fields = cl.getFields();

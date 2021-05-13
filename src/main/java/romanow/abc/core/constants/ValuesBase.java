@@ -85,9 +85,10 @@ public class ValuesBase {
     public final static int ClassNameClient = 5;
     public final static int ClassNameConsoleClient = 6;
     public final static int ClassNameKioskClient = 7;
-    private  final static String abcClassNames[]={"ValuesBase","WorkSettingsBase","DataServer",
+    private  final static String abcClassNames[]={"romanow.abc.core.constants.ValuesBase",
+            "WorkSettingsBase","DataServer",
             "ConsoleServer","Cabinet","Client","ConsoleClient",""};
-    private static Class createApplicationClass(int type, String names[]) throws UniException {
+    protected static Class createApplicationClass(int type, String names[]) throws UniException {
             if (type<0 || type>=names.length)
                 throw UniException.bug("Ошибка создания системного класса: индекс="+type);
         try {
@@ -97,7 +98,7 @@ public class ValuesBase {
                 throw UniException.bug("Ошибка создания системного класса: не найден "+names[type]);
                 }
             }
-    private static Object createApplicationObject(int type, String names[]) throws UniException {
+    protected static Object createApplicationObject(int type, String names[]) throws UniException {
             Class cc = createApplicationClass(type,names);
         try {
             return cc.newInstance();
