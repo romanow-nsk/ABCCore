@@ -17,4 +17,5 @@ public interface I_Environment {
     public int releaseNumber();
     public WorkSettingsBase currentWorkSettings();
     public String modulePackage();
+    public String iconFilePath();
     }

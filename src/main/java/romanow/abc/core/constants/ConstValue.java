@@ -20,7 +20,10 @@ public class ConstValue{
         return title; }
     public int value() {
         return value; }
-    public String toString(){
+    public String toFullString(){
         return groupName+"."+name+"["+title+"]="+value;
         }
+    public String toString(){
+        return name+"["+title+"]="+value;
+    }
 }

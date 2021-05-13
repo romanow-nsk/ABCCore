@@ -28,14 +28,11 @@ public class ValuesBase {
         return env;
         }
     public final static EntityIndexedFactory EntityFactory = new EntityIndexedFactory();
-    private final static ConstMap constMap = new ConstMap();
+    public final static ConstMap constMap = new ConstMap();
     public static String title(String group,int cid){
         return constMap.title(group,cid);
         }
     public static ArrayList<ConstValue> title(String group){  return constMap.getValuesList(group); }
-    static {
-        constMap.createConstList(ValuesBase.class);
-        }
     //------------------------------------------------------------------------------------------------------
     private final static int abcReleaseNumber=1;
     public final static String week[] = {"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"};
@@ -75,7 +72,14 @@ public class ValuesBase {
     public final static String bashPath="/bin/";                // путь к bash для Linux
     public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "pi31415926","9130000000");
 
-    public static void init(){}
+    public static void init(){
+        try {
+            Class cc = env().applicationClass(ClassNameValues);
+            constMap.createConstList(cc);
+            } catch (UniException ee) {
+                System.out.println("Ошибка построения карты констант "+ee);
+                }
+        }
     //---------------------------------------------------------------------------------------------------
     public final static int ClassNameValues = 0;
     public final static int ClassNameWorkSettings = 1;
@@ -85,9 +89,14 @@ public class ValuesBase {
     public final static int ClassNameClient = 5;
     public final static int ClassNameConsoleClient = 6;
     public final static int ClassNameKioskClient = 7;
-    private  final static String abcClassNames[]={"romanow.abc.core.constants.ValuesBase",
-            "WorkSettingsBase","DataServer",
-            "ConsoleServer","Cabinet","Client","ConsoleClient",""};
+    private  final static String abcClassNames[]={
+            "romanow.abc.core.constants.ValuesBase",
+            "romanow.abc.core.entity.base.WorkSettingsBase",
+            "romanow.abc.dataserver.DataServer",
+            "romanow.abc.dataserver.ConsoleServer",
+            "romanow.abc.desktop.Cabinet",
+            "romanow.abc.desktop.Client",
+            "",""};
     protected static Class createApplicationClass(int type, String names[]) throws UniException {
             if (type<0 || type>=names.length)
                 throw UniException.bug("Ошибка создания системного класса: индекс="+type);
@@ -139,7 +148,10 @@ public class ValuesBase {
             public WorkSettingsBase currentWorkSettings() { return new WorkSettingsBase(); }
             @Override
             public String modulePackage() { return "romanow.abc.desktop.module"; }
+            @Override
+            public String iconFilePath() { return "/drawable/lecture.png"; }
             };
+        //--------------------------------------------------------------------------------------------------------------
         EntityFactory.put(new TableItem("Настройки_0", WorkSettingsBase.class));
         EntityFactory.put(new TableItem("Метка GPS", GPSPoint.class));
         EntityFactory.put(new TableItem("Адрес", Address.class));
@@ -376,5 +388,6 @@ public class ValuesBase {
     public static void main(String a[]){
         ValuesBase.init();
         System.out.println(ValuesBase.title("User",ValuesBase.UserAdminType));
+        System.out.print(ValuesBase.constMap.toString());
         }
 }
