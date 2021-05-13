@@ -62,9 +62,10 @@ public class ConstList extends ArrayList<ConstValue> {
         map.put(cc.name(),cc);
         }
     public void createConstList(){
-        Class cl = ValuesBase.env().valuesClass();
+        Class cl = null;
         Object oo = null;
         try {
+            ValuesBase.env().applicationClass(ValuesBase.ClassNameValues);
             oo = cl.newInstance();
             } catch (Exception e) {
                 System.out.println("Не создан список констант");

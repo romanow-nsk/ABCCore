@@ -1,6 +1,7 @@
 package romanow.abc.core.constants;
 
 import romanow.abc.core.ServerState;
+import romanow.abc.core.UniException;
 import romanow.abc.core.entity.EntityIndexedFactory;
 import romanow.abc.core.entity.artifacts.Artifact;
 import romanow.abc.core.entity.artifacts.ReportFile;
@@ -75,7 +76,36 @@ public class ValuesBase {
     public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "pi31415926","9130000000");
 
     public static void init(){}
-
+    //---------------------------------------------------------------------------------------------------
+    public final static int ClassNameValues = 0;
+    public final static int ClassNameWorkSettings = 1;
+    public final static int ClassNameDataServer = 2;
+    public final static int ClassNameConsoleServer = 3;
+    public final static int ClassNameCabinet = 4;
+    public final static int ClassNameClient = 5;
+    public final static int ClassNameConsoleClient = 6;
+    public final static int ClassNameKioskClient = 7;
+    private  final static String abcClassNames[]={"ValuesBase","WorkSettingsBase","DataServer",
+            "ConsoleServer","Cabinet","Client","ConsoleClient",""};
+    private static Class createApplicationClass(int type, String names[]) throws UniException {
+            if (type<0 || type>=names.length)
+                throw UniException.bug("Ошибка создания системного класса: индекс="+type);
+        try {
+            Class cc = Class.forName(names[type]);
+            return cc;
+            } catch (ClassNotFoundException e) {
+                throw UniException.bug("Ошибка создания системного класса: не найден "+names[type]);
+                }
+            }
+    private static Object createApplicationObject(int type, String names[]) throws UniException {
+            Class cc = createApplicationClass(type,names);
+        try {
+            return cc.newInstance();
+            } catch (Exception e) {
+                throw UniException.bug("Ошибка создания объекта класса "+names[type]+": "+e.toString());
+                }
+            }
+    //---------------------------------------------------------------------------------------------------
     static {
         env = new I_Environment() {
             @Override
@@ -95,7 +125,13 @@ public class ValuesBase {
                 return new User(ValuesBase.UserSuperAdminType, "Система", "", "", "ABCDataserver", "pi31415926","9130000000");
                 }
             @Override
-            public Class valuesClass() { return ValuesBase.class; }
+            public Class applicationClass(int classType) throws UniException {
+                return createApplicationClass(classType,abcClassNames);
+                }
+            @Override
+            public Object applicationObject(int classType) throws UniException {
+                return createApplicationObject(classType,abcClassNames);
+                }
             @Override
             public int releaseNumber() { return abcReleaseNumber; }
             @Override
