@@ -41,7 +41,7 @@ public class SQLDBDriver extends I_MongoDB {
         try {
             ParamList paramList = new ParamList().add("DBUser", ValuesBase.SQLDBUser).add("DBPass",ValuesBase.SQLDBPass)
                     .add("DBProxyOn",false).add("DBIP",ValuesBase.SQLDBIP).add("DBPort",ValuesBase.SQLDBPort)
-                    .add("DBName",ValuesBase.env().mongoDBName()+port).add("DBPort2",ValuesBase.SQLDBPort2);
+                    .add("DBName",ValuesBase.env().applicationName(ValuesBase.AppNameDBName)+port).add("DBPort2",ValuesBase.SQLDBPort2);
             jdbc.connect(paramList);
             } catch (Exception ee){
                 System.out.println(ee);

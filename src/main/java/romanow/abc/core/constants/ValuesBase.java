@@ -97,6 +97,24 @@ public class ValuesBase {
             "romanow.abc.desktop.Cabinet",
             "romanow.abc.desktop.Client",
             "",""};
+    public final static int AppNameSubjectArea = 0;
+    public final static int AppNameDBName = 1;
+    public final static int AppNameDBUser = 2;
+    public final static int AppNameDBPass = 3;
+    public final static int AppNameAPK = 4;
+    public final static int AppNameServerJar = 5;
+    public final static int AppNameModulePackage = 6;
+    public final static int AppNameIconPath = 7;
+    private  final static String abcAppNames[]={
+        "ABCEmpty",
+        "abc",
+        "abc",
+        "abc",
+        "ABSEmptyClient.apk",
+        "ABCDataserver.jar",
+        "romanow.abc.desktop.module",
+        "/drawable/lecture.png"
+        };
     protected static Class createApplicationClass(int type, String names[]) throws UniException {
             if (type<0 || type>=names.length)
                 throw UniException.bug("Ошибка создания системного класса: индекс="+type);
@@ -119,18 +137,6 @@ public class ValuesBase {
     static {
         env = new I_Environment() {
             @Override
-            public String subjectAreaName() { return "ABCEmpty"; }
-            @Override
-            public String mongoDBName() { return "abc"; }
-            @Override
-            public String mongoDBUser() { return "abc"; }
-            @Override
-            public String mongoDBPassword() { return "abc"; }
-            @Override
-            public String apkName() { return "ABSEmptyClient.apk"; }
-            @Override
-            public String serverName() { return "ABCDataserver.jar"; }
-            @Override
             public User superUser() {
                 return new User(ValuesBase.UserSuperAdminType, "Система", "", "", "ABCDataserver", "pi31415926","9130000000");
                 }
@@ -142,14 +148,19 @@ public class ValuesBase {
             public Object applicationObject(int classType) throws UniException {
                 return createApplicationObject(classType,abcClassNames);
                 }
+
+            @Override
+            public String applicationName(int nameNype) {
+                return abcAppNames[nameNype];
+                }
+            @Override
+            public String applicationClassName(int classType) {
+                return abcClassNames[classType];
+                }
             @Override
             public int releaseNumber() { return abcReleaseNumber; }
             @Override
             public WorkSettingsBase currentWorkSettings() { return new WorkSettingsBase(); }
-            @Override
-            public String modulePackage() { return "romanow.abc.desktop.module"; }
-            @Override
-            public String iconFilePath() { return "/drawable/lecture.png"; }
             };
         //--------------------------------------------------------------------------------------------------------------
         EntityFactory.put(new TableItem("Настройки_0", WorkSettingsBase.class));

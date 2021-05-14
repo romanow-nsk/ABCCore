@@ -2,6 +2,7 @@ package romanow.abc.core.mongo;
 
 import com.mongodb.*;
 import romanow.abc.core.UniException;
+import romanow.abc.core.constants.I_Environment;
 import romanow.abc.core.constants.TableItem;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.Entity;
@@ -26,7 +27,7 @@ public class MongoDB extends I_MongoDB {
         try {
             List<String> ss = mongo.getDatabaseNames();
             for (String zz : ss)
-                if (zz.equals(ValuesBase.env().mongoDBName()+port))
+                if (zz.equals(ValuesBase.env().applicationName(ValuesBase.AppNameDBName)+port))
                     return true;
             return false;
             } catch (Exception ee){ System.out.println(ee); return false; }
@@ -45,8 +46,9 @@ public class MongoDB extends I_MongoDB {
             connect();
             if (testDB(port)){
                 //MongoDatabase mongoDB = mongo.getDatabase(ValuesBase.mongoDBName+port);
-                mongoDB = mongo.getDB(ValuesBase.env().mongoDBName()+port);
-                mongoDB.addUser(ValuesBase.env().mongoDBUser(), ValuesBase.env().mongoDBPassword().toCharArray());
+                I_Environment env = ValuesBase.env();
+                mongoDB = mongo.getDB(env.applicationName(ValuesBase.AppNameDBName)+port);
+                mongoDB.addUser(env.applicationName(ValuesBase.AppNameDBUser), env.applicationName(ValuesBase.AppNameDBPass).toCharArray());
                 }
             else{
                 return false;

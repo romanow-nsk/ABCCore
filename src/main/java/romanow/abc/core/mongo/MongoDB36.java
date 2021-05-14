@@ -27,10 +27,11 @@ public class MongoDB36 extends I_MongoDB {
     private MongoDatabase mongoDB=null;
     public MongoDB36(){ }
     private boolean testDB(int port){
+        String dbName = ValuesBase.env().applicationName(ValuesBase.AppNameDBName)+port;
         try {
             List<String> ss = mongo.getDatabaseNames();
             for (String zz : ss)
-                if (zz.equals(ValuesBase.env().mongoDBName()+port))
+                if (zz.equals(dbName))
                     return true;
             return false;
         } catch (Exception ee){ System.out.println(ee); return false; }
@@ -43,7 +44,7 @@ public class MongoDB36 extends I_MongoDB {
             boolean auth=false;
             connect();
             if (testDB(port))
-                mongoDB = mongo.getDatabase(ValuesBase.env().mongoDBName()+port);
+                mongoDB = mongo.getDatabase(ValuesBase.env().applicationName(ValuesBase.AppNameDBName)+port);
             else
                 return false;
         } catch (Exception ee){ System.out.println(ee); return false; }
