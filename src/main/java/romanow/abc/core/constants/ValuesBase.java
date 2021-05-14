@@ -105,6 +105,7 @@ public class ValuesBase {
     public final static int AppNameServerJar = 5;
     public final static int AppNameModulePackage = 6;
     public final static int AppNameIconPath = 7;
+    public final static int AppNameTitle = 8;
     private  final static String abcAppNames[]={
         "ABCEmpty",
         "abc",
@@ -113,7 +114,8 @@ public class ValuesBase {
         "ABSEmptyClient.apk",
         "ABCDataserver.jar",
         "romanow.abc.desktop.module",
-        "/drawable/lecture.png"
+        "/drawable/lecture.png",
+        "Пустой фреймворк ABC"
         };
     protected static Class createApplicationClass(int type, String names[]) throws UniException {
             if (type<0 || type>=names.length)

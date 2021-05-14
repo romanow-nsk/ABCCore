@@ -16,8 +16,8 @@ public class ConstGroup {
             map.remove(key);
         map.put(key,cc);
         }
-    public ArrayList<ConstValue> createList(){
-        ArrayList<ConstValue> out = new ArrayList<>();
+    public ConstList createList(){
+        ConstList out = new ConstList("");
         Object oo[] = map.values().toArray();
         for(Object vv : oo)
             out.add((ConstValue)vv );

@@ -7,6 +7,7 @@ import retrofit2.http.*;
 import romanow.abc.core.DBRequest;
 import romanow.abc.core.ServerState;
 import romanow.abc.core.constants.ConstList;
+import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.entity.EntityList;
 import romanow.abc.core.entity.EntityNamed;
 import romanow.abc.core.entity.artifacts.Artifact;
@@ -168,10 +169,10 @@ public interface RestAPIBase {
     Call<JBoolean> undeleteById(@Header("SessionToken") String token,@Query("entity") String entity, @Query("id") long id);
     /** Получить список констант */
     @GET("/api/const/all")
-    Call<ConstList> getConstAll(@Header("SessionToken") String token);
+    Call<ArrayList<ConstValue>> getConstAll(@Header("SessionToken") String token);
     /** Получить список констант (группа) */
     @GET("/api/const/bygroups")
-    Call<ArrayList<ConstList>> getConstByGroups(@Header("SessionToken") String token);
+    Call<ArrayList<ArrayList<ConstValue>>> getConstByGroups(@Header("SessionToken") String token);
     /** Режим кэширования сервера */
     @POST("/api/admin/cashmode")
     Call<JEmpty> setCashMode(@Header("SessionToken") String token,@Query("mode") boolean mode,@Query("pass") String pass);

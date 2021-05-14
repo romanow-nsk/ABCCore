@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import romanow.abc.core.API.RestAPIBase;
 import romanow.abc.core.DBRequest;
 import romanow.abc.core.constants.ConstList;
+import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.EntityList;
 import romanow.abc.core.entity.baseentityes.JLong;
@@ -37,7 +38,7 @@ public class DBExample implements I_DBTarget<RestAPIBase> {
             Response<JString> res = service.clearDB(token,ValuesBase.DebugTokenPass).execute();
             System.out.println(res.body());
             System.out.println(service.getConstAll(token).execute().body());
-            ArrayList<ConstList> constList = service.getConstByGroups(token).execute().body();
+            ArrayList<ArrayList<ConstValue>> constList = service.getConstByGroups(token).execute().body();
             System.out.println(constList);
             putId(service.addUser(token,new User(ValuesBase.UserGuestType,"Гость","","","Гость","112233","89335555555")).execute());
             putId(service.addUser(token,new User(ValuesBase.UserAdminType,"Админ","Павел","Ильич","tt2","1234","89136666666")).execute());

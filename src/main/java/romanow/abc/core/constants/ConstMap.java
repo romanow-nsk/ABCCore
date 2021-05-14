@@ -50,11 +50,11 @@ public class ConstMap extends HashMap<String, ConstGroup>{
         }
     }
     //------------------------------------------------------------------------------------------------------------------
-    public ArrayList<ConstValue> getValuesList(String gName){
+    public ConstList getValuesList(String gName){
         ConstGroup gmap = get(gName);
         if (gmap==null)
-            return new ArrayList<ConstValue>();
-        ArrayList<ConstValue> list = gmap.createList();
+            return new ConstList("");
+        ConstList list = gmap.createList();
         list.sort(new Comparator<ConstValue>() {
             @Override
             public int compare(ConstValue o1, ConstValue o2) {
