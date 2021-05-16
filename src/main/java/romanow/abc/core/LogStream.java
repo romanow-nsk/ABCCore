@@ -1,6 +1,7 @@
 package romanow.abc.core;
 
 import romanow.abc.core.utils.OwnDateTime;
+import romanow.abc.core.utils.StringFIFO;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,12 +14,16 @@ public class LogStream extends OutputStream {
     private boolean newString=true;
     private boolean utf8;
     private I_String back;
-    public LogStream(boolean utf80, I_String back0){        // ВОЗВРАЩАЕТ БЕЗ КОНЦА СТРОКИ
+    private StringFIFO fifo=null;
+    public LogStream(boolean utf80, StringFIFO fifo0, I_String back0){        // ВОЗВРАЩАЕТ БЕЗ КОНЦА СТРОКИ
         super();
         utf8 = utf80;
         back = back0;
+        fifo = fifo0;
         }
-
+    public void setStringFIFO(StringFIFO fifo0){
+        fifo = fifo0;
+        }
     private void procString(){
         String ss;
         int sz = str.length();
@@ -36,6 +41,8 @@ public class LogStream extends OutputStream {
         ss = new OwnDateTime().timeFullToString()+" "+ss;
         if (back!=null)
             back.onEvent(ss);
+        if (fifo!=null)
+            fifo.add(str.toString());
         str = new StringBuffer();
         }
     @Override
@@ -81,7 +88,7 @@ public class LogStream extends OutputStream {
         }
     private static int cnt=0;
     public static void main(String ss[]) throws IOException {
-        LogStream log = new LogStream(true, new I_String() {
+        LogStream log = new LogStream(true, null,new I_String() {
             @Override
             public void onEvent(String ss) {
                 cnt++;

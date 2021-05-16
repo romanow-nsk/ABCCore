@@ -40,5 +40,4 @@ public class Contact extends DAO implements I_TypeName,I_Name {
     public void parseValue(String ss) throws Exception {
         value = ss;
         }
-
 }
