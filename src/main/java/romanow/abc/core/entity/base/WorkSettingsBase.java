@@ -1,11 +1,13 @@
 package romanow.abc.core.entity.base;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import romanow.abc.core.entity.Entity;
 
 @ToString
+@NoArgsConstructor
 public class WorkSettingsBase extends Entity {
     @Getter @Setter private String MKVersion="1.0.01";
     @Getter @Setter private String dataServerFileDir="d:/temp";
@@ -19,7 +21,6 @@ public class WorkSettingsBase extends Entity {
     @Getter @Setter private String mailToSend="romanow@ngs.ru";
     @Getter @Setter private boolean mailNotifycation=false;
     @Getter @Setter private String nodeName="noname";
-    public WorkSettingsBase(){}
     //------------------------------------------------------------------------------------------------------------------
     public boolean isMainServer(){ return false; }
     public static void main(String ss[]){
