@@ -461,62 +461,66 @@ public class DAO implements I_ExcelRW, I_MongoRW {
         catch(Exception ee){
             throw UniException.bug(getClass().getSimpleName()+"["+out.getString("oid")+"]."+ff.name);  }
         }
-    final public void getXMLValues(Row row, ExCellCounter cnt) throws UniException{
+    final public void getXMLValues(Row row, String prefix,HashMap<String,Integer> colMap) throws UniException{
         EntityField ff=new EntityField();
         try {
             getFields();
             for(int i=0;i<fld.size();i++){
                 ff=fld.get(i);
+                Integer idx = colMap.get(prefix+ff.name);
+                if (idx==null && ff.type!=dbDAOLink)
+                    continue;
+                int cnt= ff.type!=dbDAOLink ? idx.intValue() : 0;
                 switch(ff.type){
                     case dbInt:	    try {
-                                        ff.field.setInt(this, ((int)row.getCell(cnt.getIdx()).getNumericCellValue()));
-                                        } catch (Exception ee){}
-                                        break;
+                        ff.field.setInt(this, ((int)row.getCell(cnt).getNumericCellValue()));
+                    } catch (Exception ee){}
+                        break;
                     case dbShort:	try {
-                                        ff.field.setShort(this, ((short)row.getCell(cnt.getIdx()).getNumericCellValue()));
-                                        } catch (Exception ee){}
-                                    break;
+                        ff.field.setShort(this, ((short)row.getCell(cnt).getNumericCellValue()));
+                    } catch (Exception ee){}
+                        break;
                     case dbLong:	try {
-                                        ff.field.setLong(this, ((long)row.getCell(cnt.getIdx()).getNumericCellValue()));
-                                        } catch (Exception ee){}
-                                    break;
+                        ff.field.setLong(this, ((long)row.getCell(cnt).getNumericCellValue()));
+                    } catch (Exception ee){}
+                        break;
                     case dbDouble:	try {
-                                        ff.field.setDouble(this, (row.getCell(cnt.getIdx()).getNumericCellValue()));
-                                        } catch (Exception ee){}
-                                    break;
+                        ff.field.setDouble(this, (row.getCell(cnt).getNumericCellValue()));
+                    } catch (Exception ee){}
+                        break;
                     case dbBoolean: try {
-                                        ff.field.setBoolean(this, ((int)row.getCell(cnt.getIdx()).getNumericCellValue()!=0));
-                                        } catch (Exception ee){}
-                                    break;
+                        ff.field.setBoolean(this, ((int)row.getCell(cnt).getNumericCellValue()!=0));
+                    } catch (Exception ee){}
+                        break;
                     case dbString2:
                     case dbString:	try {
-                                        ff.field.set(this, row.getCell(cnt.getIdx()).getStringCellValue());
-                                        } catch (Exception ee){}
-                                    break;
+                        ff.field.set(this, row.getCell(cnt).getStringCellValue());
+                    } catch (Exception ee){}
+                        break;
                     case dbLink:    EntityLink link = (EntityLink)ff.field.get(this);
-                                    try {
-                                        link.setOid(((long)row.getCell(cnt.getIdx()).getNumericCellValue()));
-                                        } catch (Exception ee){}
-                                    break;
+                        try {
+                            link.setOid(((long)row.getCell(cnt).getNumericCellValue()));
+                        } catch (Exception ee){}
+                        break;
                     case dbLinkList:EntityLinkList list = (EntityLinkList)ff.field.get(this);
-                                    try {
-                                        list.parseIdList(row.getCell(cnt.getIdx()).getStringCellValue());
-                                        } catch (Exception ee){}
-                                    break;
+                        try {
+                            list.parseIdList(row.getCell(cnt).getStringCellValue());
+                        } catch (Exception ee){}
+                        break;
                     case dbDAOLink:
-                                    DAO dd = (DAO)ff.field.get(this);
-                                    String pref = getFieldPrefix(ff);
-                                    if (pref!=null)
-                                        dd.getData(row,cnt);
-                                    else
-                                        noField(3,ff);
-                                    break;
-                    case dbRefList: row.getCell(cnt.getIdx()).getNumericCellValue(); break;
+                        DAO dd = (DAO)ff.field.get(this);
+                        String pref = getFieldPrefix(ff);
+                        if (pref!=null)
+                            dd.getData(row,pref+"_",colMap);
+                        else
+                            noField(3,ff);
+                        break;
+                    case dbRefList: row.getCell(cnt).getNumericCellValue(); break;
                 }
             }
-        afterLoad();
+            afterLoad();
         } catch(Exception ee){
-            throw UniException.bug(getClass().getSimpleName()+"."+ff.name);  }
+            throw UniException.bug(getClass().getSimpleName()+"."+prefix+ff.name);  }
         }
     final public void putXMLValues(Row row, ExCellCounter cnt) throws UniException{
         EntityField ff=new EntityField();
@@ -597,8 +601,8 @@ public class DAO implements I_ExcelRW, I_MongoRW {
         getDBValues(prefix,res,level,mongo,null,statistic);
         }
     @Override
-    public void getData(Row row, ExCellCounter cnt) throws UniException{
-        getXMLValues(row, cnt);
+    public void getData(Row row, String prefix, HashMap<String,Integer> colMap) throws UniException{
+        getXMLValues(row, prefix,colMap);
     }
     @Override
     public void putData(Row row, ExCellCounter cnt) throws UniException{

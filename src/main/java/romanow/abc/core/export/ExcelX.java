@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ExcelX implements I_Excel{
     private XSSFWorkbook workbook = new XSSFWorkbook();
@@ -29,8 +30,8 @@ public class ExcelX implements I_Excel{
         for(Entity ee : data){
             Row row = sheet.createRow(cnt.getIdx());
             ee.putData(row,new ExCellCounter());
-            }
         }
+    }
     public void exportHeader(Entity ent) throws UniException {
         sheet = workbook.createSheet(ent.getClass().getSimpleName());
         cnt = new ExCellCounter();
@@ -40,11 +41,12 @@ public class ExcelX implements I_Excel{
         ent.putHeader("",head);
         for(String ss : head)
             hd.createCell(hdCnt.getIdx()).setCellValue(ss);
-        }
+    }
 
     public int sheetCount(){
         return workbook.getNumberOfSheets();
-        }
+    }
+    /*
     public String testSheetHeader(Entity proto,int idx)  {
         String pp;
         String ss1 = workbook.getSheetAt(idx).getSheetName();
@@ -79,74 +81,100 @@ public class ExcelX implements I_Excel{
             }
         return cc==0 ? null : xx;
         }
-    public String importSheet(Entity proto, int idx, I_MongoDB mongo) throws UniException{
+     */
+    @Override
+    public String importSheet(Entity proto, Sheet sh, I_MongoDB mongo, HashMap<String,Integer> colMap) throws UniException{
         try {
-            String zz = testSheetHeader(proto,idx);
-            if (zz!=null)
-                return zz;
-            Sheet sh = workbook.getSheetAt(idx);
+            String vv="";
             ArrayList<Entity> out = new ArrayList<>();
             int sz = sh.getLastRowNum();
             if (sz<=0){
-                return "Пустая таблица "+proto.getClass().getSimpleName()+"\n";
-                }
+                return vv+"Пустая таблица "+proto.getClass().getSimpleName()+"\n";
+            }
             for (int i = 1; i <= sz; i++) {     // Пропустить пустую
                 Entity xx = proto.getClass().newInstance();
                 Row row = sh.getRow(i);
-                xx.getData(row,new ExCellCounter());
+                xx.getData(row,"",colMap);
                 mongo.add(xx,0,true);
-                }
-            return "Импортирован класс:"+sh.getSheetName() +" "+(sz-1)+" записей\n";
-            } catch (Exception ee){
-                String ss = Utils.createFatalMessage(ee);
-                System.out.println(ss);
-                return ss+"\n";
-                }
             }
+            return vv+"Импортирован класс:"+sh.getSheetName() +" "+(sz-1)+" записей\n";
+        } catch (Exception ee){
+            String ss = Utils.createFatalMessage(ee);
+            System.out.println(ss);
+            return ss+"\n";
+        }
+    }
     public void save(FileNameExt fspec) throws UniException{
         save(fspec.fullName());
-        }
+    }
     public void save(String fullName) throws UniException{
         try (FileOutputStream out = new FileOutputStream(new File(fullName))) {
             workbook.write(out);
-            } catch (IOException e) { UniException.io(e); }
-        }
+        } catch (IOException e) { UniException.io(e); }
+    }
     public String load(FileNameExt fspec, I_MongoDB mongo) {
         return load(fspec.fullName(),mongo);
-        }
+    }
     public String load(String fullName, I_MongoDB mongo) {
         String xx ="",pp;
         try (FileInputStream out = new FileInputStream(new File(fullName))) {
             workbook = new XSSFWorkbook(out);
             int ns = workbook.getNumberOfSheets();
+            for(TableItem item : ValuesBase.EntityFactory.classList()){
+                Entity proto = (Entity)item.clazz.newInstance();
+                mongo.dropTable(proto);
+            }
             for(int i=0;i<ns;i++){
                 Sheet sh = workbook.getSheetAt(i);
                 String ss = sh.getSheetName();
                 try {
                     TableItem item = ValuesBase.EntityFactory.getItemForSimpleName(ss);
-                    //Class zz = ValuesBase.EntityFactory.getClassForSimpleName(ss);
                     if (item==null){
                         pp = "Класс не найден "+ss;
                         xx+=pp+"\n";
                         System.out.println(pp);
                         continue;
-                        }
+                    }
+                    //----------------------------------------------------------------
                     Entity proto = (Entity)item.clazz.newInstance();
-                    mongo.dropTable(proto);
+                    HashMap<String,Integer> colMap = new HashMap<>();
+                    Row hd = sh.getRow(0);
+                    boolean done=false;
+                    for(int k=0;!done;k++){
+                        String s1;
+                        try {
+                            s1 = hd.getCell(i).getStringCellValue();
+                            if (s1.length()==0)
+                                done=true;
+                            else
+                                colMap.put(s1,k);
+                        } catch (Exception ee){ done=true; }
+                    }
+                    ArrayList<String> list = new ArrayList<>();
+                    try {
+                        proto.putHeader("",list);
+                        for(String ss2 : list){
+                            if (colMap.get(ss2)==null)
+                                xx+="Не найдено "+ss+"."+ss2+"\n";
+                        }
+                    } catch (UniException e) {
+                        xx += ss+ ": "+e.toString()+"\n";
+                        continue;
+                    }
+                    //---------------------------------------------------------------
                     if (!item.isExportXLS())
                         xx+="Не импортируется класс "+ss+"\n";
                     else
-                        xx += importSheet(proto,i,mongo);
-                    } catch (Exception e2) {
-                        System.out.println(e2.toString());
-                        xx+=e2.toString()+"\n";
-                        }
-                }
-            } catch (Exception e) {
-                pp = e.toString();
-                xx+=pp+"\n";
-                System.out.println(pp);
-                }
-        return xx;
+                        xx += importSheet(proto,sh,mongo,colMap);
+                } catch (Exception e2) {
+                    System.out.println(e2.toString());
+                    xx+=e2.toString()+"\n";
+                }                }
+        } catch (Exception e) {
+            pp = e.toString();
+            xx+=pp+"\n";
+            System.out.println(pp);
         }
+        return xx;
     }
+}

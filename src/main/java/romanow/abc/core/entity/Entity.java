@@ -51,8 +51,8 @@ public class Entity extends DAO implements I_XStream, I_Name, I_MongoRW, I_Excel
         }
     //----------------- Импорт/экспорт Excel ------------------------------------------------------------
     @Override
-    public void getData(Row row, ExCellCounter cnt) throws UniException{
-        getXMLValues(row, cnt);
+    public void getData(Row row, String prefix, HashMap<String,Integer> colMap) throws UniException{
+        getXMLValues(row, prefix,colMap);
         }
     @Override
     public void putData(Row row, ExCellCounter cnt) throws UniException{

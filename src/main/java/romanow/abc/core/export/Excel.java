@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Excel implements I_Excel {
     private HSSFWorkbook workbook = new HSSFWorkbook();
@@ -32,18 +33,19 @@ public class Excel implements I_Excel {
         ent.putHeader("",head);
         for(String ss : head)
             hd.createCell(hdCnt.getIdx()).setCellValue(ss);
-        }
+    }
     @Override
-        public void exportData(ArrayList<Entity> data) throws UniException {
+    public void exportData(ArrayList<Entity> data) throws UniException {
         for(Entity ee : data){
             Row row = sheet.createRow(cnt.getIdx());
             ee.putData(row,new ExCellCounter());
-            }
         }
+    }
     @Override
     public int sheetCount(){
         return workbook.getNumberOfSheets();
     }
+    /*
     @Override
     public String testSheetHeader(Entity proto, int idx)  {
         String pp;
@@ -53,7 +55,7 @@ public class Excel implements I_Excel {
             pp = "Разные таблицы: " + ss1 + " " + ss2;
             System.out.println(pp);
             return pp+"\n";
-        }
+            }
         Row hd = workbook.getSheetAt(idx).getRow(0);
         ArrayList<String> list = new ArrayList<>();
         try {
@@ -78,26 +80,24 @@ public class Excel implements I_Excel {
             }
         }
         return cc==0 ? null : xx;
-    }
+        }
+    */
     @Override
-    public String importSheet(Entity proto, int idx, I_MongoDB mongo) throws UniException{
+    public String importSheet(Entity proto, Sheet sh, I_MongoDB mongo, HashMap<String,Integer> colMap) throws UniException{
         try {
-            String zz = testSheetHeader(proto,idx);
-            if (zz!=null)
-                return zz;
-            Sheet sh = workbook.getSheetAt(idx);
+            String vv ="";
             ArrayList<Entity> out = new ArrayList<>();
             int sz = sh.getLastRowNum();
             if (sz<=0){
-                return "Пустая таблица "+proto.getClass().getSimpleName()+"\n";
+                return vv+"Пустая таблица "+proto.getClass().getSimpleName()+"\n";
             }
             for (int i = 1; i <= sz; i++) {     // Пропустить пустую
                 Entity xx = proto.getClass().newInstance();
                 Row row = sh.getRow(i);
-                xx.getData(row,new ExCellCounter());
+                xx.getData(row,"",colMap);
                 mongo.add(xx,0,true);
             }
-            return "Импортирован класс:"+sh.getSheetName() +" "+(sz-1)+" записей\n";
+            return vv+"Импортирован класс:"+sh.getSheetName() +" "+(sz-1)+" записей\n";
         } catch (Exception ee){
             String ss = Utils.createFatalMessage(ee);
             System.out.println(ss);
@@ -124,24 +124,52 @@ public class Excel implements I_Excel {
         try (FileInputStream out = new FileInputStream(new File(fullName))) {
             workbook = new HSSFWorkbook(out);
             int ns = workbook.getNumberOfSheets();
+            for(TableItem item : ValuesBase.EntityFactory.classList()){
+                Entity proto = (Entity)item.clazz.newInstance();
+                mongo.dropTable(proto);
+            }
             for(int i=0;i<ns;i++){
                 Sheet sh = workbook.getSheetAt(i);
                 String ss = sh.getSheetName();
                 try {
                     TableItem item = ValuesBase.EntityFactory.getItemForSimpleName(ss);
-                    //Class zz = ValuesBase.EntityFactory.getClassForSimpleName(ss);
                     if (item==null){
                         pp = "Класс не найден "+ss;
                         xx+=pp+"\n";
                         System.out.println(pp);
                         continue;
-                        }
+                    }
+                    //----------------------------------------------------------------
                     Entity proto = (Entity)item.clazz.newInstance();
-                    mongo.dropTable(proto);
+                    HashMap<String,Integer> colMap = new HashMap<>();
+                    Row hd = sh.getRow(0);
+                    boolean done=false;
+                    for(int k=0;!done;k++){
+                        String s1;
+                        try {
+                            s1 = hd.getCell(k).getStringCellValue();
+                            if (s1.length()==0)
+                                done=true;
+                            else
+                                colMap.put(s1,k);
+                        } catch (Exception ee){ done=true; }
+                    }
+                    ArrayList<String> list = new ArrayList<>();
+                    try {
+                        proto.putHeader("",list);
+                        for(String ss2 : list){
+                            if (colMap.get(ss2)==null)
+                                xx+="Не найдено "+ss+"."+ss2+"\n";
+                        }
+                    } catch (UniException e) {
+                        xx += ss+ ": "+e.toString()+"\n";
+                        continue;
+                    }
+                    //---------------------------------------------------------------
                     if (!item.isExportXLS())
                         xx+="Не импортируется класс "+ss+"\n";
                     else
-                        xx += importSheet(proto,i,mongo);
+                        xx += importSheet(proto,sh,mongo,colMap);
                 } catch (Exception e2) {
                     System.out.println(e2.toString());
                     xx+=e2.toString()+"\n";
@@ -154,4 +182,5 @@ public class Excel implements I_Excel {
         }
         return xx;
     }
+
 }
