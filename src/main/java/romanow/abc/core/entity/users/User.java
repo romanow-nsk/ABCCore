@@ -15,6 +15,7 @@ public class User extends Person implements I_Name {
     private EntityLink<Artifact> photo=new EntityLink<>(Artifact.class);    // Фотография
     private long secondTableId=0;                                           // ID для производного класса
     private String sessionToken="";
+    private String simCardICC="";
     //------------------------------------------------------------------------------------------------------------------
     /*
     @Override
@@ -109,6 +110,10 @@ public class User extends Person implements I_Name {
         //this.account = account0;
         accountData.setRef(new Account(account0));
         }
+    public String getSimCardICC() {
+        return simCardICC; }
+    public void setSimCardICC(String simCardICC) {
+        this.simCardICC = simCardICC; }
     public void setPhoto(Artifact photo0) {
         this.photo.setRef(photo0); }
     public long getSecondTableId() {
