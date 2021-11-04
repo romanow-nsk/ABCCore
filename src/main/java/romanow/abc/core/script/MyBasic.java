@@ -1,8 +1,7 @@
-package romanow.abc.core.basic;
+package romanow.abc.core.script;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
 import java.awt.event.*;
 import java.awt.Rectangle;
 

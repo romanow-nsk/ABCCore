@@ -1,4 +1,4 @@
-package romanow.abc.core.basic;
+package romanow.abc.core.script;
 
 
 public class Command {

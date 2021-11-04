@@ -397,7 +397,99 @@ public class ValuesBase {
     public final static int EventSystem=4;          // Системное - сервер данных
     //------------------------ Источники артефактов ------------------------------------------------------
     public final static String ArtifactParentList[] = {"ReportFile", "User"};
-    //----------------------------------------------------------------------------------------------------
+    //---------------------  Типы данных ЯОП -------------------------------------------------------------
+    @CONST(group = "DType", title = "void")
+    public final static int DTVoid=0;
+    @CONST(group = "DType", title = "short")
+    public final static int DTShort=1;
+    @CONST(group = "DType", title = "int")
+    public final static int DTInt=2;
+    @CONST(group = "DType", title = "long")
+    public final static int DTLong=3;
+    @CONST(group = "DType", title = "float")
+    public final static int DTFloat=4;
+    @CONST(group = "DType", title = "double")
+    public final static int DTDouble=5;
+    @CONST(group = "DType", title = "boolean")
+    public final static int DTBoolean=6;
+    @CONST(group = "DType", title = "char")
+    public final static int DTChar=7;
+    @CONST(group = "DType", title = "array")
+    public final static int DTArray=8;
+    //---------------------  Операции ЯОП -----------------------------------------------------------------
+    @CONST(group = "Operation", title = "nop")
+    public final static int ONOP=0;
+    @CONST(group = "Operation", title = "add")
+    public final static int OAdd=1;
+    @CONST(group = "Operation", title = "sub")
+    public final static int OSub=2;
+    @CONST(group = "Operation", title = "mul")
+    public final static int OMul=3;
+    @CONST(group = "Operation", title = "div")
+    public final static int ODiv=4;
+    @CONST(group = "Operation", title = "mod")
+    public final static int OMod=5;
+    @CONST(group = "Operation", title = "and")
+    public final static int OAnd=6;
+    @CONST(group = "Operation", title = "or")
+    public final static int OOr=7;
+    @CONST(group = "Operation", title = "not")
+    public final static int ONot=8;
+    @CONST(group = "Operation", title = "eq")
+    public final static int OEqual=9;
+    @CONST(group = "Operation", title = "neq")
+    public final static int ONoEqual=10;
+    @CONST(group = "Operation", title = "le")
+    public final static int OLE=11;
+    @CONST(group = "Operation", title = "lt")
+    public final static int OLT=12;
+    @CONST(group = "Operation", title = "gt")
+    public final static int OGT=13;
+    @CONST(group = "Operation", title = "ge")
+    public final static int OGE=14;
+    @CONST(group = "Operation", title = "jmp")
+    public final static int OJmp=15;
+    @CONST(group = "Operation", title = "jfalse")
+    public final static int OJmpFalse=16;
+    @CONST(group = "Operation", title = "jtrue")
+    public final static int OJmpTrue=17;
+    @CONST(group = "Operation", title = "return")
+    public final static int OReturn=18;
+    @CONST(group = "Operation", title = "push")
+    public final static int OPush=19;
+    @CONST(group = "Operation", title = "pop")
+    public final static int OPop=20;
+    //------------------- Типы ошибок ЯОП -----------------------------------------------------------------
+    @CONST(group = "SEType", title = "Не определено")
+    public final static int SETypeUndef=0;
+    @CONST(group = "SEType", title = "Компиляция")
+    public final static int SETypeCompile=1;
+    @CONST(group = "SEType", title = "Связывание")
+    public final static int SETypeLink=2;
+    @CONST(group = "SEType", title = "Исполнение")
+    public final static int SETypeRunTime=2;
+    @CONST(group = "SEMode", title = "Информация")
+    public final static int SEModeInfo=0;
+    @CONST(group = "SEMode", title = "Предупреждение")
+    public final static int SEModeWarning=1;
+    @CONST(group = "SEMode", title = "Ошибка")
+    public final static int SEModeError=2;
+    @CONST(group = "SEMode", title = "Крах")
+    public final static int SEModeFatal=3;
+    //------------------------ Коды ошибок -------------------------------------------------------------
+    @CONST(group = "SRError", title = "Переполнение стека")
+    public final static int SREStackOver=1;
+    @CONST(group = "SRError", title = "Стек пуст")
+    public final static int SREStackEmpty=2;
+    @CONST(group = "SRError", title = "Выход за границы стека")
+    public final static int SREStackLimits=3;
+    @CONST(group = "SRError", title = "Формат целого")
+    public final static int SREIntFormat=4;
+    @CONST(group = "SRError", title = "Форматирование целого")
+    public final static int SREIntOutFormat=5;
+    @CONST(group = "SRError", title = "Недопустимая операция для ТД")
+    public final static int SREIllegalOperation=5;
+    //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         ValuesBase.init();
         System.out.println(ValuesBase.title("User",ValuesBase.UserAdminType));

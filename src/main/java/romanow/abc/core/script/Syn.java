@@ -1,4 +1,4 @@
-package romanow.abc.core.basic;
+package romanow.abc.core.script;
 import java.io.*;
 import java.util.*;
 
