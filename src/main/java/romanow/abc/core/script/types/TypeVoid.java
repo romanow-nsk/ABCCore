@@ -4,10 +4,23 @@ import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptRunTimeException;
 
 public class TypeVoid extends TypeFace{
-    private long val;
-    public TypeVoid(long word) {
-        super(word); }
     public TypeVoid() {}
+    @Override
+    public double toDouble() throws ScriptRunTimeException {
+        throw new ScriptRunTimeException(ValuesBase.SREIllegalOperation,"Недопустимое приведение void->double");
+        }
+    @Override
+    public void fromDouble(double val) throws ScriptRunTimeException {
+        throw new ScriptRunTimeException(ValuesBase.SREIllegalOperation,"Недопустимое приведение double->void");
+        }
+    @Override
+    public long toLong() throws ScriptRunTimeException {
+        throw new ScriptRunTimeException(ValuesBase.SREIllegalOperation,"Недопустимое приведение void->long");
+        }
+    @Override
+    public void fromLong(long val) throws ScriptRunTimeException {
+        throw new ScriptRunTimeException(ValuesBase.SREIllegalOperation,"Недопустимое приведение long->void");
+        }
     @Override
     public int type() {
         return ValuesBase.DTVoid; }
@@ -29,6 +42,6 @@ public class TypeVoid extends TypeFace{
     public void parse(String value) throws ScriptRunTimeException {}
     @Override
     public TypeFace clone() {
-        return new TypeVoid(val);
+        return new TypeVoid();
         }
 }

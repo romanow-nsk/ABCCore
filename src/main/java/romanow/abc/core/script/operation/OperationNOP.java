@@ -10,7 +10,8 @@ public class OperationNOP extends Operation{
         super(ValuesBase.ONOP, "nop");
         }
     @Override
-    public void exec(OperationStack stack, CallContext context) throws ScriptRunTimeException {
+    public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptRunTimeException {
+        if (trace) setTrace(toString());
         }
     @Override
     public Operation clone() {

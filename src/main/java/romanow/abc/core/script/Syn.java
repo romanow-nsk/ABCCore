@@ -2,7 +2,7 @@ package romanow.abc.core.script;
 import java.io.*;
 import java.util.*;
 
-public class Syn extends Lex {
+public class Syn extends Scaner {
     public Syn() {
     }
     /*---------------------------------------- Грамматика
@@ -50,11 +50,9 @@ public class Syn extends Lex {
     }
     void sget(){
         LX=super.get();
-        err+=LX.val;
+        err+=LX.value;
         }
-    void close() { super.close();
-        try{ out.close();
-        } catch(IOException ee){}
+    void close() {
         }
     boolean open(String nm) {
         IP=0;
@@ -65,7 +63,7 @@ public class Syn extends Lex {
        }
     void error(int code, String str){
         try {
-            err+=LX.val+" [ Ошибка: "+str+" ]\n";
+            err+=LX.value+" [ Ошибка: "+str+" ]\n";
             story+=err;
             err="";
             nerror++;
@@ -96,7 +94,7 @@ public class Syn extends Lex {
         err="";
         switch (LX.type){
     case 'a':
-            k=getVar(LX.val);
+            k=getVar(LX.value);
             sget();
             if (LX.type!='=') error(4,"Пропущен =");
             else sget();
@@ -107,7 +105,7 @@ public class Syn extends Lex {
             break;
     case 'r': sget();
             if (LX.type!='a') error(4,"Пропущего имя");
-            k=getVar(LX.val);
+            k=getVar(LX.value);
             sget();
             if (LX.type!=';') error(10,"Пропущен ;");
             sget();
@@ -119,7 +117,7 @@ public class Syn extends Lex {
                 if (LX.type == 'b') { sget(); own+="ENDL\n"; }
                 else
                 if (LX.type == 's') {
-                    own+="PUT " + LX.val.substring(1,LX.val.length()-1) + "\n";
+                    own+="PUT " + LX.value.substring(1,LX.value.length()-1) + "\n";
                     sget();
                 } else own+=E() + "OUT\n";
                 if (LX.type==';') { sget(); break; }
@@ -275,7 +273,7 @@ public class Syn extends Lex {
         boolean minus=false;
         if (LX.type=='-'){ minus=true; sget(); }
         switch (LX.type){
-    case 'a':  name=LX.val;
+    case 'a':  name=LX.value;
                sget();
                if (LX.type=='('){
                    sget();
@@ -289,7 +287,7 @@ public class Syn extends Lex {
                    own = "LOADM " + k + "\n";
                    }
                break;
-    case 'c':  own="LOADC "+LX.val+"\n";
+    case 'c':  own="LOADC "+LX.value+"\n";
                sget();
                break;
     case '(':  sget();

@@ -1,0 +1,30 @@
+package romanow.abc.core.script.operation;
+
+import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.CallContext;
+import romanow.abc.core.script.OperationStack;
+import romanow.abc.core.script.ScriptRunTimeException;
+import romanow.abc.core.script.types.TypeFace;
+
+public class OperationPushVar extends Operation{
+    private String varName;
+    public OperationPushVar(String varName0) {
+        super(ValuesBase.OPushVar, "pushVar");
+        varName = varName0;
+        }
+    @Override
+    public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptRunTimeException {
+        TypeFace var = context.getVariables().get(varName);
+        if (var==null)
+            throw  new ScriptRunTimeException(ValuesBase.SREIllegalVariable,"Переменнная не определена: "+varName);
+        stack.push(var);
+        }
+    @Override
+    public Operation clone() {
+        return new OperationPushVar(varName);
+        }
+    @Override
+    public String toString(){
+        return super.toString()+" "+varName;
+    }
+}

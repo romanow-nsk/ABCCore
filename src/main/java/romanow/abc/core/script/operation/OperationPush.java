@@ -14,7 +14,8 @@ public class OperationPush extends Operation{
         data = data0;
         }
     @Override
-    public void exec(OperationStack stack, CallContext context) throws ScriptRunTimeException {
+    public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptRunTimeException {
+        if (trace) setTrace(toString());
         stack.push(data);
         }
     @Override

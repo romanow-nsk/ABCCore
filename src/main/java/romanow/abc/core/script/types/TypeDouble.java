@@ -3,31 +3,29 @@ package romanow.abc.core.script.types;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptRunTimeException;
 
-public class TypeInt extends TypeFace{
-    private int value;
-    public TypeInt(boolean valid, int vv) {
-        super(valid);
-        value = vv;
-        }
-    public TypeInt(int word) {
+public class TypeDouble extends TypeFace{
+    private double value;
+    public TypeDouble(double val) {
         super(true);
-        value = word;
+        value = val;
         }
-    public TypeInt(TypeInt two) {
-        super(two); }
+    public TypeDouble(TypeDouble two){
+        super(two.isValid());
+        value = two.value;
+        }
     @Override
     public int type() {
-        return ValuesBase.DTInt; }
+        return ValuesBase.DTDouble; }
     @Override
     public String typeName() {
-        return "int"; }
+        return "double"; }
     @Override
     public String typeNameTitle() {
-        return "целое"; }
+        return "длинное вещ."; }
     @Override
     public int compare(TypeFace two) throws ScriptRunTimeException {
         if (two.isIntType()){
-            long vv =  value-two.toLong();
+            double vv =  value-two.toDouble();
             if (vv==0) return 0;
             return vv <0 ? -1 : 1;
             }
@@ -37,7 +35,7 @@ public class TypeInt extends TypeFace{
             return vv <0 ? -1 : 1;
             }
         throw new ScriptRunTimeException(ValuesBase.SREIllegalCompare,"Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
-        }
+    }
     @Override
     public String format(String fmtString) throws ScriptRunTimeException {
         try {
@@ -48,34 +46,32 @@ public class TypeInt extends TypeFace{
         }
     @Override
     public void parse(String ss) throws ScriptRunTimeException {
-        try {
-            value = Integer.parseInt(ss);
-            setValid(true);
+        try{
+             value = Double.parseDouble(ss);
+             setValid(true);
             } catch (Exception ee){
                 setValid(false);
-                throw new ScriptRunTimeException(ValuesBase.SREIntFormat,"Формат целого: "+ss);
+                throw new ScriptRunTimeException(ValuesBase.SREFloatConvertation,"Ошибка конвертации из double "+ss);
                 }
             }
     @Override
     public TypeFace clone() {
-        return new TypeInt(isValid(),value);
+        return new TypeDouble(this);
         }
-
-    @Override
-    public double toDouble() throws ScriptRunTimeException {
+    public double toDouble() throws ScriptRunTimeException{
         return value;
         }
-    @Override
-    public void fromDouble(double val) throws ScriptRunTimeException {
-        value = (int)val;
+    public void fromDouble(double val) throws ScriptRunTimeException{
+        value = val;
+        setValid(true);
         }
     @Override
     public long toLong() throws ScriptRunTimeException {
-        return value;
+        return (long)value;
         }
     @Override
     public void fromLong(long val) throws ScriptRunTimeException {
-        value =(int)val;
+        value = val;
         }
     @Override
     public String toString(){

@@ -414,8 +414,10 @@ public class ValuesBase {
     public final static int DTBoolean=6;
     @CONST(group = "DType", title = "char")
     public final static int DTChar=7;
+    @CONST(group = "DType", title = "date")
+    public final static int DTDateTime=8;
     @CONST(group = "DType", title = "array")
-    public final static int DTArray=8;
+    public final static int DTArray=9;
     //---------------------  Операции ЯОП -----------------------------------------------------------------
     @CONST(group = "Operation", title = "nop")
     public final static int ONOP=0;
@@ -457,8 +459,10 @@ public class ValuesBase {
     public final static int OReturn=18;
     @CONST(group = "Operation", title = "push")
     public final static int OPush=19;
+    @CONST(group = "Operation", title = "pushVar")
+    public final static int OPushVar=20;
     @CONST(group = "Operation", title = "pop")
-    public final static int OPop=20;
+    public final static int OPop=21;
     //------------------- Типы ошибок ЯОП -----------------------------------------------------------------
     @CONST(group = "SEType", title = "Не определено")
     public final static int SETypeUndef=0;
@@ -488,7 +492,13 @@ public class ValuesBase {
     @CONST(group = "SRError", title = "Форматирование целого")
     public final static int SREIntOutFormat=5;
     @CONST(group = "SRError", title = "Недопустимая операция для ТД")
-    public final static int SREIllegalOperation=5;
+    public final static int SREIllegalOperation=6;
+    @CONST(group = "SRError", title = "Ошибка конвертации float/int")
+    public final static int SREFloatConvertation=7;
+    @CONST(group = "SRError", title = "Недопустимое сравнение для ТД")
+    public final static int SREIllegalCompare=8;
+    @CONST(group = "SRError", title = "Переменная не определена")
+    public final static int SREIllegalVariable=9;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         ValuesBase.init();

@@ -1,0 +1,13 @@
+write "x=";
+read x;
+eps=0.0001;
+n=2;
+sn=x;
+s=0;
+while(abs(sn)>eps){
+s=s+sn;
+sn=-sn*x**2/(n*(n+1));
+n=n+2;
+} write "s=",s," sin(x)=",sin(x),endl;
+write "n=",n;
+#
