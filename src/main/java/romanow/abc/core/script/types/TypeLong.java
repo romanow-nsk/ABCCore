@@ -3,37 +3,40 @@ package romanow.abc.core.script.types;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptRunTimeException;
 
-public class TypeBoolean extends TypeFace{
-    private boolean value;
-    public boolean getValue() {
-        return value; }
-    public TypeBoolean(boolean valid, boolean vv) {
+public class TypeLong extends TypeFace{
+    private long value;
+    public TypeLong(boolean valid, long vv) {
         super(valid);
         value = vv;
         }
-    public TypeBoolean(boolean word) {
+    public TypeLong(long word) {
         super(true);
         value = word;
         }
-    public TypeBoolean(TypeBoolean two) {
-        super(two);
-        value = two.value;
-        }
+    public TypeLong(TypeLong two) {
+        super(two); }
     @Override
     public int type() {
-        return ValuesBase.DTBoolean; }
+        return ValuesBase.DTLong; }
     @Override
     public String typeName() {
-        return "boolean"; }
+        return "long"; }
     @Override
     public String typeNameTitle() {
-        return "логическое"; }
+        return "длинное"; }
     @Override
     public int compare(TypeFace two) throws ScriptRunTimeException {
-        if (two.type()!=ValuesBase.DTBoolean)
-            throw new ScriptRunTimeException(ValuesBase.SREIllegalCompare,"Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
-        long vv = toLong() - two.toLong();
-        return vv==0 ? 0 :(vv<0 ? -1 : 1);
+        if (two.isIntType()){
+            long vv =  value-two.toLong();
+            if (vv==0) return 0;
+            return vv <0 ? -1 : 1;
+            }
+        if (two.isFloatType()){
+            double vv =  value-two.toDouble();
+            if (vv==0) return 0;
+            return vv <0 ? -1 : 1;
+            }
+        throw new ScriptRunTimeException(ValuesBase.SREIllegalCompare,"Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
         }
     @Override
     public String format(String fmtString) throws ScriptRunTimeException {
@@ -46,7 +49,7 @@ public class TypeBoolean extends TypeFace{
     @Override
     public void parse(String ss) throws ScriptRunTimeException {
         try {
-            value = Boolean.parseBoolean(ss);
+            value = Long.parseLong(ss);
             setValid(true);
             } catch (Exception ee){
                 setValid(false);
@@ -55,24 +58,24 @@ public class TypeBoolean extends TypeFace{
             }
     @Override
     public TypeFace clone() {
-        return new TypeBoolean(isValid(),value);
+        return new TypeLong(isValid(),value);
         }
 
     @Override
     public double toDouble() throws ScriptRunTimeException {
-        return value ? 1: 0;
+        return value;
         }
     @Override
     public void fromDouble(double val) throws ScriptRunTimeException {
-        value = val!=0;
+        value = (int)val;
         }
     @Override
     public long toLong() throws ScriptRunTimeException {
-        return value ? 1: 0;
+        return value;
         }
     @Override
     public void fromLong(long val) throws ScriptRunTimeException {
-        value = val!=0;
+        value =val;
         }
     @Override
     public String toString(){

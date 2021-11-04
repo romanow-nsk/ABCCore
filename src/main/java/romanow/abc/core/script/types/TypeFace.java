@@ -11,7 +11,7 @@ public abstract class TypeFace {
     abstract public String typeNameTitle();                                         // Имя ТД внешнее
     abstract public int compare(TypeFace two) throws ScriptRunTimeException;        // Сравнение
     abstract String format(String fmtString) throws ScriptRunTimeException;         // Форматированный ТД
-    abstract void  parse(String value) throws ScriptRunTimeException;               // Парсинг из строки, !=null - сообщение об ошибке
+    public abstract void  parse(String value) throws ScriptRunTimeException;               // Парсинг из строки, !=null - сообщение об ошибке
     abstract public TypeFace clone();                                               // Клонирование
     public TypeFace(TypeFace two){
         valid = two.valid;

@@ -5,9 +5,10 @@ import java.util.HashMap;
 
 //----------------------- Лексический анализатор ---------------------------------
 public class Scaner {
-    private StringBuffer is=new StringBuffer();
-    private char str[];
+    private ArrayList<String> lines = new ArrayList();
+    private String str;
     private int idx=0;
+    private int lineIdx=0;
     final private  int	TBL[][]= {            // Матрица переходов КА
             {0, 1, 2, 2, -11, -12, -16, 3, 4, -10, -13, -14, 5, -4, -15, 0, -19, -20, -21, 7},
             {-2, 1, -2, 1, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 6, -2, -2, -2, -2},
@@ -144,13 +145,15 @@ public class Scaner {
     boolean open(String nm) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(nm), "Windows-1251"));
-            is = new StringBuffer();
+            lines.clear();
             String ss;
             while ((ss=reader.readLine())!=null)
-                is.append(ss+" ");
+                lines.add(ss);
+            lines.add("#");
             reader.close();
-            str = is.toString().toCharArray();
             idx=0;
+            lineIdx=0;
+            str = lines.get(lineIdx);
             }   catch (Exception ee){ return false;}
     return true;
     }
@@ -161,7 +164,15 @@ Lexem get(){
     char cc;
     while (ST >= 0) {              // Пока не достигнуто конечное состояние
         if (ST == 0) s="";         // Накопление лексемы с 0-го состояния
-        cc = str[idx++];
+        if (idx>=str.length()){
+            idx=0;
+            lineIdx++;
+            str = lines.get(lineIdx);
+            }
+        if (idx<str.length())
+            cc = str.charAt(idx++);
+        else
+            cc=' ';
         s = s + cc;
         int CL = sclass(cc);
         int ST1 = TBL[ST][CL];
@@ -172,12 +183,15 @@ Lexem get(){
     int l = back[ST];              // длина лексемы  и кол-во возвращаемых литер
     idx-=l;
     Lexem lexem= finStates.get(ST);
-    Lexem L=new Lexem(lexem.type,s.substring(0, k - l));
+    String vv = s.substring(0, k - l);
+    Lexem L=new Lexem(lexem.type,vv);
     if (ST == 0) {
         Lexem keyword = keywords.get(L.value);
-        if (keyword!=null)
-            return keyword;
+        if (keyword!=null){
+            L = keyword.clone();
             }
+        }
+    L.setSrc(lineIdx,idx-vv.length(),str);
     return L;
     }
 int sclass(char c){
@@ -218,7 +232,7 @@ default:
         if (bb){
             do {
                 B = lex.get();
-                System.out.println(B.type+" "+B.value);
+                System.out.println(B);
             } while (B.type != '#');
         }
     }

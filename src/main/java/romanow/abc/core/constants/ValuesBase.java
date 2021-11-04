@@ -463,6 +463,8 @@ public class ValuesBase {
     public final static int OPushVar=20;
     @CONST(group = "Operation", title = "pop")
     public final static int OPop=21;
+    @CONST(group = "Operation", title = "pow")
+    public final static int OPow=22;
     //------------------- Типы ошибок ЯОП -----------------------------------------------------------------
     @CONST(group = "SEType", title = "Не определено")
     public final static int SETypeUndef=0;
@@ -499,6 +501,8 @@ public class ValuesBase {
     public final static int SREIllegalCompare=8;
     @CONST(group = "SRError", title = "Переменная не определена")
     public final static int SREIllegalVariable=9;
+    @CONST(group = "SRError", title = "Недопустимый ТД")
+    public final static int SREIllegalDT=10;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         ValuesBase.init();
