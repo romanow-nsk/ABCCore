@@ -63,6 +63,20 @@ public class ConstMap extends HashMap<String, ConstGroup>{
             });
         return list;
         }
+    public HashMap<Integer,ConstValue> getGroupMapByValue(String gName){
+        ConstList list = getValuesList(gName);
+        HashMap<Integer,ConstValue> map = new HashMap<>();
+        for(ConstValue cc : list)
+            map.put(cc.value(),cc);
+        return map;
+        }
+    public HashMap<String,ConstValue> getGroupMapByName(String gName){
+        ConstList list = getValuesList(gName);
+        HashMap<String,ConstValue> map = new HashMap<>();
+        for(ConstValue cc : list)
+            map.put(cc.name(),cc);
+        return map;
+        }
     public String toString(){
         String out = "";
         for(String gg : this.keySet())

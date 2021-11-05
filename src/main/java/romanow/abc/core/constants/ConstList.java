@@ -15,5 +15,5 @@ public class ConstList extends ArrayList<ConstValue>{
             if (cc.groupName().equals(fgroup))
                 out.add(cc);
         return out;
-    }
+        }
 }

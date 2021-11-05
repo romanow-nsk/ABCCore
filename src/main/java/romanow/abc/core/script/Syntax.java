@@ -1,10 +1,12 @@
 package romanow.abc.core.script;
+import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.operation.*;
 import romanow.abc.core.script.types.TypeDouble;
 import romanow.abc.core.script.types.TypeFace;
 import romanow.abc.core.script.types.TypeInt;
 import romanow.abc.core.script.types.TypeLong;
+import static romanow.abc.core.constants.ValuesBase.*;
 
 import java.io.*;
 import java.util.*;
@@ -13,8 +15,10 @@ public class Syntax{
     private Scaner lex;
     private ArrayList<CompileError> errorList = new ArrayList<>();
     private VariableList variables = new VariableList();
+    private HashMap<Integer, ConstValue> errorsMap;
     public Syntax(Scaner lex0) {
         lex = lex0;
+        errorsMap = ValuesBase.constMap.getGroupMapByValue("SCError");
         }
     /*---------------------------------------- Грамматика
     Z::= S#
@@ -54,8 +58,19 @@ public class Syntax{
     void sget(){
         LX=lex.get();
         }
+    void error(int code){
+        error(code,"");
+        }
     void error(int code, String str){
-        errorList.add(new CompileError(code, ValuesBase.SEModeInfo,LX,str));
+        ConstValue cc = errorsMap.get(code);
+        if (cc==null){
+            if (code!=SCENoCode)
+                error(SCENoCode);
+            errorList.add(new CompileError(code, SEModeInfo,LX,str));
+            }
+        else {
+            errorList.add(new CompileError(code, SEModeInfo, LX, cc.title()+": "+str));
+            }
         sget();
         }
 //-------------------------------------------------------------
@@ -63,7 +78,7 @@ public class Syntax{
     FunctionCode Z(){
         FunctionCode own;
         own=S();
-        if (LX.type!='#') error(1,"Не найден конец текста");
+        if (LX.type!='#') error(SCENoEOF);
         return own; }
 //-------------------------------------------------------------
 //S::=  O | S;O
@@ -80,12 +95,12 @@ public class Syntax{
         sget();
         while (true){
             if (LX.type!='a'){
-                error(15,"Не найдена переменная в списке "+LX.value);
+                error(SCENoVarName,LX.value);
                 return own;
                 }
             TypeFace ff = proto.clone();
             if (variables.get(LX.value)!=null){
-                error(16,"Повторное определение переменной "+LX.value);
+                error(SCEVarMultiply,LX.value);
                 return own;
                 }
             variables.add(LX.value,ff);
@@ -104,7 +119,7 @@ public class Syntax{
                 return own;
                 }
             else{
-                error(17,"Ошибка списка переменных: "+LX.value);
+                error(SCEVarListFormat,LX.value);
                 }
             }
         }
@@ -122,14 +137,14 @@ public class Syntax{
     case 'a':
             TypeFace var = variables.get(LX.value);
             if (var==null){
-                error(2,"Не найдена переменная "+LX.value);
+                error(SCEVarNotDef,LX.value);
                 return own;
                 }
             sget();
-            if (LX.type!='=') error(3,"Пропущен =");
+            if (LX.type!='=') error(SCELexemLost,"=");
             else sget();
             own=E();
-            if (LX.type!=';') error(4,"Пропущен ;");
+            if (LX.type!=';') error(SCELexemLost,";");
             sget();
             // TODO ---------------------------- SET
             //own.+="SAVE "+k+"\n";
@@ -141,33 +156,33 @@ public class Syntax{
             sget();
             break;
     case 'l': sget();
-            if (LX.type!='(') error(5,"Пропущен (");
+            if (LX.type!='(') error(SCELexemLost,"(");
             sget();
             own1=L();
             i1=own1.size();
-            if (LX.type!=')') error(6,"Пропущен )");
+            if (LX.type!=')') error(SCELexemLost,")");
             sget();
             own2=O();
             i2=own2.size();
             own.add(own1).addOne(new OperationJmpFalse(i2+1)).add(own2).addOne(new OperationJmp(-i1-i2-2));
             break;
     case 'w': sget();
-            if (LX.type!='(') error(5,"Пропущен (");
+            if (LX.type!='(') error(SCELexemLost,"(");
             sget();
             own1=L();
             i1=own1.size();
-            if (LX.type!=')') error(6,"Пропущен )");
+            if (LX.type!=')') error(SCELexemLost,")");
             sget();
             own2=O();
             i2=own2.size();
             own.add(own1).addOne(new OperationJmpFalse(i2 + 1)).add(own2).addOne(new OperationJmp(-(i2+i1+1)));
             break;
     case 'i': sget();
-            if (LX.type!='(') error(5,"Пропущен (");
+            if (LX.type!='(') error(SCELexemLost,"(");
             sget();
             own1=L();
             i1=own1.size();
-            if (LX.type!=')') error(6,"Пропущен )");
+            if (LX.type!=')') error(SCELexemLost,")");
             sget();
             own2=O();
             i2=own2.size();
@@ -181,7 +196,7 @@ public class Syntax{
                 own.add(own1).addOne(new OperationJmpFalse(i2 + 1)).add(own2).addOne(new OperationJmp(i3)).add(own3);
                 }
            break;
-    default:error(2,"Недопустимый оператор");
+    default:error(SCEIllegalOperator,LX.value);
             break;
             }
     return own; }
@@ -224,7 +239,7 @@ public class Syntax{
         if (LX.type=='('){
             sget();
             own=L();
-            if (LX.type!=')') error(6,"Пропущен )");
+            if (LX.type!=')') error(SCELexemLost,")");
             sget();
             }
         else{
@@ -237,7 +252,7 @@ public class Syntax{
         case '>': operation = new OperationGT(); break;
         case 'g': operation = new OperationGE(); break;
         case 'l': operation = new OperationLE(); break;
-        default:  error(9,"Неправильное условие");
+        default:  error(SCEIllegalCondition,LX.value);
                     return own;
                 }
         sget();
@@ -299,7 +314,7 @@ public class Syntax{
                if (LX.type=='('){
                    sget();
                    own=E();
-                   if (LX.type!=')') error(6,"Пропущен )");
+                   if (LX.type!=')') error(SCELexemLost,")");
                    sget();
                    //-----------------TODO CALL ----------------------------------
                    //own+="CALL "+name+"\n";
@@ -307,7 +322,7 @@ public class Syntax{
                else{
                    TypeFace var = variables.get(name);
                    if (var==null)
-                        error(14,"Не найдена переменная "+name);
+                        error(SCEVarNotDef,name);
                    else
                         own.addOne(new OperationPush(var.clone()));
                    }
@@ -318,17 +333,17 @@ public class Syntax{
                    vv.parse(LX.value);
                    own.addOne(new OperationPush(vv));
                    } catch (ScriptRunTimeException ee){
-                       error(12,"Формат константы: "+LX.value);
+                       error(SCEConstFormat,LX.value);
                         }
                     }
                sget();
                break;
     case '(':  sget();
                own=E();
-               if (LX.type!=')') error(6,"Пропущен )");
+               if (LX.type!=')') error(SCELexemLost,")");
                sget();
                break;
-    default: error(10,"Недопустимый терм"); lex.get(); break;
+    default: error(SCEIllegalSyntax,LX.value); lex.get(); break;
              }
     if (minus) {
         FunctionCode xx = new FunctionCode();
@@ -343,6 +358,7 @@ public class Syntax{
        }
 //-----------------------------------
 public static void main(String[] args) throws ScriptException {
+    ValuesBase.init();
     Scaner lex = new Scaner();
     boolean bb=lex.open("Input01.txt");
     Syntax SS=new Syntax(lex);
@@ -352,7 +368,9 @@ public static void main(String[] args) throws ScriptException {
     for(CompileError error : SS.errorList)
         System.out.println(error);
     System.out.println(SS.variables);
-    CallContext context = new CallContext(ff,SS.variables);
-    context.call(true);
+    if (SS.errorList.size()==0){
+        CallContext context = new CallContext(ff,SS.variables);
+        context.call(true);
+        }
    }
 }

@@ -482,7 +482,7 @@ public class ValuesBase {
     public final static int SEModeError=2;
     @CONST(group = "SEMode", title = "Крах")
     public final static int SEModeFatal=3;
-    //------------------------ Коды ошибок -------------------------------------------------------------
+    //------------------------ Коды ошибок runtime ---------------------------------------------------------
     @CONST(group = "SRError", title = "Переполнение стека")
     public final static int SREStackOver=1;
     @CONST(group = "SRError", title = "Стек пуст")
@@ -503,6 +503,29 @@ public class ValuesBase {
     public final static int SREIllegalVariable=9;
     @CONST(group = "SRError", title = "Недопустимый ТД")
     public final static int SREIllegalDT=10;
+    //--------------------------Коды ошибок компиляции ----------------------------------------------------
+    @CONST(group = "SCError", title = "Недопустимый код ошибки")
+    public final static int SCENoCode=0;
+    @CONST(group = "SCError", title = "Не найден конец текста")
+    public final static int SCENoEOF=1;
+    @CONST(group = "SCError", title = "Пропущего имя переменной ")
+    public final static int SCENoVarName=2;
+    @CONST(group = "SCError", title = "Переменная не определена")
+    public final static int SCEVarNotDef=3;
+    @CONST(group = "SCError", title = "Повторное определение переменной")
+    public final static int SCEVarMultiply=4;
+    @CONST(group = "SCError", title = "Ошибка списка переменных")
+    public final static int SCEVarListFormat=5;
+    @CONST(group = "SCError", title = "Не найден символ")
+    public final static int SCELexemLost=6;
+    @CONST(group = "SCError", title = "Недопустимый оператор")
+    public final static int SCEIllegalOperator=7;
+    @CONST(group = "SCError", title = "Недопустимое условие")
+    public final static int SCEIllegalCondition=8;
+    @CONST(group = "SCError", title = "Формат константы")
+    public final static int SCEConstFormat=9;
+    @CONST(group = "SCError", title = "Синтаксическая ошибка")
+    public final static int SCEIllegalSyntax=10;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         ValuesBase.init();
