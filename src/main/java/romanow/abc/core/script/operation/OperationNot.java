@@ -26,7 +26,7 @@ public class OperationNot extends Operation{
             stack.push(res);
             return;
             }
-        throw new ScriptRunTimeException(ValuesBase.SREIllegalOperation, "Операция " + this.name + " " + one.typeName() + " " + two.typeName());
+        throwException(context,ValuesBase.SREIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
         }
 
     @Override

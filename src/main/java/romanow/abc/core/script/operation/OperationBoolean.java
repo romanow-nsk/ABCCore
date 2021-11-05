@@ -5,9 +5,8 @@ import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
 import romanow.abc.core.script.ScriptRunTimeException;
 import romanow.abc.core.script.types.TypeBoolean;
-import romanow.abc.core.script.types.TypeDouble;
 import romanow.abc.core.script.types.TypeFace;
-import romanow.abc.core.script.types.TypeLong;
+
 
 public abstract class OperationBoolean extends Operation{
     public OperationBoolean(int code, String name) {
@@ -30,6 +29,6 @@ public abstract class OperationBoolean extends Operation{
             stack.push(res);
             return;
             }
-        throw new ScriptRunTimeException(ValuesBase.SREIllegalOperation, "Операция " + this.name + " " + one.typeName() + " " + two.typeName());
+        throwException(context,ValuesBase.SREIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
         }
 }

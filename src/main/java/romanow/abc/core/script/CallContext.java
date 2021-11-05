@@ -1,14 +1,18 @@
 package romanow.abc.core.script;
 
+import romanow.abc.core.constants.ConstValue;
+import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.operation.*;
 import romanow.abc.core.script.types.TypeInt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CallContext {
     public final FunctionCode code;
     private OperationStack stack = new OperationStack();
     private VariableList variables = new VariableList();
+    private HashMap<Integer, ConstValue> errorsMap;
     private int ip=0;
     public int getIP() {
         return ip; }
@@ -19,6 +23,7 @@ public class CallContext {
         }
     public void reset(){ ip=0; }
     public CallContext(FunctionCode code,VariableList list) {
+        errorsMap = ValuesBase.constMap.getGroupMapByValue("SRError");
         this.code = code;
         variables = list;
         reset();
@@ -49,6 +54,8 @@ public class CallContext {
         return variables; }
     public int getIp() {
         return ip; }
+    public HashMap<Integer, ConstValue> getErrorsMap() {
+        return errorsMap; }
 
     public static void main(String ss[]) throws ScriptException {
         FunctionCode code = new FunctionCode();

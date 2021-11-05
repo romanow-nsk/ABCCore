@@ -40,6 +40,6 @@ public abstract class OperationCompare extends Operation{
             stack.push(res2);
             return;
             }
-        throw new ScriptRunTimeException(ValuesBase.SREIllegalOperation, "Операция " + this.name + " " + one.typeName() + " " + two.typeName());
+        throwException(context,ValuesBase.SREIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
         }
 }

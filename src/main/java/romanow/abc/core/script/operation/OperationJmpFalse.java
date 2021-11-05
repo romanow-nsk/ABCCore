@@ -18,7 +18,7 @@ public class OperationJmpFalse extends Operation{
         if (trace) setTrace(toString());
         TypeFace cond = stack.pop();
         if (cond.type()!=ValuesBase.DTBoolean)
-            throw new ScriptRunTimeException(ValuesBase.SREIllegalDT, "Недопустимый ТД  " + this.name + " " + cond.typeName());
+            throwException(context,ValuesBase.SREIllegalDT, "Недопустимый ТД  " + this.name + " " + cond.typeName());
         if (((TypeBoolean)cond).getValue()==false)
             context.jump(offset);
         }

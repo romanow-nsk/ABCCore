@@ -483,6 +483,8 @@ public class ValuesBase {
     @CONST(group = "SEMode", title = "Крах")
     public final static int SEModeFatal=3;
     //------------------------ Коды ошибок runtime ---------------------------------------------------------
+    @CONST(group = "SRError", title = "Недопустимый код ошибки")
+    public final static int SRENoCode=0;
     @CONST(group = "SRError", title = "Переполнение стека")
     public final static int SREStackOver=1;
     @CONST(group = "SRError", title = "Стек пуст")

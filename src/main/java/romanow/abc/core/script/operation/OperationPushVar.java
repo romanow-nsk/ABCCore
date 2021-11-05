@@ -16,7 +16,7 @@ public class OperationPushVar extends Operation{
     public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptRunTimeException {
         TypeFace var = context.getVariables().get(varName);
         if (var==null)
-            throw  new ScriptRunTimeException(ValuesBase.SREIllegalVariable,"Переменнная не определена: "+varName);
+            throwException(context,ValuesBase.SREIllegalVariable,varName);
         stack.push(var);
         }
     @Override

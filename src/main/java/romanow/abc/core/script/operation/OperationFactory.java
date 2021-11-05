@@ -17,8 +17,24 @@ public class OperationFactory extends ArrayList<Operation> {
         addToMaps(new OperationNOP());
         addToMaps(new OperationJmp(0));
         addToMaps(new OperationPush(null));
+        addToMaps(new OperationPushVar(null));
         addToMaps(new OperationAdd());
-        }
+        addToMaps(new OperationSub());
+        addToMaps(new OperationMul());
+        addToMaps(new OperationDiv());
+        addToMaps(new OperationJmpFalse(0));
+        addToMaps(new OperationJmpTrue(0));
+        addToMaps(new OperationEQ());
+        addToMaps(new OperationNE());
+        addToMaps(new OperationLE());
+        addToMaps(new OperationLT());
+        addToMaps(new OperationGE());
+        addToMaps(new OperationGT());
+        addToMaps(new OperationAnd());
+        addToMaps(new OperationOr());
+        addToMaps(new OperationNot());
+        addToMaps(new OperationPow());
+    }
     public  Operation getByCode(int code) throws ScriptCompileException {
         Operation operation = mapCode.get(code);
         if (operation==null)

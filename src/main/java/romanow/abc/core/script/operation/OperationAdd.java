@@ -1,12 +1,7 @@
 package romanow.abc.core.script.operation;
 
 import romanow.abc.core.constants.ValuesBase;
-import romanow.abc.core.script.CallContext;
-import romanow.abc.core.script.OperationStack;
-import romanow.abc.core.script.ScriptRunTimeException;
-import romanow.abc.core.script.types.TypeDouble;
-import romanow.abc.core.script.types.TypeFace;
-import romanow.abc.core.script.types.TypeInt;
+
 
 public class OperationAdd extends OperationBinary{
     public OperationAdd() {
