@@ -15,9 +15,8 @@ public class OperationNot extends Operation{
     public void exec(OperationStack stack, CallContext context, boolean trace) throws ScriptException {
         String out="";
         TypeFace one = stack.pop();
-        TypeFace two = stack.pop();
         if (trace)
-            out = toString()+" "+one+" "+two;
+            out = toString()+" "+one;
         if (one.type()==ValuesBase.DTBoolean){
             boolean vv1 = ((TypeBoolean)one).getValue();
             TypeBoolean res = new TypeBoolean(!vv1);
@@ -26,7 +25,7 @@ public class OperationNot extends Operation{
             stack.push(res);
             return;
             }
-        throwException(context,ValuesBase.SEIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
+        throwException(context,ValuesBase.SEIllegalOperation, this.name + " " + one.typeName());
         }
 
     @Override

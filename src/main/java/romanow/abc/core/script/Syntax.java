@@ -269,7 +269,7 @@ public class Syntax{
                 return own;
                 }
             }
-        if (cnt==0) return own;
+        if (cnt%2==0) return own;
         return own.addOne(new OperationNot());
         }
 //-------------------------------------------------------------
@@ -287,7 +287,6 @@ public class Syntax{
             }
         else{
             own=E();
-            boolean bb1 = own.getResultType()== DTBoolean;
             Operation operation;
             switch(LX.type){
         case '<': operation = new OperationLT(); break;			// Команда проверки условия
@@ -296,11 +295,7 @@ public class Syntax{
         case '>': operation = new OperationGT(); break;
         case 'g': operation = new OperationGE(); break;
         case 'l': operation = new OperationLE(); break;
-        default:
-                if (!bb1)                                        // Одиночный булевский
-                    return own;
-                error(SEIllegalCondition,LX.value);
-                return own;
+        default:    return own;
                 }
         sget();
         own1=E();
@@ -318,6 +313,7 @@ public class Syntax{
         FunctionCode own,own1,op;
         own=T();
         while(LX.type=='+' || LX.type=='-') {
+            char cc = LX.type;
             sget();
             own1=T();
             if (!own.isResultNumetic()){
@@ -325,7 +321,7 @@ public class Syntax{
                 }
             if (!convertResultTypes(own,own1))
                 return own;
-            own.add(own1).addOne(LX.type=='+' ? new OperationAdd() : new OperationSub());
+            own.add(own1).addOne(cc=='+' ? new OperationAdd() : new OperationSub());
             }
         return own;
         }
@@ -349,11 +345,12 @@ public class Syntax{
         FunctionCode own,own1,op;
         own=G();
         while(LX.type=='*' || LX.type=='/') {
+            char cc = LX.type;
             sget();
             own1=G();
             if (!convertResultTypes(own,own1))
                 return own;
-            own.add(own1).addOne(LX.type=='*' ? new OperationMul() : new OperationDiv());
+            own.add(own1).addOne(cc=='*' ? new OperationMul() : new OperationDiv());
             }
     return own; }
 //-------------------------------------------------------------
