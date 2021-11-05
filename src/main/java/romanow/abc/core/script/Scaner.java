@@ -13,86 +13,91 @@ public class Scaner {
     private int idx=0;
     private int lineIdx=0;
     final private  int	TBL[][]= {            // Матрица переходов КА
-            {0, 1, 2, 2, -11, -12, -16, 3, 4, -10, -13, -14, 5, -4, -15, 0, -19, -20, -21, 7},
-            {-2, 1, -2, 1, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 6, -2, -2, -2, -2},
-            {-1, 2, 2, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-            {-5, -5, -5, -5, -5, -5, -7, -5, -17, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5},
-            {-6, -6, -6, -6, -6, -6, -8, -6, -6, -6, -6, -6, -6, -6, -6, -6, -6, -6, -6, -6},
-            {-9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -18, -9, -9, -9, -9, -9, -9, -9},
-            {-2, 6, -2, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8},
-            {-22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, 7}
+            { -100, 0, 1, 2, 2, -11, -12, -16, 3, 4, -10, -13, -14, 5, -4, -15, 0, -19, -20, -21, 7},
+            {-2,-2, 1, -2, 1, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 6, -2, -2, -2, -2},
+            {-1,-1, 2, 2, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-5,-5,-5, -5, -5, -5, -5, -7, -5, -17, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5, -5},
+            {-6,-6,-6, -6, -6, -6, -6, -8, -6, -6, -6, -6, -6, -6, -6, -6, -6, -6, -6, -6, -6},
+            {-9,-9,-9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -18, -9, -9, -9, -9, -9, -9, -9},
+            {-2,-2, 6, -2, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            { 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8},
+            {-22,-22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, -22, 7}
             };
+    //          0 1 2 3 4 5 6 7 8 9 10  12  14  16  18  20  22
+    int back[]={0,1,1,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1};
     final private HashMap<Character,Lexem> lexems=new HashMap<>();
     final private HashMap<String,Lexem> keywords=new HashMap<>();
     final private ArrayList<Lexem> finStates = new ArrayList<>();
     public Scaner(){
         Lexem lexem;
+        lexem = new Lexem('z',"illegal");
+        finStates.add(lexem);       //0
+        lexems.put(lexem.type,lexem);
         lexem = new Lexem('a',"ident");
-        finStates.add(lexem);
+        finStates.add(lexem);       //1
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('c',"const");
-        finStates.add(lexem);
+        finStates.add(lexem);       //2
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('?',"comment");
-        finStates.add(lexem);
+        finStates.add(lexem);       //3
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('/',"/");
-        finStates.add(lexem);
+        finStates.add(lexem);       //4
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('<',"<");
-        finStates.add(lexem);
+        finStates.add(lexem);       //5
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('>',">");
-        finStates.add(lexem);
+        finStates.add(lexem);       //6
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('l',"<=");
-        finStates.add(lexem);
+        finStates.add(lexem);       //7
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('g',">=");
-        finStates.add(lexem);
+        finStates.add(lexem);       //8
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('*',"*");
-        finStates.add(lexem);
+        finStates.add(lexem);       //9
         lexems.put(lexem.type,lexem);
         lexem = new Lexem(';',";");
-        finStates.add(lexem);
+        finStates.add(lexem);       //10
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('(',"(");
-        finStates.add(lexem);
+        finStates.add(lexem);       //11
         lexems.put(lexem.type,lexem);
         lexem = new Lexem(')',")");
-        finStates.add(lexem);
+        finStates.add(lexem);       //12
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('+',"+");
-        finStates.add(lexem);
+        finStates.add(lexem);       //13
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('-',"-");
-        finStates.add(lexem);
+        finStates.add(lexem);       //14
         lexems.put(lexem.type,lexem);
         lexem = new  Lexem('#',"EOF");
-        finStates.add(lexem);
+        finStates.add(lexem);       //15
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('=',"=");
-        finStates.add(lexem);
+        finStates.add(lexem);       //16
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('n',"<>");
-        finStates.add(lexem);
+        finStates.add(lexem);       //17
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('p',"**");
-        finStates.add(lexem);
+        finStates.add(lexem);       //18
         lexems.put(lexem.type,lexem);
         lexem = new Lexem(',',",");
-        finStates.add(lexem);
+        finStates.add(lexem);       //19
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('{',"{");
-        finStates.add(lexem);
+        finStates.add(lexem);       //20
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('}',"}");
-        finStates.add(lexem);
+        finStates.add(lexem);       //21
         lexems.put(lexem.type,lexem);
         lexem = new Lexem('s',"string");
-        finStates.add(lexem);
+        finStates.add(lexem);       //22
         lexems.put(lexem.type,lexem);
         //-------------------- Ключевые слова -----------------------------------
         lexem = new Lexem('U',"if");
@@ -144,8 +149,6 @@ public class Scaner {
         lexems.put(lexem.type,lexem);
         keywords.put(lexem.value,lexem);
         }
-    int back[]=		        // Кол-во возвращаемых литер для конечных состояний
-        {1,1,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1};
     boolean open(String nm) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(nm), "Windows-1251"));
@@ -164,10 +167,10 @@ public class Scaner {
 
 Lexem get(){
     String s="";
-    int ST = 0;
+    int st = 0;
     char cc;
-    while (ST >= 0) {              // Пока не достигнуто конечное состояние
-        if (ST == 0) s="";         // Накопление лексемы с 0-го состояния
+    while (st >= 0) {              // Пока не достигнуто конечное состояние
+        if (st == 0) s="";         // Накопление лексемы с 0-го состояния
         if (idx>=str.length()){
             idx=0;
             lineIdx++;
@@ -181,53 +184,56 @@ Lexem get(){
         else
             cc=' ';
         s = s + cc;
-        int CL = sclass(cc);
-        int ST1 = TBL[ST][CL];
-        ST = ST1;
+        int cl = sclass(cc);
+        int st1 = TBL[st][cl];
+        st = st1;
         }
-    ST = -ST - 1;                  // Преобразовать номер конечного в индекс
+    st = -st;                       // Преобразовать номер конечного в индекс
+    if (st==100) st=0;
     int k = s.length();
-    int l = back[ST];              // длина лексемы  и кол-во возвращаемых литер
+    int l = back[st];              // длина лексемы  и кол-во возвращаемых литер
     idx-=l;
-    Lexem lexem= finStates.get(ST);
+    Lexem lexem= finStates.get(st);
     String vv = s.substring(0, k - l);
-    Lexem L=new Lexem(lexem.type,vv);
-    if (ST == 0) {
-        Lexem keyword = keywords.get(L.value);
+    Lexem two=new Lexem(lexem.type,vv);
+    if (st == 1) {
+        Lexem keyword = keywords.get(two.value);
         if (keyword!=null){
-            L = keyword.clone();
+            two = keyword.clone();
             }
         }
-    L.setSrc(lineIdx,idx-vv.length(),str);
-    return L;
+    two.setSrc(lineIdx,idx-vv.length(),str);
+    return two;
     }
 int sclass(char c){
     switch (c)
         {
-case '(': return 4;
-case ')': return 5;
-case '=': return 6;
-case '<': return 7;
-case '>': return 8;
-case ';': return 9;
-case '+': return 10;
-case '-': return 11;
-case '*': return 12;
-case '/': return 13;
-case '#': return 14;
-case '.': return 15;
-case ',': return 16;
-case '{': return 17;
-case '}': return 18;
-case '\"': return 19;
+case '(': return 5;
+case ')': return 6;
+case '=': return 7;
+case '<': return 8;
+case '>': return 9;
+case ';': return 10;
+case '+': return 11;
+case '-': return 12;
+case '*': return 13;
+case '/': return 14;
+case '#': return 15;
+case '.': return 16;
+case ',': return 17;
+case '{': return 18;
+case '}': return 19;
+case '\"': return 20;
 default:
-        if (c>='A' && c<='F') return 3;
-        if (c>='a' && c<='f') return 3;
-        if (c>='0' && c<='9') return 1;
-        if (c>='A' && c<='Z') return 2;
-        if (c>='a' && c<='z') return 2;
-        if (c>='а' && c<='я') return 2;
-        if (c>='А' && c<='Я') return 2;
+        if (c>='A' && c<='F') return 4;
+        if (c>='a' && c<='f') return 4;
+        if (c>='0' && c<='9') return 2;
+        if (c>='A' && c<='Z') return 3;
+        if (c>='a' && c<='z') return 3;
+        if (c>='а' && c<='я') return 3;
+        if (c>='А' && c<='Я') return 3;
+        if (c==' ' || c=='\t')
+            return 1;
         return 0;
         }
 }
