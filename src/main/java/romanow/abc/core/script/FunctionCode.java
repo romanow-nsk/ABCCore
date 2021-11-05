@@ -22,8 +22,33 @@ public class FunctionCode extends ArrayList<Operation> {
         }
     public String toString(){
         String out="";
-        for(Operation oo : this)
-            out+=oo.toString()+"\n";
+        for(int i=0;i<size();i++){
+            out+=""+i+": "+get(i).toString()+"\n";
+            }
         return out;
         }
+    public boolean isResultFloat(){
+        return resultType==ValuesBase.DTFloat || resultType==ValuesBase.DTDouble;
+        }
+    public boolean isResultInt(){
+        return resultType==ValuesBase.DTShort || resultType==ValuesBase.DTInt || resultType==ValuesBase.DTLong;
+        }
+    public boolean isResultNumetic(){
+        return isResultFloat() || isResultInt();
+        }
+    public void convertResultTypes(FunctionCode two,boolean onlyNumeric) throws ScriptException {
+        if (getResultType()==ValuesBase.DTBoolean){
+            if (two.getResultType()!=ValuesBase.DTBoolean || onlyNumeric)
+                throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации boolean");
+            }
+        else
+        if (isResultNumetic() && two.isResultNumetic()){
+            if (isResultFloat() || two.isResultFloat())
+                setResultType(ValuesBase.DTDouble);
+            else
+                setResultType(ValuesBase.DTLong);
+            }
+        else
+            throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации остатков "+getResultType()+"/"+two.getResultType());
+    }
 }

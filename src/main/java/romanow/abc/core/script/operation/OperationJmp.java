@@ -3,7 +3,7 @@ package romanow.abc.core.script.operation;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
-import romanow.abc.core.script.ScriptRunTimeException;
+import romanow.abc.core.script.ScriptException;
 import romanow.abc.core.script.types.TypeFace;
 import romanow.abc.core.script.types.TypeVoid;
 
@@ -14,7 +14,7 @@ public class OperationJmp extends Operation{
         offset=ff;
         }
     @Override
-    public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptRunTimeException {
+    public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptException {
         if (trace) setTrace(toString());
         context.jump(offset);
         }

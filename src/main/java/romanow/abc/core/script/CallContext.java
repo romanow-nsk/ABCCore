@@ -23,7 +23,7 @@ public class CallContext {
         }
     public void reset(){ ip=0; }
     public CallContext(FunctionCode code,VariableList list) {
-        errorsMap = ValuesBase.constMap.getGroupMapByValue("SRError");
+        errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
         this.code = code;
         variables = list;
         reset();
@@ -38,10 +38,14 @@ public class CallContext {
             try {
                 operation.exec(stack,this,trace);
                 if (trace){
-                    System.out.println(operation.getTrace());
+                    System.out.println("-----------------------------------");
+                    String ss = operation.getTrace();
+                    if (ss.length()!=0)
+                        System.out.println(ss);
+                    System.out.println(variables);
                     System.out.println(stack);
                     }
-                } catch (ScriptRunTimeException e) {
+                } catch (ScriptException e) {
                     throw e.clone(mes);
                 }
             }

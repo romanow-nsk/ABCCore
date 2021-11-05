@@ -2,13 +2,10 @@ package romanow.abc.core.script;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.operation.*;
-import romanow.abc.core.script.types.TypeDouble;
-import romanow.abc.core.script.types.TypeFace;
-import romanow.abc.core.script.types.TypeInt;
-import romanow.abc.core.script.types.TypeLong;
+import romanow.abc.core.script.types.*;
+
 import static romanow.abc.core.constants.ValuesBase.*;
 
-import java.io.*;
 import java.util.*;
 
 public class Syntax{
@@ -16,9 +13,12 @@ public class Syntax{
     private ArrayList<CompileError> errorList = new ArrayList<>();
     private VariableList variables = new VariableList();
     private HashMap<Integer, ConstValue> errorsMap;
+    private HashMap<Integer, ConstValue> typesMap;
+    private TypeFactory typeFaces = new TypeFactory();
     public Syntax(Scaner lex0) {
         lex = lex0;
-        errorsMap = ValuesBase.constMap.getGroupMapByValue("SCError");
+        errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
+        typesMap = ValuesBase.constMap.getGroupMapByValue("DType");
         }
     /*---------------------------------------- Грамматика
     Z::= S#
@@ -58,14 +58,17 @@ public class Syntax{
     void sget(){
         LX=lex.get();
         }
+    void error(ScriptException ex){
+        error(ex.code,ex.getMessage());
+        }
     void error(int code){
         error(code,"");
         }
     void error(int code, String str){
         ConstValue cc = errorsMap.get(code);
         if (cc==null){
-            if (code!=SCENoCode)
-                error(SCENoCode);
+            if (code!=SENoCode)
+                error(SENoCode);
             errorList.add(new CompileError(code, SEModeInfo,LX,str));
             }
         else {
@@ -78,7 +81,7 @@ public class Syntax{
     FunctionCode Z(){
         FunctionCode own;
         own=S();
-        if (LX.type!='#') error(SCENoEOF);
+        if (LX.type!='#') error(SENoEOF);
         return own; }
 //-------------------------------------------------------------
 //S::=  O | S;O
@@ -92,15 +95,16 @@ public class Syntax{
 //  X::= пусто | eO
     private FunctionCode createVarList(TypeFace proto){
         FunctionCode own = new FunctionCode();
+        own.setResultType(proto.type());
         sget();
         while (true){
             if (LX.type!='a'){
-                error(SCENoVarName,LX.value);
+                error(SENoVarName,LX.value);
                 return own;
                 }
             TypeFace ff = proto.clone();
             if (variables.get(LX.value)!=null){
-                error(SCEVarMultiply,LX.value);
+                error(SEVarMultiply,LX.value);
                 return own;
                 }
             variables.add(LX.value,ff);
@@ -109,7 +113,14 @@ public class Syntax{
                 return own;
             if (LX.type=='='){
                 sget();
-                own.add(E());
+                FunctionCode own1 = L();
+                own.add(own1);
+                try {
+                    ff.setValue(false,typeFaces.getByCode(own.getResultType()));
+                    own.addOne(new OperationSave(ff.getVarName()));
+                    } catch (ScriptException e) {
+                    error(e);
+                    }
                 }
             if (LX.type==','){
                 sget();
@@ -119,7 +130,7 @@ public class Syntax{
                 return own;
                 }
             else{
-                error(SCEVarListFormat,LX.value);
+                error(SEVarListFormat,LX.value);
                 }
             }
         }
@@ -131,23 +142,42 @@ public class Syntax{
     case 'I':
             own = createVarList(new TypeInt(0));
             break;
+    case 'S':
+            own = createVarList(new TypeShort((short) 0));
+            break;
+    case 'L':
+            own = createVarList(new TypeLong(0));
+            break;
     case 'D':
             own = createVarList(new TypeDouble(0));
+            break;
+    case 'R':
+            own = createVarList(new TypeFloat(0));
+            break;
+    case 'B':
+            own = createVarList(new TypeBoolean(false));
+            break;
+    case 'V':
+            own = createVarList(new TypeVoid());
             break;
     case 'a':
             TypeFace var = variables.get(LX.value);
             if (var==null){
-                error(SCEVarNotDef,LX.value);
+                error(SEVarNotDef,LX.value);
                 return own;
                 }
             sget();
-            if (LX.type!='=') error(SCELexemLost,"=");
+            if (LX.type!='=') error(SELexemLost,"=");
             else sget();
-            own=E();
-            if (LX.type!=';') error(SCELexemLost,";");
+            own=L();
+            if (LX.type!=';') error(SELexemLost,";");
             sget();
-            // TODO ---------------------------- SET
-            //own.+="SAVE "+k+"\n";
+            try {
+                var.setValue(false,typeFaces.getByCode(own.getResultType()));
+                own.addOne(new OperationSave(var.getVarName()));
+                } catch (ScriptException e) {
+                    error(e);
+                    }
             break;
     case ';': sget();
             break;
@@ -155,38 +185,27 @@ public class Syntax{
             while(LX.type!='}') own.add(O());
             sget();
             break;
-    case 'l': sget();
-            if (LX.type!='(') error(SCELexemLost,"(");
+    case 'W': sget();
+            if (LX.type!='(') error(SELexemLost,"(");
             sget();
             own1=L();
             i1=own1.size();
-            if (LX.type!=')') error(SCELexemLost,")");
+            if (LX.type!=')') error(SELexemLost,")");
             sget();
             own2=O();
             i2=own2.size();
-            own.add(own1).addOne(new OperationJmpFalse(i2+1)).add(own2).addOne(new OperationJmp(-i1-i2-2));
+            own.add(own1).addOne(new OperationJmpFalse(i2 + 1)).add(own2).addOne(new OperationJmp(-(i2+i1+2)));
             break;
-    case 'w': sget();
-            if (LX.type!='(') error(SCELexemLost,"(");
+    case 'U': sget();
+            if (LX.type!='(') error(SELexemLost,"(");
             sget();
             own1=L();
             i1=own1.size();
-            if (LX.type!=')') error(SCELexemLost,")");
+            if (LX.type!=')') error(SELexemLost,")");
             sget();
             own2=O();
             i2=own2.size();
-            own.add(own1).addOne(new OperationJmpFalse(i2 + 1)).add(own2).addOne(new OperationJmp(-(i2+i1+1)));
-            break;
-    case 'i': sget();
-            if (LX.type!='(') error(SCELexemLost,"(");
-            sget();
-            own1=L();
-            i1=own1.size();
-            if (LX.type!=')') error(SCELexemLost,")");
-            sget();
-            own2=O();
-            i2=own2.size();
-            if (LX.type!='e') {
+            if (LX.type!='E') {
                 own.add(own1).addOne(new OperationJmpFalse(i2)).add(own2);
                 }
             else{
@@ -196,10 +215,20 @@ public class Syntax{
                 own.add(own1).addOne(new OperationJmpFalse(i2 + 1)).add(own2).addOne(new OperationJmp(i3)).add(own3);
                 }
            break;
-    default:error(SCEIllegalOperator,LX.value);
+    default:error(SEIllegalOperator,LX.value);
             break;
             }
     return own; }
+//---------------------------------------------------------------
+    private boolean testExprType(FunctionCode own,int type){
+        int tt = own.getResultType();
+        if (tt!=type){
+            String tname = typesMap.get(tt).name();
+            error(SEIllegalExprDT,own.getResultType()+(tname==null ? "???" : tname) +" "+LX.value);
+            return false;
+            }
+        return true;
+        }
 //-------------------------------------------------------------
 //L::= A | L or A
     private FunctionCode  L(){
@@ -208,6 +237,9 @@ public class Syntax{
         while(LX.type=='|') {
             sget();
             own1=A();
+            if (!testExprType(own1,DTBoolean)){
+                return own;
+                }
             own.add(own1).addOne(new OperationOr());
             }
         return own; }
@@ -219,6 +251,9 @@ public class Syntax{
         while(LX.type=='&') {
             sget();
             own1=B();
+            if (!testExprType(own1,DTBoolean)){
+                return own;
+                }
             own.add(own1).addOne(new OperationAnd());
             }
         return own; }
@@ -229,6 +264,11 @@ public class Syntax{
         FunctionCode own;
         while(LX.type=='!') { sget();cnt++; }
         own=C();
+        if (cnt!=0){
+            if (!testExprType(own,DTBoolean)){
+                return own;
+                }
+            }
         if (cnt==0) return own;
         return own.addOne(new OperationNot());
         }
@@ -239,11 +279,15 @@ public class Syntax{
         if (LX.type=='('){
             sget();
             own=L();
-            if (LX.type!=')') error(SCELexemLost,")");
+            if (LX.type!=')') error(SELexemLost,")");
             sget();
+            if (own.getResultType()!= DTBoolean){
+                error(SEIllegalExprDT,""+typesMap.get(own.getResultType()));
+                }
             }
         else{
             own=E();
+            boolean bb1 = own.getResultType()== DTBoolean;
             Operation operation;
             switch(LX.type){
         case '<': operation = new OperationLT(); break;			// Команда проверки условия
@@ -252,12 +296,20 @@ public class Syntax{
         case '>': operation = new OperationGT(); break;
         case 'g': operation = new OperationGE(); break;
         case 'l': operation = new OperationLE(); break;
-        default:  error(SCEIllegalCondition,LX.value);
+        default:
+                if (!bb1)                                        // Одиночный булевский
                     return own;
+                error(SEIllegalCondition,LX.value);
+                return own;
                 }
         sget();
         own1=E();
+        if (!own.isResultNumetic() || !own1.isResultNumetic()){
+            error(SEIllegalCondition,LX.value);
+            return own;
+            }
         own.add(own1).addOne(operation);
+        own.setResultType(DTBoolean);
         }
      return own; }
 //-------------------------------------------------------------
@@ -268,9 +320,27 @@ public class Syntax{
         while(LX.type=='+' || LX.type=='-') {
             sget();
             own1=T();
+            if (!own.isResultNumetic()){
+                error(SEIllegalExprDT,""+typesMap.get(own.getResultType()));
+                }
+            if (!convertResultTypes(own,own1))
+                return own;
             own.add(own1).addOne(LX.type=='+' ? new OperationAdd() : new OperationSub());
             }
         return own;
+        }
+//------------------------------------------------------------
+    private boolean convertResultTypes(FunctionCode one, FunctionCode two){
+        return convertResultTypes(true,one,two);
+        }
+    private boolean convertResultTypes(boolean onlyNumeric, FunctionCode one, FunctionCode two){
+        try {
+            one.convertResultTypes(two,onlyNumeric);
+            } catch (ScriptException ee){
+                error(ee.code, ee.getMessage());
+                return false;
+                }
+        return true;
         }
 //-------------------------------------------------------------
 //T::= G | T*G | T/G
@@ -281,6 +351,8 @@ public class Syntax{
         while(LX.type=='*' || LX.type=='/') {
             sget();
             own1=G();
+            if (!convertResultTypes(own,own1))
+                return own;
             own.add(own1).addOne(LX.type=='*' ? new OperationMul() : new OperationDiv());
             }
     return own; }
@@ -293,8 +365,10 @@ public class Syntax{
         if(LX.type=='p') {
             sget();
             own1=F();
+            if (!convertResultTypes(own,own1))
+                return own;
             own.add(own1).addOne(new OperationPow());
-        }
+            }
         return own;
     }
 
@@ -309,41 +383,50 @@ public class Syntax{
         boolean minus=false;
         if (LX.type=='-'){ minus=true; sget(); }
         switch (LX.type){
-    case 'a':  name=LX.value;
-               sget();
-               if (LX.type=='('){
-                   sget();
-                   own=E();
-                   if (LX.type!=')') error(SCELexemLost,")");
-                   sget();
-                   //-----------------TODO CALL ----------------------------------
-                   //own+="CALL "+name+"\n";
-                   }
-               else{
-                   TypeFace var = variables.get(name);
-                   if (var==null)
-                        error(SCEVarNotDef,name);
-                   else
-                        own.addOne(new OperationPush(var.clone()));
-                   }
-               break;
-    case 'c':  if (LX.value.indexOf(".")==-1){
-                   TypeFace vv = LX.value.indexOf(".")==-1 ? new TypeLong(0) : new TypeDouble(0);
-               try {
-                   vv.parse(LX.value);
-                   own.addOne(new OperationPush(vv));
-                   } catch (ScriptRunTimeException ee){
-                       error(SCEConstFormat,LX.value);
+    case 'a':   name=LX.value;
+                sget();
+                if (LX.type=='('){
+                    sget();
+                    own=E();
+                    if (LX.type!=')') error(SELexemLost,")");
+                    sget();
+                    //-----------------TODO CALL ----------------------------------
+                    //own+="CALL "+name+"\n";
+                    }
+                else{
+                    TypeFace var = variables.get(name);
+                    if (var==null)
+                        error(SEVarNotDef,name);
+                    else{
+                        own.addOne(new OperationPush(var));
+                        own.setResultType(var.type());
                         }
                     }
-               sget();
-               break;
+                break;
+    case 'c':       TypeFace vv = LX.value.indexOf(".")==-1 ? new TypeLong(0) : new TypeDouble(0);
+                    try {
+                        vv.parse(LX.value);
+                        own.addOne(new OperationPush(vv));
+                        own.setResultType(vv.type());
+                        } catch (ScriptException ee){
+                            error(SEConstFormat,LX.value);
+                            }
+                sget();
+                break;
+    case 'F':   own.addOne(new OperationPush(new TypeBoolean(false)));
+                own.setResultType(DTBoolean);
+                sget();
+                break;
+    case 'T':   own.addOne(new OperationPush(new TypeBoolean(true)));
+                own.setResultType(DTBoolean);
+                sget();
+                break;
     case '(':  sget();
                own=E();
-               if (LX.type!=')') error(SCELexemLost,")");
+               if (LX.type!=')') error(SELexemLost,")");
                sget();
                break;
-    default: error(SCEIllegalSyntax,LX.value); lex.get(); break;
+    default: error(SEIllegalSyntax,LX.value); lex.get(); break;
              }
     if (minus) {
         FunctionCode xx = new FunctionCode();

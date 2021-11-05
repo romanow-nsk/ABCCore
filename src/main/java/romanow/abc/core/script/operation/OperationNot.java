@@ -3,7 +3,7 @@ package romanow.abc.core.script.operation;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
-import romanow.abc.core.script.ScriptRunTimeException;
+import romanow.abc.core.script.ScriptException;
 import romanow.abc.core.script.types.TypeBoolean;
 import romanow.abc.core.script.types.TypeFace;
 
@@ -12,7 +12,7 @@ public class OperationNot extends Operation{
         super(ValuesBase.ONot,"not");
         }
     @Override
-    public void exec(OperationStack stack, CallContext context, boolean trace) throws ScriptRunTimeException {
+    public void exec(OperationStack stack, CallContext context, boolean trace) throws ScriptException {
         String out="";
         TypeFace one = stack.pop();
         TypeFace two = stack.pop();
@@ -26,7 +26,7 @@ public class OperationNot extends Operation{
             stack.push(res);
             return;
             }
-        throwException(context,ValuesBase.SREIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
+        throwException(context,ValuesBase.SEIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
         }
 
     @Override

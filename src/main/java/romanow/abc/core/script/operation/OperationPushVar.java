@@ -3,7 +3,7 @@ package romanow.abc.core.script.operation;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
-import romanow.abc.core.script.ScriptRunTimeException;
+import romanow.abc.core.script.ScriptException;
 import romanow.abc.core.script.types.TypeFace;
 
 public class OperationPushVar extends Operation{
@@ -13,11 +13,11 @@ public class OperationPushVar extends Operation{
         varName = varName0;
         }
     @Override
-    public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptRunTimeException {
+    public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptException {
         TypeFace var = context.getVariables().get(varName);
         if (var==null)
-            throwException(context,ValuesBase.SREIllegalVariable,varName);
-        stack.push(var);
+            throwException(context,ValuesBase.SEIllegalVariable,varName);
+        stack.push(var.clone());
         }
     @Override
     public Operation clone() {

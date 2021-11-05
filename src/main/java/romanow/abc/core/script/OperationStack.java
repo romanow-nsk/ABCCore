@@ -16,24 +16,24 @@ public class OperationStack extends ArrayList<TypeFace> {
         super(StackLimit);
         }
     public int sp(){ return size()-1; }
-    public void push(TypeFace operand) throws ScriptRunTimeException {
+    public void push(TypeFace operand) throws ScriptException {
         if (sp()>=stackLimit)
-            throw new ScriptRunTimeException(ValuesBase.SREStackOver,"Переполнение стека операндов");
+            throw new ScriptException(ValuesBase.SEStackOver,"Переполнение стека операндов");
         add(operand);
         }
-    public TypeFace getData() throws ScriptRunTimeException{
+    public TypeFace getData() throws ScriptException{
         if (sp()==-1)
-            throw new ScriptRunTimeException(ValuesBase.SREStackEmpty,"Пустой стек");
+            throw new ScriptException(ValuesBase.SEStackEmpty,"Пустой стек");
         return get(sp());
         }
-    public TypeFace pop() throws ScriptRunTimeException{
+    public TypeFace pop() throws ScriptException{
         if (sp()==-1)
-            throw new ScriptRunTimeException(ValuesBase.SREStackEmpty,"Пустой стек");
+            throw new ScriptException(ValuesBase.SEStackEmpty,"Пустой стек");
         return remove(sp());
         }
-    public TypeFace getData(int n) throws ScriptRunTimeException{
+    public TypeFace getData(int n) throws ScriptException{
         if (sp()-n<0 || n>0)
-            throw new ScriptRunTimeException(ValuesBase.SREStackLimits,"Границы стека "+sp()+" offset="+n);
+            throw new ScriptException(ValuesBase.SEStackLimits,"Границы стека "+sp()+" offset="+n);
         return get(sp()-n);
         }
     public String toString(){

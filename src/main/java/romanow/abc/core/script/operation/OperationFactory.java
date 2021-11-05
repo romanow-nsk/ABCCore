@@ -1,7 +1,7 @@
 package romanow.abc.core.script.operation;
 
 import romanow.abc.core.constants.ValuesBase;
-import romanow.abc.core.script.ScriptCompileException;
+import romanow.abc.core.script.ScriptException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,16 +35,16 @@ public class OperationFactory extends ArrayList<Operation> {
         addToMaps(new OperationNot());
         addToMaps(new OperationPow());
     }
-    public  Operation getByCode(int code) throws ScriptCompileException {
+    public  Operation getByCode(int code) throws ScriptException {
         Operation operation = mapCode.get(code);
         if (operation==null)
-            throw new ScriptCompileException(ValuesBase.SREIllegalOperation, ValuesBase.SEModeError,"Недопустимая операция, код: "+code);
+            throw new ScriptException(ValuesBase.SEIllegalOperation, ValuesBase.SEModeError,"Недопустимая операция, код: "+code);
         return operation.clone();
         }
-    public  Operation getByName(String name) throws ScriptCompileException {
+    public  Operation getByName(String name) throws ScriptException {
         Operation operation = mapName.get(name);
         if (operation==null)
-            throw new ScriptCompileException(ValuesBase.SREIllegalOperation, ValuesBase.SEModeError,"Недопустимая операция, код: "+name);
+            throw new ScriptException(ValuesBase.SEIllegalOperation, ValuesBase.SEModeError,"Недопустимая операция, код: "+name);
         return operation.clone();
         }
 }

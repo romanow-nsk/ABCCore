@@ -94,13 +94,14 @@ public class Scaner {
         lexem = new Lexem('s',"string");
         finStates.add(lexem);
         lexems.put(lexem.type,lexem);
+        //-------------------- Ключевые слова -----------------------------------
         lexem = new Lexem('U',"if");
         lexems.put(lexem.type,lexem);
         keywords.put(lexem.value,lexem);
         lexem = new Lexem('E',"else");
         lexems.put(lexem.type,lexem);
         keywords.put(lexem.value,lexem);
-        lexem = new Lexem('w',"while");
+        lexem = new Lexem('W',"while");
         lexems.put(lexem.type,lexem);
         keywords.put(lexem.value,lexem);
         lexem = new Lexem('&',"and");
@@ -170,7 +171,10 @@ Lexem get(){
         if (idx>=str.length()){
             idx=0;
             lineIdx++;
-            str = lines.get(lineIdx);
+            if (lineIdx>=lines.size())
+                str = "#";
+            else
+                str = lines.get(lineIdx);
             }
         if (idx<str.length())
             cc = str.charAt(idx++);

@@ -465,6 +465,8 @@ public class ValuesBase {
     public final static int OPop=21;
     @CONST(group = "Operation", title = "pow")
     public final static int OPow=22;
+    @CONST(group = "Operation", title = "save")
+    public final static int OSave=23;
     //------------------- Типы ошибок ЯОП -----------------------------------------------------------------
     @CONST(group = "SEType", title = "Не определено")
     public final static int SETypeUndef=0;
@@ -483,51 +485,53 @@ public class ValuesBase {
     @CONST(group = "SEMode", title = "Крах")
     public final static int SEModeFatal=3;
     //------------------------ Коды ошибок runtime ---------------------------------------------------------
-    @CONST(group = "SRError", title = "Недопустимый код ошибки")
-    public final static int SRENoCode=0;
-    @CONST(group = "SRError", title = "Переполнение стека")
-    public final static int SREStackOver=1;
-    @CONST(group = "SRError", title = "Стек пуст")
-    public final static int SREStackEmpty=2;
-    @CONST(group = "SRError", title = "Выход за границы стека")
-    public final static int SREStackLimits=3;
-    @CONST(group = "SRError", title = "Формат целого")
-    public final static int SREIntFormat=4;
-    @CONST(group = "SRError", title = "Форматирование целого")
-    public final static int SREIntOutFormat=5;
-    @CONST(group = "SRError", title = "Недопустимая операция для ТД")
-    public final static int SREIllegalOperation=6;
-    @CONST(group = "SRError", title = "Ошибка конвертации float/int")
-    public final static int SREFloatConvertation=7;
-    @CONST(group = "SRError", title = "Недопустимое сравнение для ТД")
-    public final static int SREIllegalCompare=8;
-    @CONST(group = "SRError", title = "Переменная не определена")
-    public final static int SREIllegalVariable=9;
-    @CONST(group = "SRError", title = "Недопустимый ТД")
-    public final static int SREIllegalDT=10;
+    @CONST(group = "SError", title = "Недопустимый код ошибки")
+    public final static int SENoCode=0;
+    @CONST(group = "SError", title = "Переполнение стека")
+    public final static int SEStackOver=1;
+    @CONST(group = "SError", title = "Стек пуст")
+    public final static int SEStackEmpty=2;
+    @CONST(group = "SError", title = "Выход за границы стека")
+    public final static int SEStackLimits=3;
+    @CONST(group = "SError", title = "Формат целого")
+    public final static int SEIntFormat=4;
+    @CONST(group = "SError", title = "Форматирование целого")
+    public final static int SEIntOutFormat=5;
+    @CONST(group = "SError", title = "Недопустимая операция для ТД")
+    public final static int SEIllegalOperation=6;
+    @CONST(group = "SError", title = "Ошибка конвертации float/int")
+    public final static int SEFloatConvertation=7;
+    @CONST(group = "SError", title = "Недопустимое сравнение для ТД")
+    public final static int SEIllegalCompare=8;
+    @CONST(group = "SError", title = "Переменная не определена")
+    public final static int SEIllegalVariable=9;
+    @CONST(group = "SError", title = "Недопустимый ТД")
+    public final static int SEIllegalDT=10;
     //--------------------------Коды ошибок компиляции ----------------------------------------------------
-    @CONST(group = "SCError", title = "Недопустимый код ошибки")
-    public final static int SCENoCode=0;
-    @CONST(group = "SCError", title = "Не найден конец текста")
-    public final static int SCENoEOF=1;
-    @CONST(group = "SCError", title = "Пропущего имя переменной ")
-    public final static int SCENoVarName=2;
-    @CONST(group = "SCError", title = "Переменная не определена")
-    public final static int SCEVarNotDef=3;
-    @CONST(group = "SCError", title = "Повторное определение переменной")
-    public final static int SCEVarMultiply=4;
-    @CONST(group = "SCError", title = "Ошибка списка переменных")
-    public final static int SCEVarListFormat=5;
-    @CONST(group = "SCError", title = "Не найден символ")
-    public final static int SCELexemLost=6;
-    @CONST(group = "SCError", title = "Недопустимый оператор")
-    public final static int SCEIllegalOperator=7;
-    @CONST(group = "SCError", title = "Недопустимое условие")
-    public final static int SCEIllegalCondition=8;
-    @CONST(group = "SCError", title = "Формат константы")
-    public final static int SCEConstFormat=9;
-    @CONST(group = "SCError", title = "Синтаксическая ошибка")
-    public final static int SCEIllegalSyntax=10;
+    @CONST(group = "SError", title = "Не найден конец текста")
+    public final static int SENoEOF=100;
+    @CONST(group = "SError", title = "Пропущего имя переменной ")
+    public final static int SENoVarName=101;
+    @CONST(group = "SError", title = "Переменная не определена")
+    public final static int SEVarNotDef=102;
+    @CONST(group = "SError", title = "Повторное определение переменной")
+    public final static int SEVarMultiply=103;
+    @CONST(group = "SError", title = "Ошибка списка переменных")
+    public final static int SEVarListFormat=104;
+    @CONST(group = "SError", title = "Не найден символ")
+    public final static int SELexemLost=105;
+    @CONST(group = "SError", title = "Недопустимый оператор")
+    public final static int SEIllegalOperator=106;
+    @CONST(group = "SError", title = "Недопустимое условие")
+    public final static int SEIllegalCondition=107;
+    @CONST(group = "SError", title = "Формат константы")
+    public final static int SEConstFormat=108;
+    @CONST(group = "SError", title = "Синтаксическая ошибка")
+    public final static int SEIllegalSyntax=109;
+    @CONST(group = "SError", title = "Недопустимый тип выражения")
+    public final static int SEIllegalExprDT=110;
+    @CONST(group = "SError", title = "Недопустимой сочетание ТД")
+    public final static int SEIllegalTypeConvertion=111;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         ValuesBase.init();

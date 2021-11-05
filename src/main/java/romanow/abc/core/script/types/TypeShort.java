@@ -3,27 +3,27 @@ package romanow.abc.core.script.types;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptException;
 
-public class TypeLong extends TypeFace{
-    private long value;
-    public TypeLong(boolean valid, long vv) {
+public class TypeShort extends TypeFace{
+    private short value;
+    public TypeShort(boolean valid, short vv) {
         super(valid);
         value = vv;
         }
-    public TypeLong(long word) {
+    public TypeShort(short word) {
         super(true);
         value = word;
         }
-    public TypeLong(TypeLong two) {
+    public TypeShort(TypeShort two) {
         super(two); }
     @Override
     public int type() {
-        return ValuesBase.DTLong; }
+        return ValuesBase.DTShort; }
     @Override
     public String typeName() {
-        return "long"; }
+        return "short"; }
     @Override
     public String typeNameTitle() {
-        return "длинное"; }
+        return "короткое"; }
     @Override
     public int compare(TypeFace two) throws ScriptException {
         if (two.isIntType()){
@@ -49,7 +49,7 @@ public class TypeLong extends TypeFace{
     @Override
     public void parse(String ss) throws ScriptException {
         try {
-            value = Long.parseLong(ss);
+            value = Short.parseShort(ss);
             setValid(true);
             } catch (Exception ee){
                 setValid(false);
@@ -58,7 +58,7 @@ public class TypeLong extends TypeFace{
             }
     @Override
     public TypeFace clone() {
-        return new TypeLong(isValid(),value);
+        return new TypeShort(isValid(),value);
         }
 
     @Override
@@ -67,7 +67,7 @@ public class TypeLong extends TypeFace{
         }
     @Override
     public void fromDouble(double val) throws ScriptException {
-        value = (int)val;
+        value = (short) val;
         }
     @Override
     public long toLong() throws ScriptException {
@@ -75,7 +75,7 @@ public class TypeLong extends TypeFace{
         }
     @Override
     public void fromLong(long val) throws ScriptException {
-        value =val;
+        value =(short) val;
         }
     @Override
     public String toString(){

@@ -3,31 +3,29 @@ package romanow.abc.core.script.types;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptException;
 
-public class TypeLong extends TypeFace{
-    private long value;
-    public TypeLong(boolean valid, long vv) {
-        super(valid);
-        value = vv;
-        }
-    public TypeLong(long word) {
+public class TypeFloat extends TypeFace{
+    private float value;
+    public TypeFloat(float val) {
         super(true);
-        value = word;
+        value = val;
         }
-    public TypeLong(TypeLong two) {
-        super(two); }
+    public TypeFloat(TypeFloat two){
+        super(two.isValid());
+        value = two.value;
+        }
     @Override
     public int type() {
-        return ValuesBase.DTLong; }
+        return ValuesBase.DTFloat; }
     @Override
     public String typeName() {
-        return "long"; }
+        return "float"; }
     @Override
     public String typeNameTitle() {
-        return "длинное"; }
+        return "короткое вещ."; }
     @Override
     public int compare(TypeFace two) throws ScriptException {
         if (two.isIntType()){
-            long vv =  value-two.toLong();
+            double vv =  value-two.toDouble();
             if (vv==0) return 0;
             return vv <0 ? -1 : 1;
             }
@@ -37,7 +35,7 @@ public class TypeLong extends TypeFace{
             return vv <0 ? -1 : 1;
             }
         throw new ScriptException(ValuesBase.SEIllegalCompare,"Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
-        }
+    }
     @Override
     public String format(String fmtString) throws ScriptException {
         try {
@@ -48,34 +46,32 @@ public class TypeLong extends TypeFace{
         }
     @Override
     public void parse(String ss) throws ScriptException {
-        try {
-            value = Long.parseLong(ss);
-            setValid(true);
+        try{
+             value = Float.parseFloat(ss);
+             setValid(true);
             } catch (Exception ee){
                 setValid(false);
-                throw new ScriptException(ValuesBase.SEIntFormat,"Формат целого: "+ss);
+                throw new ScriptException(ValuesBase.SEFloatConvertation,"Ошибка конвертации из double "+ss);
                 }
             }
     @Override
     public TypeFace clone() {
-        return new TypeLong(isValid(),value);
+        return new TypeFloat(this);
         }
-
-    @Override
-    public double toDouble() throws ScriptException {
+    public double toDouble() throws ScriptException{
         return value;
         }
-    @Override
-    public void fromDouble(double val) throws ScriptException {
-        value = (int)val;
+    public void fromDouble(double val) throws ScriptException{
+        value = (float) val;
+        setValid(true);
         }
     @Override
     public long toLong() throws ScriptException {
-        return value;
+        return (long)value;
         }
     @Override
     public void fromLong(long val) throws ScriptException {
-        value =val;
+        value = val;
         }
     @Override
     public String toString(){

@@ -3,7 +3,7 @@ package romanow.abc.core.script.operation;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
-import romanow.abc.core.script.ScriptRunTimeException;
+import romanow.abc.core.script.ScriptException;
 import romanow.abc.core.script.types.TypeBoolean;
 import romanow.abc.core.script.types.TypeDouble;
 import romanow.abc.core.script.types.TypeFace;
@@ -16,10 +16,10 @@ public abstract class OperationCompare extends Operation{
     public abstract boolean opDouble(double one, double two);
     public abstract boolean opLong(long one, long two);
     @Override
-    public void exec(OperationStack stack, CallContext context, boolean trace) throws ScriptRunTimeException {
+    public void exec(OperationStack stack, CallContext context, boolean trace) throws ScriptException {
         String out="";
-        TypeFace one = stack.pop();
         TypeFace two = stack.pop();
+        TypeFace one = stack.pop();
         if (trace)
             out = toString()+" "+one+" "+two;
         if (one.isFloatType() || two.isFloatType()){
@@ -40,6 +40,6 @@ public abstract class OperationCompare extends Operation{
             stack.push(res2);
             return;
             }
-        throwException(context,ValuesBase.SREIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
+        throwException(context,ValuesBase.SEIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
         }
 }
