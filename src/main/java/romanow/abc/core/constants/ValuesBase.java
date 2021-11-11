@@ -111,7 +111,7 @@ public class ValuesBase {
         "abc",
         "abc",
         "abc",
-        "ABSEmptyClient.apk",
+        "ABCEmptyClient.apk",
         "ABCDataserver.jar",
         "romanow.abc.desktop.module",
         "/drawable/lecture.png",
