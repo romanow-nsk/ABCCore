@@ -11,12 +11,15 @@ public class EntityRefList<T extends Entity> extends ArrayList<T> {
     private transient Class typeT = null;
     private transient HashMap<Integer, T> numMap = null;
     private transient HashMap<String, T> nameMap = null;
+    private transient HashMap<String, T> titleMap = null;
     public void createMap(){
         nameMap = new HashMap<>();
         numMap = new HashMap<>();
+        titleMap = new HashMap<>();
         for(Entity ent : this){
             if (ent==null) continue;
-            nameMap.put(ent.getTitle(),(T)ent);
+            titleMap.put(ent.getTitle(),(T)ent);
+            nameMap.put(ent.getName(),(T)ent);
             numMap.put(ent.getKeyNum(),(T)ent);
             }
         sortByKeyNum();
@@ -25,6 +28,9 @@ public class EntityRefList<T extends Entity> extends ArrayList<T> {
         return numMap==null ? null : numMap.get(key);
         }
     public T getByTitle(String key){
+        return titleMap==null ? null : titleMap.get(key);
+        }
+    public T getByName(String key){
         return nameMap==null ? null : nameMap.get(key);
     }
     public EntityRefList(EntityRefList<T> src){
