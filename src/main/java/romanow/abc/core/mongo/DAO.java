@@ -19,10 +19,10 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     private static int noFieldErrorCount=100;
     //-------------------------------------- РЕФЛЕКСИЯ -----------------------------------------------------------------
     public final static String dbTypes[]={"int","String","double","boolean","short","long","java.lang.String",
-            "romanow.abc.core.entity.EntityLink","romanow.abc.core.entity.EntityLinkList","romanow.abc.core.entity.EntityRefList"};
+            "romanow.abc.core.entity.EntityLink","romanow.abc.core.entity.EntityLinkList","romanow.abc.core.entity.EntityRefList","void"};
     public final static String dbTitle[] ={"int","String","double","boolean","short","long","String",
-            "EntityLink","EntityLinkList","EntityRefList","DAOLink"};
-    public final static byte dbInt=0,dbString=1,dbDouble=2,dbBoolean=3,dbShort=4,dbLong=5,dbString2=6,dbLink=7,dbLinkList=8,dbRefList=9,dbDAOLink=10;  //  ID-ы сериализуемых типов
+            "EntityLink","EntityLinkList","EntityRefList","DAOLink","void"};
+    public final static byte dbInt=0,dbString=1,dbDouble=2,dbBoolean=3,dbShort=4,dbLong=5,dbString2=6,dbLink=7,dbLinkList=8,dbRefList=9,dbDAOLink=10,dbVoid=11;  //  ID-ы сериализуемых типов
     public static int getFieldType(String tName){
         for(int i=0;i< dbTypes.length; i++)
             if (tName.equals(dbTypes[i]))

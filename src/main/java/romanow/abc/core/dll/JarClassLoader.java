@@ -40,7 +40,7 @@ import java.util.jar.JarFile;
         public String getDefaultPackageName(){
             return "romanow."+ ValuesBase.env().applicationName(ValuesBase.AppNameDBName)+".dll";
             }
-        public void loadClasses() throws UniException {
+        public String loadClasses(){
             String mes = "";
             try {
                 JarFile jarFile = new JarFile(jarFileName);
@@ -60,8 +60,9 @@ import java.util.jar.JarFile;
                 }
             }
             catch (IOException IOE) {
-                throw UniException.io(jarFileName+" не найден");
+                return  jarFileName+" не найден";
                 }
+            return null;
             }
 
         private DLLField createParameterDescription(int type,Annotation ann[]){
@@ -115,7 +116,7 @@ import java.util.jar.JarFile;
                     boolean valid=true;
                     ArrayList<DLLField> ff = new ArrayList<>();
                     for(int i=1;i<typeList.length;i++){
-                        int typeIdx = DAO.getFieldType(tName);
+                        int typeIdx = DAO.getFieldType(typeList[i].getSimpleName());
                         if (typeIdx==-1){
                             valid = false;
                             out+="Недопустимый тип параметра: "+cName+"."+method.getName()+": индекс "+i+"\n";

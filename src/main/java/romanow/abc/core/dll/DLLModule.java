@@ -9,6 +9,10 @@ public class DLLModule{
         this.name = name;
         this.classes = classes;
         }
+    public DLLModule() {
+        this.name = "";
+        this.classes = new ArrayList<>();
+        }
     public String toString(){
         String ss =  "Модуль: "+name+"\n";
         for(DLLClass zz : classes)
