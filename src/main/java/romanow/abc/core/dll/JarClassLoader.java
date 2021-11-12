@@ -4,28 +4,30 @@ package romanow.abc.core.dll;
 
 import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
-import romanow.abc.core.mongo.DAO;
 import romanow.abc.core.utils.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-    /**
-     * Загружаем файлы из заданного jar-архива
-     * Классы должны относится к заданному пакету - пример валидации при загрузке
-     *
-     * @author Pavel
-     *
-     */
-
     public class JarClassLoader extends ClassLoader {
+        public final static String dbTypes[]={"int","String","double","boolean","short","long","java.lang.String","void","char"};
+        public final static byte TInt=0,TString=1,TDouble=2,TBoolean=3,TShort=4,TLong=5,TString2=6,TVoid=7, TChar=8;  //  ID-ы сериализуемых типов
+        public final static Object wrappers[]={ new Integer(0), new String(""), new Double(0), new Boolean(false),
+            new Short((short) 0),new Long(0), new String(""), null,new Character(' ')};
+        public static int getFieldType(String tName){
+            for(int i=0;i< dbTypes.length; i++)
+                if (tName.equals(dbTypes[i]))
+                    return i;
+            return -1;
+            }
         private HashMap<String, Class<?>> cache = new HashMap<String, Class<?>>();
         private String jarFileName;
         private String packageName;
@@ -75,7 +77,7 @@ import java.util.jar.JarFile;
                 }
             return new DLLField("...",type,"...");
             }
-        public Pair<String,DLLModule> getClassesList(){
+        public Pair<String,DLLModule> getClassesList(String envClassName){
             String out="";
             ArrayList<DLLClass> list = new ArrayList<>();
             for(String cName : getClassNames()){
@@ -94,11 +96,14 @@ import java.util.jar.JarFile;
                 Method methods[] = clazz.getMethods();
                 ArrayList<DLLFunction> funs = new ArrayList<>();
                 for (Method method : methods){
+                    int modif = method.getModifiers();
+                    if ((modif & Modifier.STATIC)==0)
+                        continue;
                     String tName = method.getReturnType().getName();
                     if (!method.isAnnotationPresent(METHOD.class))
                         continue;
                     String title = ((METHOD) method.getAnnotation(METHOD.class)).title();
-                    int resIdx = DAO.getFieldType(tName);
+                    int resIdx = getFieldType(tName);
                     if (resIdx==-1){
                         out+="Недопустимый тип результата: "+cName+"."+method.getName()+": "+tName+"\n";
                         continue;
@@ -109,14 +114,14 @@ import java.util.jar.JarFile;
                         out+="Список параметров пуст: "+cName+"."+method.getName()+"\n";
                         continue;
                         }
-                    if (!typeList[0].getSimpleName().equals("MetaExternalSystem")){
-                        out+="Нет ссылки на MetaExternalSystem:  "+cName+"."+method.getName()+"\n";
+                    if (!typeList[0].getSimpleName().equals(envClassName)){
+                        out+="Нет ссылки на "+envClassName+":  "+cName+"."+method.getName()+"\n";
                         continue;
                         }
                     boolean valid=true;
                     ArrayList<DLLField> ff = new ArrayList<>();
                     for(int i=1;i<typeList.length;i++){
-                        int typeIdx = DAO.getFieldType(typeList[i].getSimpleName());
+                        int typeIdx = getFieldType(typeList[i].getSimpleName());
                         if (typeIdx==-1){
                             valid = false;
                             out+="Недопустимый тип параметра: "+cName+"."+method.getName()+": индекс "+i+"\n";
@@ -125,7 +130,7 @@ import java.util.jar.JarFile;
                         ff.add(createParameterDescription(typeIdx,params[i]));
                         }
                     if (valid) {
-                        DLLFunction function = new DLLFunction(method.getName(), resIdx, ff, title);
+                        DLLFunction function = new DLLFunction(method.getName(), resIdx, method, ff, title);
                         funs.add(function);
                         }
                     }

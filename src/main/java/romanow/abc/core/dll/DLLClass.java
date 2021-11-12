@@ -1,15 +1,24 @@
 package romanow.abc.core.dll;
 
+import romanow.abc.core.UniException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DLLClass {
     public final Class<?> dllClass;
     public final String name;
     public final ArrayList<DLLFunction> functions;
+    private HashMap<String,DLLFunction> map = new HashMap<>();
     public DLLClass(Class<?> dllClass, ArrayList<DLLFunction> functions) {
         this.dllClass = dllClass;
         this.name = dllClass.getSimpleName();
         this.functions = functions;
+        for(DLLFunction dllFunc : functions)
+            map.putIfAbsent(dllFunc.name,dllFunc);
+        }
+    public DLLFunction get(String name){
+        return map.get(name);
         }
     public String toString(){
         String ss =  "Класс: "+name+"\n";
@@ -17,4 +26,12 @@ public class DLLClass {
                 ss+=zz.toString();
             return ss;
         }
+    // pars[0] - окружение
+    public Object invoke(String header, String funName, Object pars[]) throws UniException {
+        DLLFunction dllFun = map.get(funName);
+        if (dllFun==null)
+            throw UniException.code("Не найдена функция "+ header+"."+funName);
+        return dllFun.invoke(header+"."+funName,pars);
+        }
+
 }
