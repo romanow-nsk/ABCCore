@@ -23,6 +23,12 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     public final static String dbTitle[] ={"int","String","double","boolean","short","long","String",
             "EntityLink","EntityLinkList","EntityRefList","DAOLink"};
     public final static byte dbInt=0,dbString=1,dbDouble=2,dbBoolean=3,dbShort=4,dbLong=5,dbString2=6,dbLink=7,dbLinkList=8,dbRefList=9,dbDAOLink=10;  //  ID-ы сериализуемых типов
+    public static int getFieldType(String tName){
+        for(int i=0;i< dbTypes.length; i++)
+            if (tName.equals(dbTypes[i]))
+                return i;
+            return -1;
+            }
     public Field getField(String name,int type) throws UniException {
         getFields();
         for(EntityField ff : fld)
