@@ -18,16 +18,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
     public class JarClassLoader extends ClassLoader {
-        public final static String dbTypes[]={"int","String","double","boolean","short","long","java.lang.String","void","char"};
-        public final static byte TInt=0,TString=1,TDouble=2,TBoolean=3,TShort=4,TLong=5,TString2=6,TVoid=7, TChar=8;  //  ID-ы сериализуемых типов
-        public final static Object wrappers[]={ new Integer(0), new String(""), new Double(0), new Boolean(false),
-            new Short((short) 0),new Long(0), new String(""), null,new Character(' ')};
-        public static int getFieldType(String tName){
-            for(int i=0;i< dbTypes.length; i++)
-                if (tName.equals(dbTypes[i]))
-                    return i;
-            return -1;
-            }
         private HashMap<String, Class<?>> cache = new HashMap<String, Class<?>>();
         private String jarFileName;
         private String packageName;
@@ -103,7 +93,10 @@ import java.util.jar.JarFile;
                     if (!method.isAnnotationPresent(METHOD.class))
                         continue;
                     String title = ((METHOD) method.getAnnotation(METHOD.class)).title();
-                    int resIdx = getFieldType(tName);
+                    int resIdx = -1;
+                    try {
+                        resIdx = ValuesBase.dataTypes().getCodeByName(tName);
+                        } catch (UniException ee){}
                     if (resIdx==-1){
                         out+="Недопустимый тип результата: "+cName+"."+method.getName()+": "+tName+"\n";
                         continue;
@@ -121,7 +114,10 @@ import java.util.jar.JarFile;
                     boolean valid=true;
                     ArrayList<DLLField> ff = new ArrayList<>();
                     for(int i=1;i<typeList.length;i++){
-                        int typeIdx = getFieldType(typeList[i].getSimpleName());
+                        int typeIdx = -1;
+                        try{
+                            typeIdx = ValuesBase.dataTypes().getCodeByName(typeList[i].getSimpleName());
+                            } catch (UniException ee){}
                         if (typeIdx==-1){
                             valid = false;
                             out+="Недопустимый тип параметра: "+cName+"."+method.getName()+": индекс "+i+"\n";

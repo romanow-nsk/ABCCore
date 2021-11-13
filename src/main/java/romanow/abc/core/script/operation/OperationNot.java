@@ -4,8 +4,8 @@ import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
 import romanow.abc.core.script.ScriptException;
-import romanow.abc.core.script.types.TypeBoolean;
-import romanow.abc.core.script.types.TypeFace;
+import romanow.abc.core.types.TypeBoolean;
+import romanow.abc.core.types.TypeFace;
 
 public class OperationNot extends Operation{
     public OperationNot() {

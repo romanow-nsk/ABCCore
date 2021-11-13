@@ -1,8 +1,9 @@
 package romanow.abc.core.script;
+import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.operation.*;
-import romanow.abc.core.script.types.*;
+import romanow.abc.core.types.*;
 
 import static romanow.abc.core.constants.ValuesBase.*;
 
@@ -46,8 +47,8 @@ public class Syntax{
     void sget(){
         LX=lex.get();
         }
-    void error(ScriptException ex){
-        error(ex.code,ex.getMessage());
+    void error(UniException ex){
+        error(SEDataType,ex.getMessage());
         }
     void error(int code){
         error(code,"");
@@ -106,7 +107,7 @@ public class Syntax{
                 try {
                     ff.setValue(false,typeFaces.getByCode(own.getResultType()));
                     own.addOne(new OperationSave(ff.getVarName()));
-                    } catch (ScriptException e) {
+                    } catch (UniException e) {
                     error(e);
                     }
                 }
@@ -163,7 +164,7 @@ public class Syntax{
             try {
                 var.setValue(false,typeFaces.getByCode(own.getResultType()));
                 own.addOne(new OperationSave(var.getVarName()));
-                } catch (ScriptException e) {
+                } catch (UniException e) {
                     error(e);
                     }
             break;
@@ -393,7 +394,7 @@ public class Syntax{
                         vv.parse(LX.value);
                         own.addOne(new OperationPush(vv));
                         own.setResultType(vv.type());
-                        } catch (ScriptException ee){
+                        } catch (UniException ee){
                             error(SEConstFormat,LX.value);
                             }
                 sget();

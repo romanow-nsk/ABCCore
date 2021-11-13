@@ -1,9 +1,9 @@
-package romanow.abc.core.script.types;
+package romanow.abc.core.types;
 
+import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
-import romanow.abc.core.script.ScriptException;
 
-public class TypeFloat extends TypeFace{
+public class TypeFloat extends TypeFace {
     private float value;
     public TypeFloat(float val) {
         super(true);
@@ -17,13 +17,10 @@ public class TypeFloat extends TypeFace{
     public int type() {
         return ValuesBase.DTFloat; }
     @Override
-    public String typeName() {
-        return "float"; }
-    @Override
     public String typeNameTitle() {
         return "короткое вещ."; }
     @Override
-    public int compare(TypeFace two) throws ScriptException {
+    public int compare(TypeFace two) throws UniException {
         if (two.isIntType()){
             double vv =  value-two.toDouble();
             if (vv==0) return 0;
@@ -34,43 +31,51 @@ public class TypeFloat extends TypeFace{
             if (vv==0) return 0;
             return vv <0 ? -1 : 1;
             }
-        throw new ScriptException(ValuesBase.SEIllegalCompare,"Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
+        throwBug("Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
+        return 0;
     }
     @Override
-    public String format(String fmtString) throws ScriptException {
+    public String format(String fmtString) throws UniException {
         try {
             return String.format(fmtString, value);
             } catch (Exception ee){
-                throw new ScriptException(ValuesBase.SEIntOutFormat,ValuesBase.SEModeWarning,"Форматирование целого: "+fmtString);
+                throwFormat("Форматирование целого: "+fmtString);
+                return "";
                 }
         }
     @Override
-    public void parse(String ss) throws ScriptException {
+    public void parse(String ss) throws UniException {
         try{
              value = Float.parseFloat(ss);
              setValid(true);
             } catch (Exception ee){
                 setValid(false);
-                throw new ScriptException(ValuesBase.SEFloatConvertation,"Ошибка конвертации из double "+ss);
+                throwBug("Ошибка конвертации из double "+ss);
                 }
             }
     @Override
     public TypeFace clone() {
         return new TypeFloat(this);
         }
-    public double toDouble() throws ScriptException{
+
+    @Override
+    public Object cloneWrapper() {
+        return new Float(value);
+    }
+
+    public double toDouble() throws UniException{
         return value;
         }
-    public void fromDouble(double val) throws ScriptException{
+    public void fromDouble(double val) throws UniException{
         value = (float) val;
         setValid(true);
         }
     @Override
-    public long toLong() throws ScriptException {
+    public long toLong() throws UniException {
         return (long)value;
         }
     @Override
-    public void fromLong(long val) throws ScriptException {
+    public void fromLong(long val) throws UniException {
         value = val;
         }
     @Override

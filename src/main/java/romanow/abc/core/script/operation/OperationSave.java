@@ -1,12 +1,11 @@
 package romanow.abc.core.script.operation;
 
+import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
 import romanow.abc.core.script.ScriptException;
-import romanow.abc.core.script.types.TypeDouble;
-import romanow.abc.core.script.types.TypeFace;
-import romanow.abc.core.script.types.TypeLong;
+import romanow.abc.core.types.TypeFace;
 
 public class OperationSave extends Operation{
     private String name;
@@ -19,11 +18,16 @@ public class OperationSave extends Operation{
         if (trace)
             setTrace(toString());
         TypeFace one = stack.pop();
-        TypeFace var = context.getVariables().get(name);
-        if (var==null)
-            throwException(context,ValuesBase.SEVarNotDef, this.name);
-        var.setValue(true,one);
-        }
+        try{
+            TypeFace var = context.getVariables().get(name);
+            if (var==null)
+                throwException(context,ValuesBase.SEVarNotDef, this.name);
+                var.setValue(true,one);
+            }
+        catch (UniException ee){
+            throwException(context,ValuesBase.SEIllegalTypeConvertion, this.name + " " + one.typeName());
+            }
+    }
     @Override
     public Operation clone() {
         return new OperationSave(name);

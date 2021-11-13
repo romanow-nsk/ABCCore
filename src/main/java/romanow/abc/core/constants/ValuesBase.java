@@ -17,6 +17,7 @@ import romanow.abc.core.entity.users.Account;
 import romanow.abc.core.entity.users.Person;
 import romanow.abc.core.entity.users.User;
 import romanow.abc.core.help.HelpFactory;
+import romanow.abc.core.types.TypeFactory;
 import romanow.abc.core.utils.*;
 
 import java.util.ArrayList;
@@ -71,9 +72,13 @@ public class ValuesBase {
     public final static String SQLDBPort2="3307";
     public final static String bashPath="/bin/";                // путь к bash для Linux
     public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "pi31415926","9130000000");
-
+    private static TypeFactory DataTypes;
+    public static TypeFactory dataTypes(){ return DataTypes; }
+    //------------------------------------------------------------------------------------------------------
     public static void init(){
         try {
+            System.out.println("Инициализация ValuesBase");
+            DataTypes = new TypeFactory();
             Class cc = env().applicationClass(ClassNameValues);
             constMap.createConstList(cc);
             } catch (UniException ee) {
@@ -89,6 +94,7 @@ public class ValuesBase {
     public final static int ClassNameClient = 5;
     public final static int ClassNameConsoleClient = 6;
     public final static int ClassNameKioskClient = 7;
+    public final static int ClassNameEnvironment = 8;
     private  final static String abcClassNames[]={
             "romanow.abc.core.constants.ValuesBase",
             "romanow.abc.core.entity.base.WorkSettingsBase",
@@ -96,7 +102,7 @@ public class ValuesBase {
             "romanow.abc.dataserver.ConsoleServer",
             "romanow.abc.desktop.Cabinet",
             "romanow.abc.desktop.Client",
-            "",""};
+            "","",""};
     public final static int AppNameSubjectArea = 0;
     public final static int AppNameDBName = 1;
     public final static int AppNameDBUser = 2;
@@ -150,7 +156,6 @@ public class ValuesBase {
             public Object applicationObject(int classType) throws UniException {
                 return createApplicationObject(classType,abcClassNames);
                 }
-
             @Override
             public String applicationName(int nameNype) {
                 return abcAppNames[nameNype];
@@ -418,6 +423,9 @@ public class ValuesBase {
     public final static int DTDateTime=8;
     @CONST(group = "DType", title = "array")
     public final static int DTArray=9;
+    @CONST(group = "DType", title = "String")
+    public final static int DTString=10;
+    public final static String DTypes[]={"void","short","int","long","float","double","boolean","char","date","array","String"};
     //---------------------  Операции ЯОП -----------------------------------------------------------------
     @CONST(group = "Operation", title = "nop")
     public final static int ONOP=0;
@@ -532,6 +540,8 @@ public class ValuesBase {
     public final static int SEIllegalExprDT=110;
     @CONST(group = "SError", title = "Недопустимой сочетание ТД")
     public final static int SEIllegalTypeConvertion=111;
+    @CONST(group = "SError", title = "Ошибка преобразования ТД")
+    public final static int SEDataType=112;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         ValuesBase.init();

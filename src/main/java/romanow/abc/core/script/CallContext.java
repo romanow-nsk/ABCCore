@@ -3,9 +3,8 @@ package romanow.abc.core.script;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.operation.*;
-import romanow.abc.core.script.types.TypeInt;
+import romanow.abc.core.types.TypeInt;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CallContext {

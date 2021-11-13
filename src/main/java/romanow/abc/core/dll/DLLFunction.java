@@ -1,6 +1,7 @@
 package romanow.abc.core.dll;
 
 import romanow.abc.core.UniException;
+import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.mongo.DAO;
 
 import java.lang.reflect.InvocationTargetException;
@@ -34,7 +35,7 @@ public class DLLFunction {
         for(int i=1;i<pars.length;i++){
             DLLField fld = params.get(i-1);
             String name1 = pars[i].getClass().getSimpleName();
-            String name2 = JarClassLoader.wrappers[fld.type].getClass().getSimpleName();
+            String name2 = ValuesBase.dataTypes().getByCode(fld.type).cloneWrapper().getClass().getSimpleName();
             if (!name1.equals(name2))
                 throw UniException.code("Несовпадение типов параметров "+header+"."+fld.name+"["+(i-1)+"]: "+name1+"/"+name2);
                 }

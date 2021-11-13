@@ -103,6 +103,9 @@ public class UniException extends Exception{
     public static UniException format(String mes){
         return new UniException(bug,format,mes);
     }
+    public static UniException userFormat(String mes){
+        return new UniException(bug,format,mes);
+    }
     public static UniException user(Throwable ee){
         return new UniException(warning,userData,ee,true);
     }

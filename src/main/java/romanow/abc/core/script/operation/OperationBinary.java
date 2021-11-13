@@ -1,13 +1,13 @@
 package romanow.abc.core.script.operation;
 
+import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
 import romanow.abc.core.script.ScriptException;
-import romanow.abc.core.script.types.TypeDouble;
-import romanow.abc.core.script.types.TypeFace;
-import romanow.abc.core.script.types.TypeInt;
-import romanow.abc.core.script.types.TypeLong;
+import romanow.abc.core.types.TypeDouble;
+import romanow.abc.core.types.TypeFace;
+import romanow.abc.core.types.TypeLong;
 
 public abstract class OperationBinary extends Operation{
     public OperationBinary(int code, String name) {
@@ -22,8 +22,9 @@ public abstract class OperationBinary extends Operation{
         TypeFace one = stack.pop();
         if (trace)
             out = toString()+" "+one+" "+two;
+        try {
         if (one.isFloatType() || two.isFloatType()){
-            double vv1 = one.toDouble();
+            double vv1 = one.toDouble   ();
             double vv2 = two.toDouble();
             TypeDouble res = new TypeDouble(opDouble(vv1,vv2));
             if (trace)
@@ -40,6 +41,9 @@ public abstract class OperationBinary extends Operation{
             stack.push(res2);
             return;
             }
+            }catch (UniException ee){
+                throwException(context,ValuesBase.SEIllegalTypeConvertion, this.name + " " + one.typeName() + " " + two.typeName());
+                }
         throwException(context,ValuesBase.SEIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
         }
 }

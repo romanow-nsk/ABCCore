@@ -1,9 +1,9 @@
-package romanow.abc.core.script.types;
+package romanow.abc.core.types;
 
+import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
-import romanow.abc.core.script.ScriptException;
 
-public class TypeInt extends TypeFace{
+public class TypeInt extends TypeFace {
     private int value;
     public TypeInt(boolean valid, int vv) {
         super(valid);
@@ -19,13 +19,10 @@ public class TypeInt extends TypeFace{
     public int type() {
         return ValuesBase.DTInt; }
     @Override
-    public String typeName() {
-        return "int"; }
-    @Override
     public String typeNameTitle() {
         return "целое"; }
     @Override
-    public int compare(TypeFace two) throws ScriptException {
+    public int compare(TypeFace two) throws UniException {
         if (two.isIntType()){
             long vv =  value-two.toLong();
             if (vv==0) return 0;
@@ -36,24 +33,30 @@ public class TypeInt extends TypeFace{
             if (vv==0) return 0;
             return vv <0 ? -1 : 1;
             }
-        throw new ScriptException(ValuesBase.SEIllegalCompare,"Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
+        throwBug("Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
+        return 0;
         }
     @Override
-    public String format(String fmtString) throws ScriptException {
+    public Object cloneWrapper() {
+        return new Integer(value);
+        }
+    @Override
+    public String format(String fmtString) throws UniException {
         try {
             return String.format(fmtString, value);
             } catch (Exception ee){
-                throw new ScriptException(ValuesBase.SEIntOutFormat,ValuesBase.SEModeWarning,"Форматирование целого: "+fmtString);
+                throwFormat("Форматирование целого: "+fmtString);
+                return "";
                 }
         }
     @Override
-    public void parse(String ss) throws ScriptException {
+    public void parse(String ss) throws UniException {
         try {
             value = Integer.parseInt(ss);
             setValid(true);
             } catch (Exception ee){
                 setValid(false);
-                throw new ScriptException(ValuesBase.SEIntFormat,"Формат целого: "+ss);
+                throwFormat("Формат целого: "+ss);
                 }
             }
     @Override
@@ -62,19 +65,19 @@ public class TypeInt extends TypeFace{
         }
 
     @Override
-    public double toDouble() throws ScriptException {
+    public double toDouble() throws UniException {
         return value;
         }
     @Override
-    public void fromDouble(double val) throws ScriptException {
+    public void fromDouble(double val) throws UniException {
         value = (int)val;
         }
     @Override
-    public long toLong() throws ScriptException {
+    public long toLong() throws UniException {
         return value;
         }
     @Override
-    public void fromLong(long val) throws ScriptException {
+    public void fromLong(long val) throws UniException {
         value =(int)val;
         }
     @Override

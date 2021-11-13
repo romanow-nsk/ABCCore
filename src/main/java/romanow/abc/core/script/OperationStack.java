@@ -1,7 +1,7 @@
 package romanow.abc.core.script;
 
 import romanow.abc.core.constants.ValuesBase;
-import romanow.abc.core.script.types.TypeFace;
+import romanow.abc.core.types.TypeFace;
 
 import java.util.ArrayList;
 
