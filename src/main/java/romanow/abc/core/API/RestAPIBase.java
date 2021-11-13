@@ -85,8 +85,6 @@ public interface RestAPIBase {
     /** Установка GPS-координат для адреса */
     @POST("/api/address/setgps")
     Call<JLong> setAddressGPS(@Header("SessionToken") String token, @Query("id") long id, @Body GPSPoint gps);
-    @GET("/api/entity/condition/list")
-    Call<ArrayList<DBRequest>> getEntityConditionList(@Header("SessionToken") String token, @Query("classname") String classname, @Query("level") int level,@Body DBRequest conditions);
     //---------------------------- Администрирование ---------------------------------------------------------------------------
     /** ping - запрос клиента */
     @GET("/api/debug/ping")
