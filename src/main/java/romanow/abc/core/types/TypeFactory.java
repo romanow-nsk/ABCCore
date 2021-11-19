@@ -34,7 +34,7 @@ public class TypeFactory extends ArrayList<TypeFace> {
         if (operation==null)
             throw UniException.bug("Недопустимый ТД: "+name);
         return operation.clone();
-    }
+        }
     public int getCodeByName(String name) throws UniException {
         TypeFace operation = mapName.get(name);
         if (operation==null)
