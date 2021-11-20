@@ -56,7 +56,7 @@ public class TableItem {
         return -1;
         }
     public static boolean isDAOClass(Class cls){
-        for(; cls!= Object.class; cls=cls.getSuperclass()) {    // Цикл по текущему и базовым
+        for(; cls!= null; cls=cls.getSuperclass()) {    // Цикл по текущему и базовым
             if (cls==DAO.class)
                 return true;
             }
