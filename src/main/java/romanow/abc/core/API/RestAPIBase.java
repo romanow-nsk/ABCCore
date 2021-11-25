@@ -208,6 +208,11 @@ public interface RestAPIBase {
     /** Получить описатель артефакта по oid  */
     @GET("/api/artifact/get")
     Call<Artifact> getArtifactById(@Header("SessionToken") String token,@Query("id") long id,@Query("level") int level);
+    /** Записать файл как артефакт через multipart-запрос http */
+    @Streaming
+    @Multipart
+    @POST("/api/file/update")
+    Call<Artifact> update(@Header("SessionToken") String token,@Query("artId") long artId, @Part MultipartBody.Part file);
     /** Получить список артефактов  */
     @GET("/api/artifact/list")
     Call<ArtifactList> getArtifactList(@Header("SessionToken") String token, @Query("mode") int mode, @Query("level") int level);

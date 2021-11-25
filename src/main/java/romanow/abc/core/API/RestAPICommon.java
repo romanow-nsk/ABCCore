@@ -27,5 +27,5 @@ public class RestAPICommon {
         RequestBody requestFile = RequestBody.create(mType, file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", "", requestFile);
         return body;
-    }
+        }
 }
