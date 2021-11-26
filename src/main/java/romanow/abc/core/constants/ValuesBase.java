@@ -85,6 +85,21 @@ public class ValuesBase {
                 System.out.println("Ошибка построения карты констант "+ee);
                 }
         }
+    public static Object createEntityByType(String group,int type,String pack) throws UniException {
+        ConstValue constValue = constMap.getGroupMapByValue(group).get(type);
+        if (constValue==null)
+            throw UniException.bug("Не найдена константа для "+group+":"+type);
+        String className = constValue.className();
+        if (className.length()==0)
+            throw UniException.bug("Константа не содержит имя класса Metatype:"+constValue.name());
+        String fullName = pack+"."+className;
+        try {
+            Class cls = Class.forName(fullName);
+            return cls.newInstance();
+            } catch (Exception ee){
+                throw UniException.bug("Ошибка создания объекта класса "+fullName);
+            }
+        }
     //---------------------------------------------------------------------------------------------------
     public final static int ClassNameValues = 0;
     public final static int ClassNameWorkSettings = 1;
