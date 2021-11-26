@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 public @interface CONST {               // Синтаксис аннотации
     String group() default "...";       // Параметры аннотации
     String title() default "...";
+    String className() default "";      // Имя класса
 }

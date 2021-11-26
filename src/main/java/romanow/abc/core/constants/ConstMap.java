@@ -14,13 +14,13 @@ public class ConstMap extends HashMap<String, ConstGroup>{
         ConstValue ss = gmap.get(constId);
         return ss!=null ? ss.title() : "???: "+group+":"+constId;
         }
-    public void put(String group, int constId, String title, String constName){
+    public void put(String group, int constId, String title, String className, String constName){
         ConstGroup gmap = get(group);
         if (gmap==null){
             gmap = new ConstGroup(group);
             put(group,gmap);
             }
-        gmap.put(new ConstValue(group,constName,title,constId));
+        gmap.put(new ConstValue(group,constName,title,className,constId));
         }
     //------------------------------------------------------------------------------------------------------
     public void createConstList(Class cl){
@@ -45,7 +45,7 @@ public class ConstMap extends HashMap<String, ConstGroup>{
                     vv=0;
                 }
                 //System.out.println(about.group()+":"+mname + " ="+vv+" "+about.title());
-                put(about.group(),vv,about.title(),mname);
+                put(about.group(),vv,about.title(),about.className(),mname);
             }
         }
     }
