@@ -70,6 +70,20 @@ public class ConstMap extends HashMap<String, ConstGroup>{
             map.put(cc.value(),cc);
         return map;
         }
+    public ArrayList<ConstValue> getGroupList(String gName){
+        HashMap<Integer,ConstValue> map = getGroupMapByValue(gName);
+        Object oo[] = map.values().toArray();
+        ArrayList<ConstValue> out = new ArrayList<>();
+        for(Object vv : oo)
+            out.add((ConstValue) vv);
+        out.sort(new Comparator<ConstValue>() {
+            @Override
+            public int compare(ConstValue o1, ConstValue o2) {
+                return o1.value()-o2.value();
+                }
+            });
+        return out;
+        }
     public HashMap<String,ConstValue> getGroupMapByName(String gName){
         ConstList list = getValuesList(gName);
         HashMap<String,ConstValue> map = new HashMap<>();
