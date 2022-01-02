@@ -74,7 +74,7 @@ public class Syntax{
         return own; }
 //-------------------------------------------------------------
 //S::=  O | S;O
-    private FunctionCode  S(){
+    public FunctionCode  S(){
         FunctionCode own=new FunctionCode();
         while(LX.type!='#') own.add(O());
         return own; }
@@ -82,7 +82,7 @@ public class Syntax{
 //-------------------------------------------------------------
 //  O::= a=E; | ra; | wE; | i(L)OX |  l(L)O | {S} | ;
 //  X::= пусто | eO
-    private FunctionCode createVarList(TypeFace proto){
+    public FunctionCode createVarList(TypeFace proto){
         FunctionCode own = new FunctionCode();
         own.setResultType(proto.type());
         sget();
@@ -123,7 +123,7 @@ public class Syntax{
                 }
             }
         }
-    private FunctionCode  O(){
+    public FunctionCode  O(){
         int k,lv,m1,m2,i1,i2,i3;
         FunctionCode own = new FunctionCode();
         FunctionCode own1,own2,own3;
@@ -209,7 +209,7 @@ public class Syntax{
             }
     return own; }
 //---------------------------------------------------------------
-    private boolean testExprType(FunctionCode own,int type){
+    public boolean testExprType(FunctionCode own,int type){
         int tt = own.getResultType();
         if (tt!=type){
             String tname = typesMap.get(tt).name();
@@ -220,7 +220,7 @@ public class Syntax{
         }
 //-------------------------------------------------------------
 //L::= A | L or A
-    private FunctionCode  L(){
+    public FunctionCode  L(){
         FunctionCode own,own1;
         own=A();
         while(LX.type=='|') {
@@ -234,7 +234,7 @@ public class Syntax{
         return own; }
 //-------------------------------------------------------------
 //A::= B | A & B
-    private FunctionCode  A(){
+    public FunctionCode  A(){
     FunctionCode own,own1;
         own=B();
         while(LX.type=='&') {
@@ -248,7 +248,7 @@ public class Syntax{
         return own; }
 //-------------------------------------------------------------
 //B::= C | !C
-    private FunctionCode B(){
+    public FunctionCode B(){
         int cnt=0;
         FunctionCode own;
         while(LX.type=='!') { sget();cnt++; }
@@ -263,7 +263,7 @@ public class Syntax{
         }
 //-------------------------------------------------------------
 //C::= (L) | E<E | EnE | E=E | E>E | EgE | ElE
-     private FunctionCode  C(){
+     public FunctionCode  C(){
         FunctionCode own,own1,op;
         if (LX.type=='('){
             sget();
@@ -298,7 +298,7 @@ public class Syntax{
      return own; }
 //-------------------------------------------------------------
 //E::= T | E+T | E-T
-    private FunctionCode  E(){
+    public FunctionCode  E(){
         FunctionCode own,own1,op;
         own=T();
         while(LX.type=='+' || LX.type=='-') {
@@ -315,10 +315,10 @@ public class Syntax{
         return own;
         }
 //------------------------------------------------------------
-    private boolean convertResultTypes(FunctionCode one, FunctionCode two){
+    public boolean convertResultTypes(FunctionCode one, FunctionCode two){
         return convertResultTypes(true,one,two);
         }
-    private boolean convertResultTypes(boolean onlyNumeric, FunctionCode one, FunctionCode two){
+    public boolean convertResultTypes(boolean onlyNumeric, FunctionCode one, FunctionCode two){
         try {
             one.convertResultTypes(two,onlyNumeric);
             } catch (ScriptException ee){
@@ -329,7 +329,7 @@ public class Syntax{
         }
 //-------------------------------------------------------------
 //T::= G | T*G | T/G
-    private FunctionCode T(){
+    public FunctionCode T(){
         int lv2;
         FunctionCode own,own1,op;
         own=G();
@@ -344,7 +344,7 @@ public class Syntax{
     return own; }
 //-------------------------------------------------------------
 // G::= F | F ** F
-    private FunctionCode  G(){
+    public FunctionCode  G(){
         int lv2;
         FunctionCode own,own1,op;
         own=F();
@@ -362,7 +362,7 @@ public class Syntax{
 //  F::= DaY | Dc | D(E)
 //  D::= пусто | -        - унарный минус
 //  Y::= пусто | (E)      - вызов функции с одним аргументом
-    private FunctionCode  F(){
+    public FunctionCode  F(){
         FunctionCode own=new FunctionCode();
         String name;
         int k;
