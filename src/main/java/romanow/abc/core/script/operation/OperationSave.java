@@ -24,7 +24,7 @@ public class OperationSave extends Operation{
                 throwException(context,ValuesBase.SEVarNotDef, this.name);
                 var.setValue(true,one);
             }
-        catch (UniException ee){
+        catch (ScriptException ee){
             throwException(context,ValuesBase.SEIllegalTypeConvertion, this.name + " " + one.typeName());
             }
     }

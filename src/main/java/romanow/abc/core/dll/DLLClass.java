@@ -1,6 +1,8 @@
 package romanow.abc.core.dll;
 
 import romanow.abc.core.UniException;
+import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.ScriptException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,10 +29,10 @@ public class DLLClass {
             return ss;
         }
     // pars[0] - окружение
-    public Object invoke(String header, String funName, Object pars[]) throws UniException {
+    public Object invoke(String header, String funName, Object pars[]) throws ScriptException {
         DLLFunction dllFun = map.get(funName);
         if (dllFun==null)
-            throw UniException.code("Не найдена функция "+ header+"."+funName);
+            throw new ScriptException(ValuesBase.SEBug,"Не найдена функция "+ header+"."+funName);
         return dllFun.invoke(header+"."+funName,pars);
         }
 

@@ -2,6 +2,7 @@ package romanow.abc.core.script;
 import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.functions.FunctionCall;
 import romanow.abc.core.script.operation.*;
 import romanow.abc.core.types.*;
 
@@ -15,17 +16,37 @@ public class Syntax{
     private VariableList variables = new VariableList();
     private HashMap<Integer, ConstValue> errorsMap;
     private HashMap<Integer, ConstValue> typesMap;
+    private HashMap<String, FunctionCall> functionMap = new HashMap<>();
     private TypeFactory typeFaces = new TypeFactory();
+    private FunctionCode codeBase;
     public Syntax(Scaner lex0) {
         lex = lex0;
         errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
         typesMap = ValuesBase.constMap.getGroupMapByValue("DType");
+        createFunctionMap();
         }
+    private void createFunctionMap(){
+        ArrayList<ConstValue> list = constMap.getGroupList("");
+        for(ConstValue cc : list) {
+            String fClassName = "romanow.abc.core.script.functions." + cc.className();
+            try {
+                Class cls = Class.forName(fClassName);
+                Object oo = cls.newInstance();
+                if (!(oo instanceof FunctionCall)){
+                    error(SECreateFunctionBug,"Класс функции "+ cc.title()+" не поддерживает интерфейс FunctionCall");
+                    }
+                FunctionCall fun =(FunctionCall) oo;
+                functionMap.put(cc.title(),fun);
+                }  catch (Exception ee){
+                    error(SECreateFunctionBug,"Ошибка класса функции "+ cc.title()+" "+ee.toString());
+                    }
+                }
+            }
     /*---------------------------------------- Грамматика
     Z::= S#
-    O::= a=E; | i(L)OX |  l(L)O | {S} | V P
-    P::= aGX
-    X::= ; | ,P
+    O::= a(Y); | a=E; | i(L)OX |  l(L)O | {S} | V P | ;
+    P::= aGR
+    R::= ; | ,P
     G:: пусто | =c
     M::= M,J
     J::= s | E | b
@@ -39,7 +60,9 @@ public class Syntax{
     T::= F | T*F | T/F
     F::= DaY | Dc | D(E)
     D::= пусто | -        - унарный минус
-    Y::= пусто | (E)      - вызов функции с одним аргументом
+    Y::= пусто | (H)      - вызов функции
+    H::= пусто | EW
+    W::= пусто | ,EW
     */
     // Семантика языка
     int IP;			            // Порядковый номер команды (для генерации меток)
@@ -50,6 +73,9 @@ public class Syntax{
     void error(UniException ex){
         error(SEDataType,ex.getMessage());
         }
+    void error(ScriptException ex){
+        error(ex.code,ex.getMessage());
+    }
     void error(int code){
         error(code,"");
         }
@@ -79,9 +105,9 @@ public class Syntax{
         while(LX.type!='#') own.add(O());
         return own; }
 
-//-------------------------------------------------------------
-//  O::= a=E; | ra; | wE; | i(L)OX |  l(L)O | {S} | ;
-//  X::= пусто | eO
+//------------ Определение переменных -----------------------------
+//  P::= aGR
+//  R::= ; | ,P
     public FunctionCode createVarList(TypeFace proto){
         FunctionCode own = new FunctionCode();
         own.setResultType(proto.type());
@@ -107,9 +133,9 @@ public class Syntax{
                 try {
                     ff.setValue(false,typeFaces.getByCode(own.getResultType()));
                     own.addOne(new OperationSave(ff.getVarName()));
-                    } catch (UniException e) {
-                    error(e);
                     }
+                catch (ScriptException e) { error(e); }
+                catch (UniException e2) { error(e2); }
                 }
             if (LX.type==','){
                 sget();
@@ -123,6 +149,11 @@ public class Syntax{
                 }
             }
         }
+//----------------- Оператор/определение -----------------------------------
+//  O::= a(Y); | a=E; | i(L)OX |  l(L)O | {S} | V P | ;
+//  X::= пусто | eO
+//  H::= пусто | EW
+//  W::= пусто | ,EW
     public FunctionCode  O(){
         int k,lv,m1,m2,i1,i2,i3;
         FunctionCode own = new FunctionCode();
@@ -150,23 +181,36 @@ public class Syntax{
             own = createVarList(new TypeVoid());
             break;
     case 'a':
-            TypeFace var = variables.get(LX.value);
-            if (var==null){
-                error(SEVarNotDef,LX.value);
+            Lexem name= LX;
+            sget();
+            if (LX.type=='='){          // Присваивание
+                sget();
+                TypeFace var = variables.get(name.value);
+                own = L();
+                if (LX.type!=';') error(SELexemLost,";");
+                sget();
+                if (var==null){
+                    error(SEVarNotDef,name.value);
+                    }
+                else{
+                    try {
+                        var.setValue(false,typeFaces.getByCode(own.getResultType()));
+                        own.addOne(new OperationSave(var.getVarName()));
+                        }
+                    catch (UniException e) { error(e);}
+                    catch (ScriptException e) { error(e);}
+                    }
                 return own;
                 }
-            sget();
-            if (LX.type!='=') error(SELexemLost,"=");
-            else sget();
-            own=L();
-            if (LX.type!=';') error(SELexemLost,";");
-            sget();
-            try {
-                var.setValue(false,typeFaces.getByCode(own.getResultType()));
-                own.addOne(new OperationSave(var.getVarName()));
-                } catch (UniException e) {
-                    error(e);
-                    }
+            else
+            if (LX.type=='('){
+                sget();
+                procFunctionCall(name.value);
+                }
+            else{
+                error(SEIllegalSymbol,LX.value);
+                sget();
+                }
             break;
     case ';': sget();
             break;
@@ -208,6 +252,48 @@ public class Syntax{
             break;
             }
     return own; }
+//---------------------------------------------------------------
+public FunctionCode procFunctionCall(String funName){
+    boolean bad=false;
+    FunctionCode out = new FunctionCode();
+    ArrayList<FunctionCode> paramsCode = new ArrayList<>();
+    if (LX.type==')')
+        sget();
+    else{
+        while (true) {
+            FunctionCode own = L();
+            paramsCode.add(own);
+            if (LX.type == ')') {
+                sget();
+                break;
+                }
+            else
+            if (LX.type==',')
+               sget();
+            else{
+                error(SEIllegalSymbol,LX.value);
+                error(SEIllegalFunSyntax,LX.value);
+                bad = true;
+                break;
+                }
+            }
+        }
+    if (LX.type!=';'){
+        error(SEIllegalSymbol,LX.value);
+        error(SEIllegalFunSyntax,LX.value);
+        }
+    FunctionCall fun = functionMap.get(funName);
+    if (fun==null){
+        error(SEFunNotDefined,LX.value);
+        return out;
+        }
+    int types[] = fun.getParamTypes();
+    for(FunctionCode ff : paramsCode){
+        out.add(ff);
+        }
+    out.add(new OperationCall(funName));
+    return out;
+    }
 //---------------------------------------------------------------
     public boolean testExprType(FunctionCode own,int type){
         int tt = own.getResultType();
@@ -373,11 +459,7 @@ public class Syntax{
                 sget();
                 if (LX.type=='('){
                     sget();
-                    own=E();
-                    if (LX.type!=')') error(SELexemLost,")");
-                    sget();
-                    //-----------------TODO CALL ----------------------------------
-                    //own+="CALL "+name+"\n";
+                    procFunctionCall(name);
                     }
                 else{
                     TypeFace var = variables.get(name);
@@ -394,9 +476,8 @@ public class Syntax{
                         vv.parse(LX.value);
                         own.addOne(new OperationPush(vv));
                         own.setResultType(vv.type());
-                        } catch (UniException ee){
-                            error(SEConstFormat,LX.value);
-                            }
+                        }
+                    catch (ScriptException ee){ error(ee); }
                 sget();
                 break;
     case 'F':   own.addOne(new OperationPush(new TypeBoolean(false)));
@@ -420,10 +501,18 @@ public class Syntax{
         }
     return own;
     }
-//--------------------------------------------------------------------
+    //-------------------------------------------------------------------
+    public FunctionCode getCodeBase() {
+        return codeBase;}
+    public VariableList getVariables() {
+        return variables;}
+    public HashMap<String, FunctionCall> getFunctionMap() {
+        return functionMap;}
+    //--------------------------------------------------------------------
     FunctionCode compile() {
        sget();
-       return Z();
+       codeBase =  Z();
+       return codeBase;
        }
 //-----------------------------------
 public static void main(String[] args) throws ScriptException {
@@ -438,7 +527,7 @@ public static void main(String[] args) throws ScriptException {
         System.out.println(error);
     System.out.println(SS.variables);
     if (SS.errorList.size()==0){
-        CallContext context = new CallContext(ff,SS.variables);
+        CallContext context = new CallContext(SS);
         context.call(true);
         }
    }

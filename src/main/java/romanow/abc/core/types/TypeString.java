@@ -1,7 +1,7 @@
 package romanow.abc.core.types;
 
-import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.ScriptException;
 
 public class TypeString extends TypeFace {
     private String value;
@@ -20,25 +20,25 @@ public class TypeString extends TypeFace {
     public String typeNameTitle() {
         return "короткое вещ."; }
     @Override
-    public int compare(TypeFace two) throws UniException {
+    public int compare(TypeFace two) throws ScriptException {
         if (two.type()==ValuesBase.DTString)
             return value.compareTo(((TypeString)two).value);
         throwBug("Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
         return 0;
         }
     @Override
-    public String format(String fmtString) throws UniException {
+    public String format(String fmtString) throws ScriptException {
         return value;
         }
     @Override
-    public void parse(String ss) throws UniException {
+    public void parse(String ss) throws ScriptException {
         value = ss;
         }
     @Override
     public TypeFace clone() {
         return new TypeString(this);
         }
-    public double toDouble() throws UniException{
+    public double toDouble() throws ScriptException{
         try {
             return Double.parseDouble(value);
             } catch (Exception ee){
@@ -46,12 +46,12 @@ public class TypeString extends TypeFace {
                 return 0;
                 }
         }
-    public void fromDouble(double val) throws UniException{
+    public void fromDouble(double val) throws ScriptException{
         value = ""+val;
         setValid(true);
         }
     @Override
-    public long toLong() throws UniException {
+    public long toLong() throws ScriptException {
         try {
             return Long.parseLong(value);
         } catch (Exception ee){
@@ -60,7 +60,7 @@ public class TypeString extends TypeFace {
             }
         }
     @Override
-    public void fromLong(long val) throws UniException {
+    public void fromLong(long val) throws ScriptException {
         value = ""+val;
         }
     @Override

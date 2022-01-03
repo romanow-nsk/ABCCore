@@ -3,6 +3,7 @@ package romanow.abc.core.dll;
 import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.mongo.DAO;
+import romanow.abc.core.script.ScriptException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,22 +30,27 @@ public class DLLFunction {
         return ss;
         }
     // pars[0] - окружение
-    public Object invoke(String header, Object pars[]) throws UniException {
+    public Object invoke(String header, Object pars[]) throws ScriptException {
         if (params.size()+1!=pars.length)
-            throw UniException.code("Несовпадение количества параметров: "+ header+" "+(params.size()+1)+"/"+pars.length);
+            throw new ScriptException(ValuesBase.SEIllegalFormat,"Несовпадение количества параметров: "+ header+" "+(params.size()+1)+"/"+pars.length);
         for(int i=1;i<pars.length;i++){
             DLLField fld = params.get(i-1);
             String name1 = pars[i].getClass().getSimpleName();
-            String name2 = ValuesBase.dataTypes().getByCode(fld.type).cloneWrapper().getClass().getSimpleName();
+            String name2 = null;
+                try {
+                    name2 = ValuesBase.dataTypes().getByCode(fld.type).cloneWrapper().getClass().getSimpleName();
+                    } catch (UniException ee){
+                    throw new ScriptException(ValuesBase.SEBug,"Ошибка вызова функции "+header+": "+ee.toString());
+                }
             if (!name1.equals(name2))
-                throw UniException.code("Несовпадение типов параметров "+header+"."+fld.name+"["+(i-1)+"]: "+name1+"/"+name2);
+                throw new ScriptException(ValuesBase.SEIllegalFormat,"Несовпадение типов параметров "+header+"."+fld.name+"["+(i-1)+"]: "+name1+"/"+name2);
                 }
         try {
             return method.invoke(null,pars);
             } catch (IllegalAccessException e) {
-                throw UniException.code("Ошибка вызова функции "+header+": "+e.toString());
+                throw new ScriptException(ValuesBase.SEBug,"Ошибка вызова функции "+header+": "+e.toString());
             } catch (InvocationTargetException e) {
-            throw UniException.code("Ошибка вызова функции "+header+": "+e.toString());
+                throw new ScriptException(ValuesBase.SEBug,"Ошибка вызова функции "+header+": "+e.toString());
                 }
         }
     }

@@ -490,6 +490,8 @@ public class ValuesBase {
     public final static int OPow=22;
     @CONST(group = "Operation", title = "save")
     public final static int OSave=23;
+    @CONST(group = "Operation", title = "call")
+    public final static int OCall=24;
     //------------------- Типы ошибок ЯОП -----------------------------------------------------------------
     @CONST(group = "SEType", title = "Не определено")
     public final static int SETypeUndef=0;
@@ -530,10 +532,18 @@ public class ValuesBase {
     public final static int SEIllegalVariable=9;
     @CONST(group = "SError", title = "Недопустимый ТД")
     public final static int SEIllegalDT=10;
+    @CONST(group = "SError", title = "Ошибка вызова функции")
+    public final static int SEFunctionCall=11;
+    @CONST(group = "SError", title = "Недопустимый формат")
+    public final static int SEIllegalFormat=12;
+    @CONST(group = "SError", title = "Программная ошибка (баг)")
+    public final static int SEBug=13;
+    @CONST(group = "SError", title = "Программная ошибка класса функции(баг)")
+    public final static int SECreateFunctionBug=14;
     //--------------------------Коды ошибок компиляции ----------------------------------------------------
     @CONST(group = "SError", title = "Не найден конец текста")
     public final static int SENoEOF=100;
-    @CONST(group = "SError", title = "Пропущего имя переменной ")
+    @CONST(group = "SError", title = "Пропущено имя переменной ")
     public final static int SENoVarName=101;
     @CONST(group = "SError", title = "Переменная не определена")
     public final static int SEVarNotDef=102;
@@ -557,6 +567,17 @@ public class ValuesBase {
     public final static int SEIllegalTypeConvertion=111;
     @CONST(group = "SError", title = "Ошибка преобразования ТД")
     public final static int SEDataType=112;
+    @CONST(group = "SError", title = "Недопустимый символ")
+    public final static int SEIllegalSymbol=113;
+    @CONST(group = "SError", title = "Синтаксическая ошибка функции")
+    public final static int SEIllegalFunSyntax=114;
+    @CONST(group = "SError", title = "Функция не определена")
+    public final static int SEFunNotDefined=115;
+    //------------------------------------ Классы функций --------------------------------------
+    @CONST(group = "ScriptFun", title = "sin", className="FStdSin")
+    public final static int SFSin = 1;
+    @CONST(group = "ScriptFun", title = "cos", className="FStdCos")
+    public final static int SFCos = 2;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         ValuesBase.init();

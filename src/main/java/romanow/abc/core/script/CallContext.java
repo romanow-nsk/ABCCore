@@ -2,6 +2,7 @@ package romanow.abc.core.script;
 
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.functions.FunctionCall;
 import romanow.abc.core.script.operation.*;
 import romanow.abc.core.types.TypeInt;
 
@@ -12,6 +13,7 @@ public class CallContext {
     private OperationStack stack = new OperationStack();
     private VariableList variables = new VariableList();
     private HashMap<Integer, ConstValue> errorsMap;
+    private HashMap<String, FunctionCall> functionMap = new HashMap<>();
     private int ip=0;
     public int getIP() {
         return ip; }
@@ -21,12 +23,20 @@ public class CallContext {
         return getIP()==code.size();
         }
     public void reset(){ ip=0; }
-    public CallContext(FunctionCode code,VariableList list) {
+    public CallContext(FunctionCode code,VariableList list,HashMap<String, FunctionCall> functionMap0) {
         errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
         this.code = code;
         variables = list;
+        functionMap = functionMap0;
         reset();
         }
+    public CallContext(Syntax syntax) {
+        errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
+        this.code = syntax.getCodeBase();
+        variables = syntax.getVariables();
+        functionMap = syntax.getFunctionMap();
+        reset();
+    }
     public void call(boolean trace) throws ScriptException {
         while(!isFinish()){
             Operation operation = code.get(ip);
@@ -59,7 +69,9 @@ public class CallContext {
         return ip; }
     public HashMap<Integer, ConstValue> getErrorsMap() {
         return errorsMap; }
-
+    public HashMap<String, FunctionCall> getFunctionMap() {
+        return functionMap; }
+    //---------------------------------------------------------------------------------------------------
     public static void main(String ss[]) throws ScriptException {
         FunctionCode code = new FunctionCode();
         code.add(new OperationPush(new TypeInt(5)));
@@ -70,7 +82,7 @@ public class CallContext {
         code.add(new OperationAdd());
         VariableList list = new VariableList();
         list.add("a",new TypeInt(22));
-        CallContext context = new CallContext(code,list);
+        CallContext context = new CallContext(code,list,new HashMap<>());
         context.call(true);
     }
 }

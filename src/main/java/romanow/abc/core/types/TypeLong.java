@@ -1,7 +1,7 @@
 package romanow.abc.core.types;
 
-import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.ScriptException;
 
 
 public class TypeLong extends TypeFace {
@@ -27,7 +27,7 @@ public class TypeLong extends TypeFace {
         return new Long(value);
         }
     @Override
-    public int compare(TypeFace two) throws UniException {
+    public int compare(TypeFace two) throws ScriptException {
         if (two.isIntType()){
             long vv =  value-two.toLong();
             if (vv==0) return 0;
@@ -42,7 +42,7 @@ public class TypeLong extends TypeFace {
         return 0;
         }
     @Override
-    public String format(String fmtString) throws UniException {
+    public String format(String fmtString) throws ScriptException {
         try {
             return String.format(fmtString, value);
             } catch (Exception ee){
@@ -51,7 +51,7 @@ public class TypeLong extends TypeFace {
                 }
         }
     @Override
-    public void parse(String ss) throws UniException {
+    public void parse(String ss) throws ScriptException {
         try {
             value = Long.parseLong(ss);
             setValid(true);
@@ -66,19 +66,19 @@ public class TypeLong extends TypeFace {
         }
 
     @Override
-    public double toDouble() throws UniException {
+    public double toDouble() throws ScriptException {
         return value;
         }
     @Override
-    public void fromDouble(double val) throws UniException {
+    public void fromDouble(double val) throws ScriptException {
         value = (int)val;
         }
     @Override
-    public long toLong() throws UniException {
+    public long toLong() throws ScriptException {
         return value;
         }
     @Override
-    public void fromLong(long val) throws UniException {
+    public void fromLong(long val) throws ScriptException {
         value =val;
         }
     @Override

@@ -1,7 +1,7 @@
 package romanow.abc.core.types;
 
-import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.ScriptException;
 
 public class TypeFloat extends TypeFace {
     private float value;
@@ -20,7 +20,7 @@ public class TypeFloat extends TypeFace {
     public String typeNameTitle() {
         return "короткое вещ."; }
     @Override
-    public int compare(TypeFace two) throws UniException {
+    public int compare(TypeFace two) throws ScriptException {
         if (two.isIntType()){
             double vv =  value-two.toDouble();
             if (vv==0) return 0;
@@ -35,7 +35,7 @@ public class TypeFloat extends TypeFace {
         return 0;
     }
     @Override
-    public String format(String fmtString) throws UniException {
+    public String format(String fmtString) throws ScriptException {
         try {
             return String.format(fmtString, value);
             } catch (Exception ee){
@@ -44,7 +44,7 @@ public class TypeFloat extends TypeFace {
                 }
         }
     @Override
-    public void parse(String ss) throws UniException {
+    public void parse(String ss) throws ScriptException {
         try{
              value = Float.parseFloat(ss);
              setValid(true);
@@ -63,19 +63,19 @@ public class TypeFloat extends TypeFace {
         return new Float(value);
     }
 
-    public double toDouble() throws UniException{
+    public double toDouble() throws ScriptException {
         return value;
         }
-    public void fromDouble(double val) throws UniException{
+    public void fromDouble(double val) throws ScriptException{
         value = (float) val;
         setValid(true);
         }
     @Override
-    public long toLong() throws UniException {
+    public long toLong() throws ScriptException {
         return (long)value;
         }
     @Override
-    public void fromLong(long val) throws UniException {
+    public void fromLong(long val) throws ScriptException {
         value = val;
         }
     @Override

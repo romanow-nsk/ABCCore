@@ -40,7 +40,7 @@ public abstract class OperationCompare extends Operation{
             stack.push(res2);
             return;
             }
-            }catch (UniException ee){
+            }catch (ScriptException ee){
                 throwException(context,ValuesBase.SEIllegalTypeConvertion, this.name + " " + one.typeName() + " " + two.typeName());
                 }
 

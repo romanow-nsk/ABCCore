@@ -1,18 +1,18 @@
 package romanow.abc.core.types;
 
-import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.ScriptException;
 
 public abstract class TypeFace {
     private boolean valid=true;
     private String varName="...";
     abstract public int type();                                           // Индекс ТД в ЯОП
     abstract public String typeNameTitle();                               // Имя ТД внешнее
-    abstract public int compare(TypeFace two) throws UniException;        // Сравнение
-    abstract String format(String fmtString) throws UniException;         // Форматированный ТД
-    public abstract void  parse(String value) throws UniException;        // Парсинг из строки, !=null - сообщение об ошибке
+    abstract public int compare(TypeFace two) throws ScriptException;        // Сравнение
+    abstract String format(String fmtString) throws ScriptException;         // Форматированный ТД
+    public abstract void  parse(String value) throws ScriptException;        // Парсинг из строки, !=null - сообщение об ошибке
     abstract public TypeFace clone();                                     // Клонирование
-    abstract public Object cloneWrapper() throws UniException;
+    abstract public Object cloneWrapper() throws ScriptException;
     public String typeName() {
         return ValuesBase.DTypes[type()];
         }
@@ -43,18 +43,18 @@ public abstract class TypeFace {
         return valid; }
     public void setValid(boolean valid) {
         this.valid = valid; }
-    public abstract double toDouble() throws UniException;
-    public abstract void fromDouble(double val) throws UniException;
-    public abstract long toLong() throws UniException;
-    public abstract void fromLong(long val) throws UniException;
+    public abstract double toDouble() throws ScriptException;
+    public abstract void fromDouble(double val) throws ScriptException;
+    public abstract long toLong() throws ScriptException;
+    public abstract void fromLong(long val) throws ScriptException;
     public String getVarName() {
         return varName; }
     public void setVarName(String varName) {
         this.varName = varName; }
-    public void setValue(boolean runTime, TypeFace two) throws UniException {
+    public void setValue(boolean runTime, TypeFace two) throws ScriptException {
         if (type()==ValuesBase.DTBoolean){
             if (two.type()!=ValuesBase.DTBoolean)
-                throw new UniException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации  "+typeName()+"->"+two.typeName());
+                throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации  "+typeName()+"->"+two.typeName());
             if (runTime)
                 ((TypeBoolean)this).fromLong(two.toLong());
             }
@@ -68,12 +68,12 @@ public abstract class TypeFace {
                 }
             }
         else
-            throw new UniException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации  "+typeName()+"->"+two.typeName());
+            throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации  "+typeName()+"->"+two.typeName());
        }
-    public void throwFormat(String mes) throws UniException{
-        throw UniException.userFormat(mes);
+    public void throwFormat(String mes) throws ScriptException{
+        throw new ScriptException(ValuesBase.SEIllegalFormat,mes);
         }
-    public void throwBug(String mes) throws UniException{
-        throw UniException.bug(mes);
+    public void throwBug(String mes) throws ScriptException{
+        throw new ScriptException(ValuesBase.SEBug,mes);
         }
 }

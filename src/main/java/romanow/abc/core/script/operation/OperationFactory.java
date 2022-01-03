@@ -34,6 +34,7 @@ public class OperationFactory extends ArrayList<Operation> {
         addToMaps(new OperationOr());
         addToMaps(new OperationNot());
         addToMaps(new OperationPow());
+        addToMaps(new OperationCall(""));
     }
     public  Operation getByCode(int code) throws ScriptException {
         Operation operation = mapCode.get(code);
