@@ -540,6 +540,8 @@ public class ValuesBase {
     public final static int SEBug=13;
     @CONST(group = "SError", title = "Программная ошибка класса функции(баг)")
     public final static int SECreateFunctionBug=14;
+    @CONST(group = "SError", title = "Ошибка конфигурации")
+    public final static int SEConfiguration=15;
     //--------------------------Коды ошибок компиляции ----------------------------------------------------
     @CONST(group = "SError", title = "Не найден конец текста")
     public final static int SENoEOF=100;
@@ -563,7 +565,7 @@ public class ValuesBase {
     public final static int SEIllegalSyntax=109;
     @CONST(group = "SError", title = "Недопустимый тип выражения")
     public final static int SEIllegalExprDT=110;
-    @CONST(group = "SError", title = "Недопустимой сочетание ТД")
+    @CONST(group = "SError", title = "Недопустимое сочетание ТД")
     public final static int SEIllegalTypeConvertion=111;
     @CONST(group = "SError", title = "Ошибка преобразования ТД")
     public final static int SEDataType=112;
@@ -573,11 +575,15 @@ public class ValuesBase {
     public final static int SEIllegalFunSyntax=114;
     @CONST(group = "SError", title = "Функция не определена")
     public final static int SEFunNotDefined=115;
+    @CONST(group = "SError", title = "Недопустимое окружение вызова функции")
+    public final static int SEIllegalFunEnv=116;
     //------------------------------------ Классы функций --------------------------------------
     @CONST(group = "ScriptFun", title = "sin", className="FStdSin")
     public final static int SFSin = 1;
     @CONST(group = "ScriptFun", title = "cos", className="FStdCos")
     public final static int SFCos = 2;
+    @CONST(group = "ScriptFun", title = "alert", className="FStdAlert")
+    public final static int SFAlert = 3;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         ValuesBase.init();

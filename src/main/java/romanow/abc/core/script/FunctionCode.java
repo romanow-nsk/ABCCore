@@ -49,6 +49,6 @@ public class FunctionCode extends ArrayList<Operation> {
                 setResultType(ValuesBase.DTLong);
             }
         else
-            throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации остатков "+getResultType()+"/"+two.getResultType());
+            throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации "+getResultType()+"/"+two.getResultType());
     }
 }

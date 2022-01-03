@@ -20,7 +20,7 @@ public class FStdSin extends FunctionCall {
         return new int[]{ ValuesBase.DTDouble };
         }
     @Override
-    public void call(CallContext context, Object env) throws ScriptException{
+    public void call(CallContext context) throws ScriptException{
         OperationStack stack = context.getStack();
         TypeFace par0 = stack.pop();
         double dd = Math.sin(par0.toDouble());

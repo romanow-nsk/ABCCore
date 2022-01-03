@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 public class CallContext {
     public final FunctionCode code;
+    private Object callEnvironment;
     private OperationStack stack = new OperationStack();
     private VariableList variables = new VariableList();
     private HashMap<Integer, ConstValue> errorsMap;
@@ -23,18 +24,20 @@ public class CallContext {
         return getIP()==code.size();
         }
     public void reset(){ ip=0; }
-    public CallContext(FunctionCode code,VariableList list,HashMap<String, FunctionCall> functionMap0) {
+    public CallContext(FunctionCode code,VariableList list,HashMap<String, FunctionCall> functionMap0,Object env) {
         errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
         this.code = code;
         variables = list;
         functionMap = functionMap0;
+        callEnvironment = env;
         reset();
         }
-    public CallContext(Syntax syntax) {
+    public CallContext(Syntax syntax,Object env) {
         errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
         this.code = syntax.getCodeBase();
         variables = syntax.getVariables();
         functionMap = syntax.getFunctionMap();
+        callEnvironment = env;
         reset();
     }
     public void call(boolean trace) throws ScriptException {
@@ -71,6 +74,8 @@ public class CallContext {
         return errorsMap; }
     public HashMap<String, FunctionCall> getFunctionMap() {
         return functionMap; }
+    public Object getCallEnvironment() {
+        return callEnvironment;}
     //---------------------------------------------------------------------------------------------------
     public static void main(String ss[]) throws ScriptException {
         FunctionCode code = new FunctionCode();
@@ -82,7 +87,7 @@ public class CallContext {
         code.add(new OperationAdd());
         VariableList list = new VariableList();
         list.add("a",new TypeInt(22));
-        CallContext context = new CallContext(code,list,new HashMap<>());
+        CallContext context = new CallContext(code,list,new HashMap<>(),null);
         context.call(true);
     }
 }

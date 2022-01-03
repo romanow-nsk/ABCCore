@@ -26,7 +26,7 @@ public class Syntax{
         createFunctionMap();
         }
     private void createFunctionMap(){
-        ArrayList<ConstValue> list = constMap.getGroupList("");
+        ArrayList<ConstValue> list = constMap.getGroupList("ScriptFun");
         for(ConstValue cc : list) {
             String fClassName = "romanow.abc.core.script.functions." + cc.className();
             try {
@@ -205,7 +205,9 @@ public class Syntax{
             else
             if (LX.type=='('){
                 sget();
-                procFunctionCall(name.value);
+                FunctionCode code = procFunctionCall(name.value);
+                own.add(code);
+                own.setResultType(code.getResultType());
                 }
             else{
                 error(SEIllegalSymbol,LX.value);
@@ -282,16 +284,22 @@ public FunctionCode procFunctionCall(String funName){
         error(SEIllegalSymbol,LX.value);
         error(SEIllegalFunSyntax,LX.value);
         }
+    if (bad)
+        return out;
     FunctionCall fun = functionMap.get(funName);
     if (fun==null){
         error(SEFunNotDefined,LX.value);
         return out;
         }
     int types[] = fun.getParamTypes();
-    for(FunctionCode ff : paramsCode){
+    for(int i=0; i<paramsCode.size();i++){
+        FunctionCode ff = paramsCode.get(i);
+        if (ff.getResultType()!=types[i])
+            error(ValuesBase.SEIllegalTypeConvertion,"Функция "+ funName+": несовпадение типов для "+i+" параметра "+ff.getResultType()+"-"+types[i]);
         out.add(ff);
         }
     out.add(new OperationCall(funName));
+    out.setResultType(fun.getResultType());         // Тип результата
     return out;
     }
 //---------------------------------------------------------------
@@ -356,9 +364,10 @@ public FunctionCode procFunctionCall(String funName){
             own=L();
             if (LX.type!=')') error(SELexemLost,")");
             sget();
-            if (own.getResultType()!= DTBoolean){
-                error(SEIllegalExprDT,""+typesMap.get(own.getResultType()));
-                }
+            //-------------------- TODO - грамматика для boolean и numeric ------------------
+            //if (own.getResultType()!= DTBoolean){
+            //    error(SEIllegalExprDT,""+typesMap.get(own.getResultType()));
+            //    }
             }
         else{
             own=E();
@@ -455,11 +464,17 @@ public FunctionCode procFunctionCall(String funName){
         boolean minus=false;
         if (LX.type=='-'){ minus=true; sget(); }
         switch (LX.type){
+    case 's':   own.addOne(new OperationPush(new TypeString(LX.value.substring(1,LX.value.length()-1))));
+                own.setResultType(DTString);
+                sget();
+                return own;
     case 'a':   name=LX.value;
                 sget();
                 if (LX.type=='('){
                     sget();
-                    procFunctionCall(name);
+                    FunctionCode code = procFunctionCall(name);
+                    own.add(code);
+                    own.setResultType(code.getResultType());
                     }
                 else{
                     TypeFace var = variables.get(name);
@@ -527,8 +542,8 @@ public static void main(String[] args) throws ScriptException {
         System.out.println(error);
     System.out.println(SS.variables);
     if (SS.errorList.size()==0){
-        CallContext context = new CallContext(SS);
-        context.call(true);
+        CallContext context = new CallContext(SS,null);
+        context.call(false);
         }
    }
 }
