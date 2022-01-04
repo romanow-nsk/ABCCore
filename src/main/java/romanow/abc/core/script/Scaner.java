@@ -178,6 +178,9 @@ public class Scaner {
     //-------------------------------------------------------------------------------------
     public void open(ArrayList<String> ss){
         lines = ss;
+        idx=0;
+        lineIdx=0;
+        str = lines.get(lineIdx);
         }
     public boolean open(String nm) {
         try {
