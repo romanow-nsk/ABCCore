@@ -26,8 +26,11 @@ public class Syntax{
         typesMap = ValuesBase.constMap.getGroupMapByValue("DType");
         createFunctionMap();
         }
-    private void createFunctionMap(){
-        ArrayList<ConstValue> list = constMap.getGroupList("ScriptFun");
+    public void createFunctionMap(){
+        createFunctionMap(constMap.getGroupList("ScriptFun"));
+        }
+    public void createFunctionMap(ArrayList<ConstValue> list){
+        functionMap.clear();
         for(ConstValue cc : list) {
             String fClassName = "romanow.abc.core.script.functions." + cc.className();
             try {
@@ -295,9 +298,13 @@ public FunctionCode procFunctionCall(String funName){
     int types[] = fun.getParamTypes();
     for(int i=0; i<paramsCode.size();i++){
         FunctionCode ff = paramsCode.get(i);
-        if (ff.getResultType()!=types[i])
-            error(ValuesBase.SEIllegalTypeConvertion,"Функция "+ funName+": несовпадение типов для "+i+" параметра "+ff.getResultType()+"-"+types[i]);
-        out.add(ff);
+        try {
+            int resType = FunctionCode.convertResultTypes(ff.getResultType(),types[i],true);
+            ff.setResultType(resType);
+            out.add(ff);
+            } catch (ScriptException e) {
+                error(ValuesBase.SEIllegalTypeConvertion,"Функция "+ funName+": несовпадение типов для "+i+" параметра "+ff.getResultType()+"-"+types[i]);
+                }
         }
     out.add(new OperationCall(funName));
     out.setResultType(fun.getResultType());         // Тип результата
@@ -416,7 +423,8 @@ public FunctionCode procFunctionCall(String funName){
         }
     public boolean convertResultTypes(boolean onlyNumeric, FunctionCode one, FunctionCode two){
         try {
-            one.convertResultTypes(two,onlyNumeric);
+            int resType = FunctionCode.convertResultTypes(one.getResultType(),two.getResultType(),onlyNumeric);
+            one.setResultType(resType);
             } catch (ScriptException ee){
                 error(ee.code, ee.getMessage());
                 return false;

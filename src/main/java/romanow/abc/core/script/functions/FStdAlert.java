@@ -34,6 +34,6 @@ public class FStdAlert extends FunctionCall {
             } catch (Exception ee){
                 throw new ScriptException(ValuesBase.SEBug,"Исключение: "+ee.toString());
                 }
-        System.out.println("Трассировка: "+title.format("")+value.toDouble());
+        context.trace("Трассировка: "+title.format("")+value.toDouble());
         }
 }

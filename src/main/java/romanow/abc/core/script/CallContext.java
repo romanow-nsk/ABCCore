@@ -1,21 +1,27 @@
 package romanow.abc.core.script;
 
+import lombok.Getter;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.functions.FunctionCall;
 import romanow.abc.core.script.operation.*;
 import romanow.abc.core.types.TypeInt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CallContext {
     public final FunctionCode code;
-    private Object callEnvironment;
-    private OperationStack stack = new OperationStack();
-    private VariableList variables = new VariableList();
-    private HashMap<Integer, ConstValue> errorsMap;
-    private HashMap<String, FunctionCall> functionMap = new HashMap<>();
-    private int ip=0;
+    @Getter private Object callEnvironment;
+    @Getter private StringBuffer traceList = new StringBuffer();
+    @Getter private OperationStack stack = new OperationStack();
+    @Getter private VariableList variables = new VariableList();
+    @Getter private HashMap<Integer, ConstValue> errorsMap;
+    @Getter private HashMap<String, FunctionCall> functionMap = new HashMap<>();
+    @Getter private int ip=0;
+    public void trace(String ss){
+        traceList.append(ss+"\n");
+        }
     public int getIP() {
         return ip; }
     public void incIP(){ ip++; }
@@ -45,17 +51,17 @@ public class CallContext {
             Operation operation = code.get(ip);
             String mes = "ip="+ip+" oper="+operation.toString();
             if (trace)
-                System.out.println(mes);
+                trace(mes);
             ip++;
             try {
                 operation.exec(stack,this,trace);
                 if (trace){
-                    System.out.println("-----------------------------------");
+                    trace("-----------------------------------");
                     String ss = operation.getTrace();
                     if (ss.length()!=0)
-                        System.out.println(ss);
-                    System.out.println(variables);
-                    System.out.println(stack);
+                        trace(ss);
+                    trace(variables.toString());
+                    trace(stack.toString());
                     }
                 } catch (ScriptException e) {
                     throw e.clone(mes);
