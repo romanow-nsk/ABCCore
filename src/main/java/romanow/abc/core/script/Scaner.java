@@ -176,7 +176,10 @@ public class Scaner {
         keywords.put(lexem.value,lexem);
         }
     //-------------------------------------------------------------------------------------
-    boolean open(String nm) {
+    public void open(ArrayList<String> ss){
+        lines = ss;
+        }
+    public boolean open(String nm) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(nm), "Windows-1251"));
             lines.clear();

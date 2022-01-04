@@ -1,4 +1,5 @@
 package romanow.abc.core.script;
+import lombok.Getter;
 import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
@@ -11,14 +12,14 @@ import static romanow.abc.core.constants.ValuesBase.*;
 import java.util.*;
 
 public class Syntax{
-    private Scaner lex;
-    private ArrayList<CompileError> errorList = new ArrayList<>();
-    private VariableList variables = new VariableList();
-    private HashMap<Integer, ConstValue> errorsMap;
-    private HashMap<Integer, ConstValue> typesMap;
-    private HashMap<String, FunctionCall> functionMap = new HashMap<>();
-    private TypeFactory typeFaces = new TypeFactory();
-    private FunctionCode codeBase;
+    @Getter private Scaner lex;
+    @Getter private ArrayList<CompileError> errorList = new ArrayList<>();
+    @Getter private VariableList variables = new VariableList();
+    @Getter private HashMap<Integer, ConstValue> errorsMap;
+    @Getter private HashMap<Integer, ConstValue> typesMap;
+    @Getter private HashMap<String, FunctionCall> functionMap = new HashMap<>();
+    @Getter private TypeFactory typeFaces = new TypeFactory();
+    @Getter private FunctionCode codeBase;
     public Syntax(Scaner lex0) {
         lex = lex0;
         errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
@@ -516,15 +517,8 @@ public FunctionCode procFunctionCall(String funName){
         }
     return own;
     }
-    //-------------------------------------------------------------------
-    public FunctionCode getCodeBase() {
-        return codeBase;}
-    public VariableList getVariables() {
-        return variables;}
-    public HashMap<String, FunctionCall> getFunctionMap() {
-        return functionMap;}
     //--------------------------------------------------------------------
-    FunctionCode compile() {
+    public FunctionCode compile() {
        sget();
        codeBase =  Z();
        return codeBase;
