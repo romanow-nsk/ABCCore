@@ -7,7 +7,6 @@ import romanow.abc.core.script.functions.FunctionCall;
 import romanow.abc.core.script.operation.*;
 import romanow.abc.core.types.TypeInt;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CallContext {

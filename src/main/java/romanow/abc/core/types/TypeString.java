@@ -4,72 +4,67 @@ import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptException;
 
 public class TypeString extends TypeFace {
-    private String value;
-    public TypeString(String val) {
-        super(true);
-        value = val;
+    public TypeString(){
+        this("");
         }
-    public TypeString(TypeString two){
-        super(two.isValid());
-        value = two.value;
+    public TypeString(String vv){
+        setType(ValuesBase.DTString);
+        setSymbolValue(vv);
         }
-    @Override
-    public int type() {
-        return ValuesBase.DTString; }
-    @Override
-    public String typeNameTitle() {
-        return "короткое вещ."; }
     @Override
     public int compare(TypeFace two) throws ScriptException {
-        if (two.type()==ValuesBase.DTString)
-            return value.compareTo(((TypeString)two).value);
-        throwBug("Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
+        if (two.getType()==ValuesBase.DTString)
+            return getSymbolValue().compareTo(((TypeString)two).getSymbolValue());
+        throwBug("Недопустимое сравнение: "+this.getTypeName()+"/"+two.getTypeName());
         return 0;
         }
     @Override
-    public String format(String fmtString) throws ScriptException {
-        return value;
+    public String format() throws ScriptException {
+        return getSymbolValue();
         }
     @Override
     public void parse(String ss) throws ScriptException {
-        value = ss;
-        }
-    @Override
-    public TypeFace clone() {
-        return new TypeString(this);
+        setSymbolValue(ss);
         }
     public double toDouble() throws ScriptException{
         try {
-            return Double.parseDouble(value);
+            return Double.parseDouble(getSymbolValue());
             } catch (Exception ee){
-                throwFormat("Недопустимое приведение к double "+value);
+                throwFormat("Недопустимое приведение к double "+getSymbolValue());
                 return 0;
                 }
         }
     public void fromDouble(double val) throws ScriptException{
-        value = ""+val;
-        setValid(true);
+        setSymbolValue(""+val);
         }
     @Override
     public long toLong() throws ScriptException {
         try {
-            return Long.parseLong(value);
+            return Long.parseLong(getSymbolValue());
         } catch (Exception ee){
-            throwFormat("Недопустимое приведение к long "+value);
+            throwFormat("Недопустимое приведение к long "+getSymbolValue());
             return 0;
             }
         }
     @Override
     public void fromLong(long val) throws ScriptException {
-        value = ""+val;
+        setSymbolValue(""+val);
+        }
+    @Override
+    public void convertToGroup(boolean runTime,int group) throws ScriptException {
+
+        }
+    @Override
+    public void setValue(boolean runTime, TypeFace two) throws ScriptException {
+        if (runTime)
+            setSymbolValue(two.format());
         }
     @Override
     public Object cloneWrapper() {
-        return new String(value);
+        return new String(getSymbolValue());
         }
-
     @Override
     public String toString(){
-        return super.toString()+" "+value;
+        return super.toString()+" "+getSymbolValue();
     }
-}
+        }

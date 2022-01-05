@@ -17,7 +17,7 @@ public class OperationPushVar extends Operation{
         TypeFace var = context.getVariables().get(varName);
         if (var==null)
             throwException(context,ValuesBase.SEIllegalVariable,varName);
-        stack.push(var.clone());
+        stack.push(var.cloneVar());
         }
     @Override
     public Operation clone() {

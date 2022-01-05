@@ -17,9 +17,9 @@ public class OperationJmpTrue extends Operation{
     public void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptException {
         if (trace) setTrace(toString());
         TypeFace cond = stack.pop();
-        if (cond.type()!=ValuesBase.DTBoolean)
-            throwException(context,ValuesBase.SEIllegalDT, this.name + " " + cond.typeName());
-        if (((TypeBoolean)cond).getValue()==true)
+        if (cond.getType()!=ValuesBase.DTBoolean)
+            throwException(context,ValuesBase.SEIllegalDT, this.name + " " + cond.getTypeName());
+        if (((TypeBoolean)cond).isBoolValue()==true)
             context.jump(offset);
         }
     @Override

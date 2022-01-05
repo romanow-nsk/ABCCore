@@ -20,15 +20,15 @@ public abstract class OperationBoolean extends Operation{
         TypeFace one = stack.pop();
         if (trace)
             out = toString()+" "+one+" "+two;
-        if (one.type()==ValuesBase.DTBoolean && two.type()==ValuesBase.DTBoolean){
-            boolean vv1 = ((TypeBoolean)one).getValue();
-            boolean vv2 = ((TypeBoolean)two).getValue();
+        if (one.getGroup()==ValuesBase.DTGLogical && two.getGroup()==ValuesBase.DTGLogical){
+            boolean vv1 = one.isBoolValue();
+            boolean vv2 = two.isBoolValue();
             TypeBoolean res = new TypeBoolean(opBoolean(vv1,vv2));
             if (trace)
                 out+="->"+res;
             stack.push(res);
             return;
             }
-        throwException(context,ValuesBase.SEIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
+        throwException(context,ValuesBase.SEIllegalOperation, this.name + " " + one.getTypeName() + " " + two.getTypeName());
         }
 }

@@ -6,14 +6,8 @@ public class OperationGT extends OperationCompare{
     public OperationGT() {
         super(ValuesBase.OGT, "gt");
         }
-    @Override
-    public boolean opDouble(double one, double two) {
-        return one>two;
-        }
-    @Override
-    public boolean opLong(long one, long two) {
-        return one>two;
-        }
+    public boolean opCompare(int res) {
+        return  res>0;}
     @Override
     public Operation clone() {
         return new OperationGT();

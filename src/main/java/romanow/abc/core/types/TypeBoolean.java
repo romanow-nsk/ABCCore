@@ -5,81 +5,67 @@ import romanow.abc.core.script.ScriptException;
 
 
 public class TypeBoolean extends TypeFace {
-    private boolean value;
-    public boolean getValue() {
-        return value; }
-    public TypeBoolean(boolean valid, boolean vv) {
-        super(valid);
-        value = vv;
+    public TypeBoolean(){
+        this(false);
         }
-    public TypeBoolean(boolean word) {
-        super(true);
-        value = word;
+    public TypeBoolean(boolean vv){
+        setType(ValuesBase.DTBoolean);
+        setBoolValue(vv);
         }
-    public TypeBoolean(TypeBoolean two) {
-        super(two);
-        value = two.value;
-        }
-    @Override
-    public int type() {
-        return ValuesBase.DTBoolean; }
-    @Override
-    public String typeNameTitle() {
-        return "логическое"; }
     @Override
     public int compare(TypeFace two) throws ScriptException {
-        if (two.type()!=ValuesBase.DTBoolean)
-            throwBug("Недопустимое сравнение: "+this.typeName()+"/"+two.typeName());
+        if (two.getType()!=ValuesBase.DTBoolean)
+            throwBug("Недопустимое сравнение: "+this.getTypeName()+"/"+two.getTypeName());
         long vv = toLong() - two.toLong();
         return vv==0 ? 0 :(vv<0 ? -1 : 1);
         }
     @Override
-    public String format(String fmtString) throws ScriptException {
-        try {
-            return String.format(fmtString, value);
-            } catch (Exception ee){
-                throwFormat("Форматирование целого: "+fmtString);
-                return "";
-                }
+    public String format() throws ScriptException {
+        return ""+isBoolValue();
         }
     @Override
     public void parse(String ss) throws ScriptException {
         try {
-            value = Boolean.parseBoolean(ss);
-            setValid(true);
+            setBoolValue(Boolean.parseBoolean(ss));
             } catch (Exception ee){
-                setValid(false);
                 throwFormat("Формат целого: "+ss);
                 }
             }
     @Override
-    public TypeFace clone() {
-        return new TypeBoolean(isValid(),value);
-        }
-
-    @Override
     public Object cloneWrapper() throws ScriptException {
-        return new Boolean(value);
-    }
-
+        return new Boolean(isBoolValue());
+        }
     @Override
     public double toDouble() throws ScriptException {
-        return value ? 1: 0;
+        return isBoolValue() ? 1: 0;
         }
     @Override
     public void fromDouble(double val) throws ScriptException {
-        value = val!=0;
+        setBoolValue(val!=0);
         }
     @Override
     public long toLong() throws ScriptException {
-        return value ? 1: 0;
+        return isBoolValue() ? 1: 0;
         }
     @Override
     public void fromLong(long val) throws ScriptException {
-        value = val!=0;
+        setBoolValue(val!=0);
+        }
+    @Override
+    public void convertToGroup(boolean runTime,int group) throws ScriptException{
+        if (group!=ValuesBase.DTGLogical)
+            throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка приведения типа "+getTypeName()+"->"+ValuesBase.DTGroupNames[group]);
+        }
+
+    @Override
+    public void setValue(boolean runTime, TypeFace two) throws ScriptException {
+        if (!two.isLogical())
+            throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации  "+getTypeName()+"->"+two.getTypeName());
+        if (runTime)
+            setBoolValue(two.isBoolValue());
         }
     @Override
     public String toString(){
-        return super.toString()+" "+value;
-    }
+        return super.toString()+" "+isBoolValue();
+        }
 }

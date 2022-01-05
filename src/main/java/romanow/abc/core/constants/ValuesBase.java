@@ -417,7 +417,18 @@ public class ValuesBase {
     public final static int EventSystem=4;          // Системное - сервер данных
     //------------------------ Источники артефактов ------------------------------------------------------
     public final static String ArtifactParentList[] = {"ReportFile", "User"};
-    //---------------------  Типы данных ЯОП -------------------------------------------------------------
+    //---------------------  Группы типов данных ЯОC -------------------------------------------------------------
+    @CONST(group = "DTGroup", title = "undefined")
+    public final static int DTGUndefuned=0;
+    @CONST(group = "DTGroup", title = "symbols")
+    public final static int DTGSymbol=1;
+    @CONST(group = "DTGroup", title = "integer")
+    public final static int DTGInteger=2;
+    @CONST(group = "DTGroup", title = "real")
+    public final static int DTGReal=3;
+    @CONST(group = "DTGroup", title = "logical")
+    public final static int DTGLogical=4;
+    //---------------------  Типы данных ЯОC -------------------------------------------------------------
     @CONST(group = "DType", title = "void")
     public final static int DTVoid=0;
     @CONST(group = "DType", title = "short")
@@ -438,9 +449,15 @@ public class ValuesBase {
     public final static int DTDateTime=8;
     @CONST(group = "DType", title = "array")
     public final static int DTArray=9;
-    @CONST(group = "DType", title = "String")
+    @CONST(group = "DType", title = "string")
     public final static int DTString=10;
-    public final static String DTypes[]={"void","short","int","long","float","double","boolean","char","date","array","String"};
+    public final static String DTTypes[]= {
+        "void","short","int","long","float","double","boolean","char","date","array","string"};
+    public final static int DTGroup[]= {
+            DTGUndefuned,DTGInteger,DTGInteger,DTGInteger,DTGReal,DTGReal,
+            DTGLogical,DTGUndefuned,DTGUndefuned,DTGUndefuned,DTGSymbol};
+    public final static String DTGroupNames[]={"void","string","int","double","boolean"};
+    public final static int DTGTypes[]={DTVoid,DTString,DTLong,DTDouble,DTBoolean };
     //---------------------  Операции ЯОП -----------------------------------------------------------------
     @CONST(group = "Operation", title = "nop")
     public final static int ONOP=0;
@@ -492,6 +509,18 @@ public class ValuesBase {
     public final static int OSave=23;
     @CONST(group = "Operation", title = "call")
     public final static int OCall=24;
+    @CONST(group = "Operation", title = "andWord")
+    public final static int OAndW=25;
+    @CONST(group = "Operation", title = "orWord")
+    public final static int OOrW=26;
+    @CONST(group = "Operation", title = "notWord")
+    public final static int ONotW=27;
+    @CONST(group = "Operation", title = "xorWord")
+    public final static int OXorW=28;
+    @CONST(group = "Operation", title = "xor")
+    public final static int OXor=29;
+    @CONST(group = "Operation", title = "convert")
+    public final static int OConvert=30;
     //------------------- Типы ошибок ЯОП -----------------------------------------------------------------
     @CONST(group = "SEType", title = "Не определено")
     public final static int SETypeUndef=0;

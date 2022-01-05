@@ -6,7 +6,6 @@ import romanow.abc.core.script.OperationStack;
 import romanow.abc.core.script.ScriptException;
 import romanow.abc.core.types.TypeDouble;
 import romanow.abc.core.types.TypeFace;
-import romanow.abc.core.types.TypeInt;
 import romanow.abc.core.types.TypeString;
 
 public class FStdAlert extends FunctionCall {
@@ -24,16 +23,16 @@ public class FStdAlert extends FunctionCall {
     @Override
     public void call(CallContext context) throws ScriptException{
         OperationStack stack = context.getStack();
-        TypeString title;
-        TypeDouble value;
+        String title;
+        double value;
         try {
             TypeFace par1 = stack.pop();
             TypeFace par0 = stack.pop();
-            title = (TypeString) par0;
-            value = (TypeDouble) par1;
+            title = par0.getSymbolValue();
+            value = par1.getRealValue();
             } catch (Exception ee){
                 throw new ScriptException(ValuesBase.SEBug,"Исключение: "+ee.toString());
                 }
-        context.trace("Трассировка: "+title.format("")+value.toDouble());
+        context.trace("Трассировка: "+title+value);
         }
 }

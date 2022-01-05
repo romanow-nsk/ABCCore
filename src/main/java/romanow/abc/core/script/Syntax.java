@@ -56,12 +56,16 @@ public class Syntax{
     J::= s | E | b
     X::= пусто | eO
     S::= пусто | OS
-    L::= A | L | A
-    A::= B | A & B
-    B::= C | !C
+    L::= A | L or A | L xor A
+    A::= B | A and B
+    B::= C | not B
     C::= (L) | E<E | E=E | E>E | EgE | ElE
     E::= T | E+T | E-T
-    T::= F | T*F | T/F
+    T::= U | T*U | T/U
+    U:: N | N**N
+    N:: K , N|K, N^K
+    K:: I | K&I
+    I:: F | !I
     F::= DaY | Dc | D(E)
     D::= пусто | -        - унарный минус
     Y::= пусто | (H)      - вызов функции
@@ -114,14 +118,20 @@ public class Syntax{
 //  R::= ; | ,P
     public FunctionCode createVarList(TypeFace proto){
         FunctionCode own = new FunctionCode();
-        own.setResultType(proto.type());
+        own.setResultType(proto.getType());
         sget();
         while (true){
             if (LX.type!='a'){
                 error(SENoVarName,LX.value);
                 return own;
                 }
-            TypeFace ff = proto.clone();
+            TypeFace ff=null;
+            try {
+                ff = proto.cloneVar();
+                } catch (ScriptException ee){
+                    error(SEBug,LX.value+" "+ee.toString());
+                    return own;
+                    }
             if (variables.get(LX.value)!=null){
                 error(SEVarMultiply,LX.value);
                 return own;
@@ -134,12 +144,11 @@ public class Syntax{
                 sget();
                 FunctionCode own1 = L();
                 own.add(own1);
-                try {
-                    ff.setValue(false,typeFaces.getByCode(own.getResultType()));
-                    own.addOne(new OperationSave(ff.getVarName()));
+                if (!ff.isSetEnable(own.getResultGroup())){
+                    error(SEIllegalTypeConvertion,"Недопустимое присваивание "+ff.getTypeName()+"="+ own.getResultGroupName());
+                    return own;
                     }
-                catch (ScriptException e) { error(e); }
-                catch (UniException e2) { error(e2); }
+                own.addOne(new OperationSave(ff.getVarName()));
                 }
             if (LX.type==','){
                 sget();
@@ -200,12 +209,11 @@ public class Syntax{
                     error(SEVarNotDef,name.value);
                     }
                 else{
-                    try {
-                        var.setValue(false,typeFaces.getByCode(own.getResultType()));
-                        own.addOne(new OperationSave(var.getVarName()));
+                    if (!var.isSetEnable(own.getResultGroup())){
+                        error(SEIllegalTypeConvertion,"Недопустимое присваивание "+var.getTypeName()+"="+ own.getResultGroupName());
+                        return own;
                         }
-                    catch (UniException e) { error(e);}
-                    catch (ScriptException e) { error(e);}
+                    own.addOne(new OperationSave(var.getVarName()));
                     }
                 return own;
                 }
@@ -301,73 +309,132 @@ public FunctionCode procFunctionCall(String funName){
     int types[] = fun.getParamTypes();
     for(int i=0; i<paramsCode.size();i++){
         FunctionCode ff = paramsCode.get(i);
-        try {
-            int resType = FunctionCode.convertResultTypes(ff.getResultType(),types[i],true);
-            ff.setResultType(resType);
-            out.add(ff);
-            } catch (ScriptException e) {
-                error(ValuesBase.SEIllegalTypeConvertion,"Функция "+ funName+": несовпадение типов для "+i+" параметра "+ff.getResultType()+"-"+types[i]);
-                }
+        int resGroup = DTGroup[types[i]];
+        if (!ff.isSetEnableByType(types[i])){
+            error(SEIllegalTypeConvertion,"Функция "+ funName+": несовпадение типов для "+i+" параметра "+ff.getResultType()+"-"+typesMap.get(types[i]));
+            }
+        if (resGroup!=ff.getResultGroup()){
+            ff.addOne(new OperationConvertType(resGroup));
+            ff.setResultTypeByGroup(resGroup);
+            }
+        out.add(ff);
         }
     out.add(new OperationCall(funName));
     out.setResultType(fun.getResultType());         // Тип результата
     return out;
     }
 //---------------------------------------------------------------
-    public boolean testExprType(FunctionCode own,int type){
-        int tt = own.getResultType();
+    public boolean testExprGroup(FunctionCode own,int type){
+        int tt = own.getResultGroup();
         if (tt!=type){
-            String tname = typesMap.get(tt).name();
-            error(SEIllegalExprDT,own.getResultType()+(tname==null ? "???" : tname) +" "+LX.value);
+            error(SEIllegalExprDT,own.getResultType()+ValuesBase.DTGroupNames[type] +" "+LX.value);
             return false;
             }
         return true;
         }
 //-------------------------------------------------------------
-//L::= A | L or A
+//L::= A | L or A | L xor A
     public FunctionCode  L(){
         FunctionCode own,own1;
         own=A();
-        while(LX.type=='|') {
+        while(LX.type=='|' || LX.type=='o') {
+            boolean or = LX.type=='|';
             sget();
             own1=A();
-            if (!testExprType(own1,DTBoolean)){
+            if (!testExprGroup(own1,DTGLogical)){
                 return own;
                 }
-            own.add(own1).addOne(new OperationOr());
+            own.add(own1).addOne(or ? new OperationOr() : new OperationXor());
             }
         return own; }
 //-------------------------------------------------------------
-//A::= B | A & B
+//A::= B | A and B
     public FunctionCode  A(){
     FunctionCode own,own1;
         own=B();
-        while(LX.type=='&') {
+        while(LX.type=='a') {
             sget();
             own1=B();
-            if (!testExprType(own1,DTBoolean)){
+            if (!testExprGroup(own1,DTGLogical)){
                 return own;
                 }
             own.add(own1).addOne(new OperationAnd());
             }
         return own; }
 //-------------------------------------------------------------
-//B::= C | !C
+//B::= C | not B
     public FunctionCode B(){
         int cnt=0;
         FunctionCode own;
-        while(LX.type=='!') { sget();cnt++; }
+        while(LX.type=='t') { sget();cnt++; }
         own=C();
         if (cnt!=0){
-            if (!testExprType(own,DTBoolean)){
+            if (!testExprGroup(own,DTGLogical)){
                 return own;
                 }
             }
         if (cnt%2==0) return own;
         return own.addOne(new OperationNot());
         }
+    //-------------------------------------------------------------------------------------------------
+    public void setResultTypeForBinary(FunctionCode own,FunctionCode own1){
+        int commonGroup = TypeFace.getCommonGroup(own.getResultGroup(),own1.getResultGroup());
+        if (commonGroup==-1) {
+            error(ValuesBase.SEIllegalTypeConvertion, "Недопустимое сочетание типов  " + own.getResultType() + "<>" + own1.getResultType());
+            }
+        //-------------- Команды приведения не нужны, только следить........
+        own.add(own1);
+        own.setResultTypeByGroup(commonGroup);
+        }
 //-------------------------------------------------------------
-//C::= (L) | E<E | EnE | E=E | E>E | EgE | ElE
+// N:: K , N|K, N^K
+    public FunctionCode  N(){
+        FunctionCode own,own1;
+        own=K();
+        while(LX.type=='|' || LX.type=='^') {
+            boolean or = LX.type=='|';
+            sget();
+            own1=K();
+            if (!testExprGroup(own,DTGInteger) || !testExprGroup(own1,DTGInteger)){
+                return own;
+                }
+            setResultTypeForBinary(own,own1);
+            own.addOne(or ? new OperationOrWord() : new OperationXorWord());
+            }
+        return own; }
+//-------------------------------------------------------------
+// K:: I | K&I
+    public FunctionCode  K(){
+        FunctionCode own,own1;
+        own=I();
+        while(LX.type=='&') {
+            sget();
+            own1=I();
+            if (!testExprGroup(own,DTGInteger) || !testExprGroup(own1,DTGInteger)){
+                return own;
+                }
+            setResultTypeForBinary(own,own1);
+            own.addOne(new OperationAndWord());
+            }
+        return own;
+        }
+//-------------------------------------------------------------
+//I::= F | !I
+    public FunctionCode I(){
+        int cnt=0;
+        FunctionCode own;
+        while(LX.type=='!') { sget();cnt++; }
+        own=F();
+        if (cnt!=0){
+            if (!testExprGroup(own,DTGInteger)){
+                return own;
+                }
+            }
+        if (cnt%2==0) return own;
+        return own.addOne(new OperationNotWord());
+        }
+//-------------------------------------------------------------
+// C::= (L) | E<E | EnE | E=E | E>E | EgE | ElE
      public FunctionCode  C(){
         FunctionCode own,own1,op;
         if (LX.type=='('){
@@ -411,12 +478,13 @@ public FunctionCode procFunctionCall(String funName){
             char cc = LX.type;
             sget();
             own1=T();
-            if (!own.isResultNumetic()){
-                error(SEIllegalExprDT,""+typesMap.get(own.getResultType()));
-                }
-            if (!convertResultTypes(own,own1))
-                return own;
-            own.add(own1).addOne(cc=='+' ? new OperationAdd() : new OperationSub());
+            setResultTypeForBinary(own,own1);
+            //if (!own.isResultNumetic()){
+            //    error(SEIllegalExprDT,""+typesMap.get(own.getResultType()));
+            //    }
+            //if (!convertResultTypes(own,own1))
+            //    return own;
+            own.addOne(cc=='+' ? new OperationAdd() : new OperationSub());
             }
         return own;
         }
@@ -435,32 +503,35 @@ public FunctionCode procFunctionCall(String funName){
         return true;
         }
 //-------------------------------------------------------------
-//T::= G | T*G | T/G
+//T::= U | T*U | T/U
     public FunctionCode T(){
         int lv2;
         FunctionCode own,own1,op;
-        own=G();
+        own=U();
         while(LX.type=='*' || LX.type=='/') {
             char cc = LX.type;
             sget();
-            own1=G();
-            if (!convertResultTypes(own,own1))
-                return own;
-            own.add(own1).addOne(cc=='*' ? new OperationMul() : new OperationDiv());
+            own1=U();
+            setResultTypeForBinary(own,own1);
+            //if (!convertResultTypes(own,own1))
+            //    return own;
+            own.addOne(cc=='*' ? new OperationMul() : new OperationDiv());
             }
-    return own; }
+        return own;
+        }
 //-------------------------------------------------------------
-// G::= F | F ** F
-    public FunctionCode  G(){
+// U::= N | N ** N
+    public FunctionCode  U(){
         int lv2;
         FunctionCode own,own1,op;
-        own=F();
+        own=N();
         if(LX.type=='p') {
             sget();
-            own1=F();
-            if (!convertResultTypes(own,own1))
-                return own;
-            own.add(own1).addOne(new OperationPow());
+            own1=N();
+            setResultTypeForBinary(own,own1);
+            //if (!convertResultTypes(own,own1))
+            //    return own;
+            own.addOne(new OperationPow());
             }
         return own;
     }
@@ -494,7 +565,7 @@ public FunctionCode procFunctionCall(String funName){
                         error(SEVarNotDef,name);
                     else{
                         own.addOne(new OperationPush(var));
-                        own.setResultType(var.type());
+                        own.setResultType(var.getType());
                         }
                     }
                 break;
@@ -502,7 +573,7 @@ public FunctionCode procFunctionCall(String funName){
                     try {
                         vv.parse(LX.value);
                         own.addOne(new OperationPush(vv));
-                        own.setResultType(vv.type());
+                        own.setResultType(vv.getType());
                         }
                     catch (ScriptException ee){ error(ee); }
                 sget();
@@ -538,7 +609,7 @@ public FunctionCode procFunctionCall(String funName){
 public static void main(String[] args) throws ScriptException {
     ValuesBase.init();
     Scaner lex = new Scaner();
-    boolean bb=lex.open("Input01.txt");
+    boolean bb=lex.open("Input02.txt");
     Syntax SS=new Syntax(lex);
     FunctionCode ff = SS.compile();
     System.out.print(ff);
@@ -548,7 +619,12 @@ public static void main(String[] args) throws ScriptException {
     System.out.println(SS.variables);
     if (SS.errorList.size()==0){
         CallContext context = new CallContext(SS,null);
-        context.call(false);
+        try {
+            context.call(true);
+            } catch (ScriptException ee){
+                System.out.println(ee.toString());
+                }
+        System.out.println(context.getTraceList());
         }
    }
 }

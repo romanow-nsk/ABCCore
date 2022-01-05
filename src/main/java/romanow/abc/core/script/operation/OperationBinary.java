@@ -13,8 +13,7 @@ public abstract class OperationBinary extends Operation{
     public OperationBinary(int code, String name) {
         super(code,name);
         }
-    public abstract double opDouble(double one, double two);
-    public abstract long opLong(long one, long two);
+    public abstract void operation(TypeFace one, TypeFace two) throws ScriptException;
     @Override
     public void exec(OperationStack stack, CallContext context, boolean trace) throws ScriptException {
         String out="";
@@ -22,28 +21,14 @@ public abstract class OperationBinary extends Operation{
         TypeFace one = stack.pop();
         if (trace)
             out = toString()+" "+one+" "+two;
-        try {
-        if (one.isFloatType() || two.isFloatType()){
-            double vv1 = one.toDouble   ();
-            double vv2 = two.toDouble();
-            TypeDouble res = new TypeDouble(opDouble(vv1,vv2));
-            if (trace)
-                out+="->"+res;
-            stack.push(res);
-            return;
-            }
-        if (one.isIntType() && two.isIntType()) {
-            long dd1 = one.toLong();
-            long dd2 = two.toLong();
-            TypeLong res2 = new TypeLong(opLong(dd1,dd2));
-            if (trace)
-                out+="->"+res2;
-            stack.push(res2);
-            return;
-            }
-            }catch (ScriptException ee){
-                throwException(context,ValuesBase.SEIllegalTypeConvertion, this.name + " " + one.typeName() + " " + two.typeName());
-                }
-        throwException(context,ValuesBase.SEIllegalOperation, this.name + " " + one.typeName() + " " + two.typeName());
+        int commonGroup = one.getCommonGroup(two);
+        if (one.getGroup()!=commonGroup)
+            one.convertToGroup(true,commonGroup);
+        if (two.getGroup()!=commonGroup)
+            two.convertToGroup(true,commonGroup);   // Приведение типов RunTime
+        operation(one,two);
+        if (trace)
+            out+="->"+one;
+        stack.push(one);
         }
 }

@@ -4,7 +4,9 @@ import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptException;
 
 public class TypeVoid extends TypeFace {
-    public TypeVoid() {}
+    public TypeVoid(){
+        setType(ValuesBase.DTVoid);
+        }
     @Override
     public double toDouble() throws ScriptException {
         throwBug("Недопустимое приведение void->double");
@@ -24,29 +26,24 @@ public class TypeVoid extends TypeFace {
         throwBug("Недопустимое приведение long->void");
         }
     @Override
-    public int type() {
-        return ValuesBase.DTVoid; }
+    public void convertToGroup(boolean runTime, int group) throws ScriptException {
+        throwBug("Недопустимое приведение void->"+ValuesBase.DTGroupNames[group]);
+        }
     @Override
-    public String typeName() {
-        return "void"; }
-    @Override
-    public String typeNameTitle() {
-        return "пустой"; }
-    @Override
+    public void setValue(boolean runTime, TypeFace two) throws ScriptException {
+        throwBug("Недопустимое присваивание для void");
+        }
+
     public int compare(TypeFace two) throws ScriptException {
         throwBug("Недопустимое сравнение для void");
         return 0;
         }
     @Override
-    public String format(String fmtString) throws ScriptException {
+    String format() throws ScriptException {
         return "";
         }
     @Override
     public void parse(String value) throws ScriptException {}
-    @Override
-    public TypeFace clone() {
-        return new TypeVoid();
-        }
     @Override
     public Object cloneWrapper() throws ScriptException{
         throwBug("Нет wrapper для void");

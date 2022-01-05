@@ -37,11 +37,7 @@ public class DLLFunction {
             DLLField fld = params.get(i-1);
             String name1 = pars[i].getClass().getSimpleName();
             String name2 = null;
-                try {
-                    name2 = ValuesBase.dataTypes().getByCode(fld.type).cloneWrapper().getClass().getSimpleName();
-                    } catch (UniException ee){
-                    throw new ScriptException(ValuesBase.SEBug,"Ошибка вызова функции "+header+": "+ee.toString());
-                }
+            name2 = ValuesBase.dataTypes().getByCode(fld.type).cloneWrapper().getClass().getSimpleName();
             if (!name1.equals(name2))
                 throw new ScriptException(ValuesBase.SEIllegalFormat,"Несовпадение типов параметров "+header+"."+fld.name+"["+(i-1)+"]: "+name1+"/"+name2);
                 }

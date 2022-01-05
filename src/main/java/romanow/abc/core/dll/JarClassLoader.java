@@ -4,6 +4,7 @@ package romanow.abc.core.dll;
 
 import romanow.abc.core.UniException;
 import romanow.abc.core.constants.ValuesBase;
+import romanow.abc.core.script.ScriptException;
 import romanow.abc.core.utils.Pair;
 
 import java.io.IOException;
@@ -96,7 +97,7 @@ import java.util.jar.JarFile;
                     int resIdx = -1;
                     try {
                         resIdx = ValuesBase.dataTypes().getCodeByName(tName);
-                        } catch (UniException ee){}
+                        } catch (ScriptException ee){}
                     if (resIdx==-1){
                         out+="Недопустимый тип результата: "+cName+"."+method.getName()+": "+tName+"\n";
                         continue;
@@ -117,7 +118,7 @@ import java.util.jar.JarFile;
                         int typeIdx = -1;
                         try{
                             typeIdx = ValuesBase.dataTypes().getCodeByName(typeList[i].getSimpleName());
-                            } catch (UniException ee){}
+                            } catch (ScriptException ee){}
                         if (typeIdx==-1){
                             valid = false;
                             out+="Недопустимый тип параметра: "+cName+"."+method.getName()+": индекс "+i+"\n";

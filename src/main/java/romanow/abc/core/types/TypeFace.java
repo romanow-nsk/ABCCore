@@ -1,48 +1,60 @@
 package romanow.abc.core.types;
 
+import lombok.Getter;
+import lombok.Setter;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptException;
 
 public abstract class TypeFace {
-    private boolean valid=true;
-    private String varName="...";
-    abstract public int type();                                           // Индекс ТД в ЯОП
-    abstract public String typeNameTitle();                               // Имя ТД внешнее
-    abstract public int compare(TypeFace two) throws ScriptException;        // Сравнение
-    abstract String format(String fmtString) throws ScriptException;         // Форматированный ТД
-    public abstract void  parse(String value) throws ScriptException;        // Парсинг из строки, !=null - сообщение об ошибке
-    abstract public TypeFace clone();                                     // Клонирование
+    @Getter @Setter private boolean boolValue=false;
+    @Getter @Setter private long intValue=0;
+    @Getter @Setter private double realValue=0;
+    @Getter @Setter private String symbolValue="";
+    @Getter @Setter private int type=ValuesBase.DTVoid;
+    @Getter @Setter private String varName="...";
+    abstract public int compare(TypeFace two) throws ScriptException;     // Сравнение
+    abstract String format() throws ScriptException;                      // Форматированный ТД
+    public abstract void  parse(String value) throws ScriptException;     // Парсинг из строки, !=null - сообщение об ошибке
     abstract public Object cloneWrapper() throws ScriptException;
-    public String typeName() {
-        return ValuesBase.DTypes[type()];
-        }
+    public String getTypeName(){
+        return ValuesBase.DTTypes[type]; }
     public TypeFace(TypeFace two){
-        valid = two.valid;
         }
-    public TypeFace(boolean valid0){
-        valid = valid0;
+    public TypeFace(){}
+    public TypeFace cloneVar() throws ScriptException{
+        TypeFace two = null;
+        try {
+            two = getClass().newInstance();
+            } catch (Exception ee){
+                throw new ScriptException(ValuesBase.SEBug,"Ошибка клонирования "+getTypeName());
+                }
+        two.boolValue = boolValue;
+        two.intValue = intValue;
+        two.realValue = realValue;
+        two.symbolValue = symbolValue;
+        two.type = type;
+        return two;
         }
-    public TypeFace() {
-        valid = true;
+    public int getGroup(){
+        return ValuesBase.DTGroup[type]; }
+    public void setTypeByGroup(int group){
+        type = ValuesBase.DTGTypes[group];
         }
     public String toString(){
-        return varName+":"+typeName()+"/"+typeNameTitle();
+        return varName+":"+getTypeName();
         }
-    public boolean isIntType(){
-        int type = type();
-        return type== ValuesBase.DTInt || type==ValuesBase.DTLong || type==ValuesBase.DTShort;
-        }
-    public boolean isFloatType(){
-        int type = type();
-        return type== ValuesBase.DTFloat || type==ValuesBase.DTDouble;
-        }
-    public boolean isNumericType(){
-        return isFloatType() || isIntType();
-        }
-    public boolean isValid() {
-        return valid; }
-    public void setValid(boolean valid) {
-        this.valid = valid; }
+    public boolean isNumeric(){
+        return getGroup()==ValuesBase.DTGReal || getGroup()==ValuesBase.DTGInteger;}
+    public boolean isInteger(){
+        return getGroup()==ValuesBase.DTGInteger; }
+    public boolean isSymbol(){
+        return getGroup()==ValuesBase.DTGSymbol; }
+    public boolean isReal(){
+        return getGroup()==ValuesBase.DTGReal; }
+    public boolean isLogical(){
+        return getGroup()==ValuesBase.DTGLogical; }
+    public boolean isEqualGroups(TypeFace two){
+        return getGroup()==two.getGroup(); }
     public abstract double toDouble() throws ScriptException;
     public abstract void fromDouble(double val) throws ScriptException;
     public abstract long toLong() throws ScriptException;
@@ -51,34 +63,52 @@ public abstract class TypeFace {
         return varName; }
     public void setVarName(String varName) {
         this.varName = varName; }
-    public void setValue(boolean runTime, TypeFace two) throws ScriptException {
-        if (type()==ValuesBase.DTString && two.type()==ValuesBase.DTString){
-            if (runTime)
-                ((TypeString)this).parse(two.toString());
-            return;
-            }
-        if (type()==ValuesBase.DTBoolean){
-            if (two.type()!=ValuesBase.DTBoolean)
-                throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации  "+typeName()+"->"+two.typeName());
-            if (runTime)
-                ((TypeBoolean)this).fromLong(two.toLong());
-            }
-        else
-        if (isNumericType() && two.isNumericType()){
-            if (runTime){
-                if (isFloatType())
-                    fromDouble(two.toDouble());
-                else
-                    fromLong(two.toLong());
-                }
-            }
-        else
-            throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации  "+typeName()+"->"+two.typeName());
-       }
     public void throwFormat(String mes) throws ScriptException{
         throw new ScriptException(ValuesBase.SEIllegalFormat,mes);
         }
     public void throwBug(String mes) throws ScriptException{
         throw new ScriptException(ValuesBase.SEBug,mes);
         }
-}
+    //--------------- Изменение группы представления в новому типу ---------------------
+    public abstract void convertToGroup(boolean runTime,int group) throws ScriptException;
+    public abstract void setValue(boolean runTime,TypeFace two) throws ScriptException;
+    public int getCommonGroup(TypeFace two) throws ScriptException{
+        int group1 = getGroup();
+        int group2 = two.getGroup();
+        if (group1==group2) return group1;
+        if (group1==ValuesBase.DTGSymbol || group2==ValuesBase.DTGSymbol)
+            return group1;            // Все приводится к строке
+        if (group1==ValuesBase.DTGLogical || group2==ValuesBase.DTGLogical)
+            throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Недопустимое сочетание типов  "+getTypeName()+"<>"+two.getTypeName());
+        if (group1==ValuesBase.DTGReal || group2==ValuesBase.DTGReal)
+            return ValuesBase.DTGReal;
+        return ValuesBase.DTGInteger;
+        }
+    public static int getCommonGroup(int group1, int group2) {
+        if (group1==group2) return group1;
+        if (group1==ValuesBase.DTGSymbol || group2==ValuesBase.DTGSymbol)
+            return group1;            // Все приводится к строке
+        if (group1==ValuesBase.DTGLogical || group2==ValuesBase.DTGLogical)
+            return -1;
+        if (group1==ValuesBase.DTGReal || group2==ValuesBase.DTGReal)
+            return ValuesBase.DTGReal;
+        return ValuesBase.DTGInteger;
+    }
+    //------------------- Проверка на разрешение присваивания к типу this=two
+    public boolean isSetEnable(int group2){
+        int group1 = getGroup();
+        if (group1==ValuesBase.DTGUndefuned || group2==ValuesBase.DTGUndefuned)
+            return false;
+        if (group1==group2)
+            return true;
+        if (group1==ValuesBase.DTGSymbol)
+            return true;
+        if (group1==ValuesBase.DTGLogical)
+            return false;
+        if (group1==ValuesBase.DTGReal && (group2==ValuesBase.DTGLogical))
+            return false;
+        if (group1==ValuesBase.DTGInteger && (group2==ValuesBase.DTGLogical))
+            return false;
+        return true;
+        }
+    }

@@ -25,7 +25,7 @@ public class OperationSave extends Operation{
                 var.setValue(true,one);
             }
         catch (ScriptException ee){
-            throwException(context,ValuesBase.SEIllegalTypeConvertion, this.name + " " + one.typeName());
+            throwException(context,ValuesBase.SEIllegalTypeConvertion, this.name + " " + one.getTypeName());
             }
     }
     @Override

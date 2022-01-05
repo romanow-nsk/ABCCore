@@ -25,6 +25,10 @@ public class Scaner {
             case '{': return c;
             case '}': return c;
             case '\"': return c;
+            case '^': return c;
+            case '!': return c;
+            case '&': return c;
+            case '|': return c;
             default:
                 if (c>='A' && c<='F') return 'F';
                 if (c>='a' && c<='f') return 'F';
@@ -148,11 +152,13 @@ public class Scaner {
         keywords.put(lexem.value,lexem);
         lexem = new Lexem('W',"while");
         keywords.put(lexem.value,lexem);
-        lexem = new Lexem('&',"and");
+        lexem = new Lexem('a',"and");
         keywords.put(lexem.value,lexem);
-        lexem = new Lexem('|',"or");
+        lexem = new Lexem('o',"or");
         keywords.put(lexem.value,lexem);
-        lexem = new Lexem('!',"not");
+        lexem = new Lexem('x',"xor");
+        keywords.put(lexem.value,lexem);
+        lexem = new Lexem('t',"not");
         keywords.put(lexem.value,lexem);
         lexem = new Lexem('I',"int");
         keywords.put(lexem.value,lexem);

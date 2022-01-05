@@ -33,7 +33,13 @@ public class OperationFactory extends ArrayList<Operation> {
         addToMaps(new OperationAnd());
         addToMaps(new OperationOr());
         addToMaps(new OperationNot());
+        addToMaps(new OperationXor());
+        addToMaps(new OperationAndWord());
+        addToMaps(new OperationOrWord());
+        addToMaps(new OperationNotWord());
+        addToMaps(new OperationXorWord());
         addToMaps(new OperationPow());
+        addToMaps(new OperationConvertType(0));
         addToMaps(new OperationCall(""));
     }
     public  Operation getByCode(int code) throws ScriptException {
