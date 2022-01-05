@@ -163,6 +163,9 @@ public class Syntax{
         FunctionCode own = new FunctionCode();
         FunctionCode own1,own2,own3;
         switch (LX.type){
+    case 'C':
+            own = createVarList(new TypeString(""));
+            break;
     case 'I':
             own = createVarList(new TypeInt(0));
             break;

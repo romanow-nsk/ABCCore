@@ -156,7 +156,7 @@ public class Scaner {
         keywords.put(lexem.value,lexem);
         lexem = new Lexem('I',"int");
         keywords.put(lexem.value,lexem);
-        lexem = new Lexem('C',"char");
+        lexem = new Lexem('C',"string");
         keywords.put(lexem.value,lexem);
         lexem = new Lexem('S',"short");
         keywords.put(lexem.value,lexem);

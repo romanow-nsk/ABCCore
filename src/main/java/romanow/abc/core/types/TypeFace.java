@@ -52,6 +52,11 @@ public abstract class TypeFace {
     public void setVarName(String varName) {
         this.varName = varName; }
     public void setValue(boolean runTime, TypeFace two) throws ScriptException {
+        if (type()==ValuesBase.DTString && two.type()==ValuesBase.DTString){
+            if (runTime)
+                ((TypeString)this).parse(two.toString());
+            return;
+            }
         if (type()==ValuesBase.DTBoolean){
             if (two.type()!=ValuesBase.DTBoolean)
                 throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка конвертации  "+typeName()+"->"+two.typeName());
