@@ -596,6 +596,7 @@ public FunctionCode procFunctionCall(String funName){
     if (minus) {
         FunctionCode xx = new FunctionCode();
         xx.addOne(new OperationPush(new TypeInt(0))).add(own).addOne(new OperationSub());
+        own = xx;
         }
     return own;
     }
