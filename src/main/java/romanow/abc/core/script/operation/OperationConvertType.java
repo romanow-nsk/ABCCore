@@ -5,6 +5,7 @@ import romanow.abc.core.script.CallContext;
 import romanow.abc.core.script.OperationStack;
 import romanow.abc.core.script.ScriptException;
 import romanow.abc.core.script.functions.FunctionCall;
+import romanow.abc.core.types.TypeFace;
 
 public class OperationConvertType extends Operation{
     public final int group;
@@ -15,7 +16,12 @@ public class OperationConvertType extends Operation{
     @Override
     public void exec(OperationStack stack, CallContext context, boolean trace) throws ScriptException {
         if (trace) setTrace(toString());
-        context.getStack().getData().convertToGroup(true,group);
+        TypeFace par = stack.pop();
+        TypeFace out = context.getTypeFaces().getByGroupCode(group);
+        if (!out.isSetEnable(par.getGroup()))
+            throwException(context,ValuesBase.SEIllegalTypeConvertion, par.getTypeName()+ "->" + out.getTypeName());
+        out.setValue(true,par);
+        stack.push(out);
         }
     @Override
     public Operation clone() {

@@ -50,10 +50,27 @@ public class TypeString extends TypeFace {
     public void fromLong(long val) throws ScriptException {
         setSymbolValue(""+val);
         }
+    /*
     @Override
     public void convertToGroup(boolean runTime,int group) throws ScriptException {
-
+        switch (group){
+            case ValuesBase.DTGUndefuned:
+            case ValuesBase.DTGLogical:
+                throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Недопустимое сочетание типов  "+getTypeName()+"<>"+ValuesBase.DTGroupNames[group]);
+            case ValuesBase.DTGSymbol:
+                break;
+            case ValuesBase.DTGInteger:
+                if (runTime)
+                    setIntValue(getIntValue());
+                break;
+            case ValuesBase.DTGReal:
+                if (runTime)
+                    setRealValue(getIntValue());
+                break;
+            }
+        setTypeByGroup(group);
         }
+     */
     @Override
     public void setValue(boolean runTime, TypeFace two) throws ScriptException {
         if (runTime)

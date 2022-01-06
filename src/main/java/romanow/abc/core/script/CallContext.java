@@ -5,6 +5,7 @@ import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.functions.FunctionCall;
 import romanow.abc.core.script.operation.*;
+import romanow.abc.core.types.TypeFactory;
 import romanow.abc.core.types.TypeInt;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class CallContext {
     @Getter private VariableList variables = new VariableList();
     @Getter private HashMap<Integer, ConstValue> errorsMap;
     @Getter private HashMap<String, FunctionCall> functionMap = new HashMap<>();
+    @Getter private TypeFactory typeFaces = new TypeFactory();
     @Getter private int ip=0;
     public void trace(String ss){
         traceList.append(ss+"\n");

@@ -571,6 +571,8 @@ public class ValuesBase {
     public final static int SECreateFunctionBug=14;
     @CONST(group = "SError", title = "Ошибка конфигурации")
     public final static int SEConfiguration=15;
+    @CONST(group = "SError", title = "Недопустимое окружение вызова функции")
+    public final static int SEIllegalFunEnv=16;
     //--------------------------Коды ошибок компиляции ----------------------------------------------------
     @CONST(group = "SError", title = "Не найден конец текста")
     public final static int SENoEOF=100;
@@ -604,8 +606,6 @@ public class ValuesBase {
     public final static int SEIllegalFunSyntax=114;
     @CONST(group = "SError", title = "Функция не определена")
     public final static int SEFunNotDefined=115;
-    @CONST(group = "SError", title = "Недопустимое окружение вызова функции")
-    public final static int SEIllegalFunEnv=116;
     //------------------------------------ Классы функций --------------------------------------
     @CONST(group = "ScriptFun", title = "sin", className="FStdSin")
     public final static int SFSin = 1;

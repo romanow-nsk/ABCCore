@@ -53,7 +53,8 @@ public class TypeDouble extends TypeFace {
     @Override
     public void fromLong(long val) throws ScriptException {
         setRealValue(val);
-    }
+        }
+    /*
     @Override
     public void convertToGroup(boolean runTime, int group) throws ScriptException {
         switch (group){
@@ -73,6 +74,7 @@ public class TypeDouble extends TypeFace {
             }
         setTypeByGroup(group);
         }
+     */
     @Override
     public void setValue(boolean runTime, TypeFace two) throws ScriptException {
         switch (two.getGroup()){

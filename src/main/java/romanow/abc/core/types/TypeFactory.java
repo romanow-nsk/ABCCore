@@ -30,6 +30,13 @@ public class TypeFactory extends ArrayList<TypeFace> {
             throw new ScriptException(ValuesBase.SEBug,"Недопустимый ТД, код: "+code);
         return operation.cloneVar();
         }
+    public TypeFace getByGroupCode(int group) throws ScriptException {
+        int code = ValuesBase.DTGTypes[group];
+        TypeFace operation = mapCode.get(code);
+        if (operation==null)
+            throw new ScriptException(ValuesBase.SEBug,"Недопустимый ТД, код: "+code);
+        return operation.cloneVar();
+    }
     public TypeFace getByName(String name) throws ScriptException {
         TypeFace operation = mapName.get(name);
         if (operation==null)

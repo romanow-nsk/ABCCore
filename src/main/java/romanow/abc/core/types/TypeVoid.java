@@ -25,10 +25,12 @@ public class TypeVoid extends TypeFace {
     public void fromLong(long val) throws ScriptException {
         throwBug("Недопустимое приведение long->void");
         }
+    /*
     @Override
     public void convertToGroup(boolean runTime, int group) throws ScriptException {
         throwBug("Недопустимое приведение void->"+ValuesBase.DTGroupNames[group]);
         }
+     */
     @Override
     public void setValue(boolean runTime, TypeFace two) throws ScriptException {
         throwBug("Недопустимое присваивание для void");

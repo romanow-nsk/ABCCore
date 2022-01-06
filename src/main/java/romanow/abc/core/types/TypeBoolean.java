@@ -51,12 +51,13 @@ public class TypeBoolean extends TypeFace {
     public void fromLong(long val) throws ScriptException {
         setBoolValue(val!=0);
         }
+    /*
     @Override
     public void convertToGroup(boolean runTime,int group) throws ScriptException{
         if (group!=ValuesBase.DTGLogical)
             throw new ScriptException(ValuesBase.SEIllegalTypeConvertion,"Ошибка приведения типа "+getTypeName()+"->"+ValuesBase.DTGroupNames[group]);
         }
-
+    */
     @Override
     public void setValue(boolean runTime, TypeFace two) throws ScriptException {
         if (!two.isLogical())

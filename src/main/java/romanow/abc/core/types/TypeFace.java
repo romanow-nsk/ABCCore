@@ -70,7 +70,7 @@ public abstract class TypeFace {
         throw new ScriptException(ValuesBase.SEBug,mes);
         }
     //--------------- Изменение группы представления в новому типу ---------------------
-    public abstract void convertToGroup(boolean runTime,int group) throws ScriptException;
+    // public abstract void convertToGroup(boolean runTime,int group) throws ScriptException;
     public abstract void setValue(boolean runTime,TypeFace two) throws ScriptException;
     public int getCommonGroup(TypeFace two) throws ScriptException{
         int group1 = getGroup();
