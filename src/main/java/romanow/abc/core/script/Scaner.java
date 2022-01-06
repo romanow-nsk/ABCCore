@@ -126,6 +126,7 @@ public class Scaner {
         public LexState onEvent(char sym) {
             switch (sym){
                 case '\"': return state8;
+                case '#': return  new Lexem('s',1,"string");
                 }
             return state7;
             }
