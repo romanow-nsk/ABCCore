@@ -204,6 +204,8 @@ public interface RestAPIBase {
     /** Получить пользователя по oid */
     @GET("/api/user/get")
     Call<User> getUserById(@Header("SessionToken") String token,@Query("id") long id,@Query("level") int level);
+    @GET("/api/user/server/environment")
+    Call<ArrayList<String>> getSetverEnvironment(@Header("SessionToken") String token);
     //=============================API артефактов и файлов  ================================
     /** Получить описатель артефакта по oid  */
     @GET("/api/artifact/get")

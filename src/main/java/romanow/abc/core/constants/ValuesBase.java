@@ -127,6 +127,7 @@ public class ValuesBase {
     public final static int AppNameModulePackage = 6;
     public final static int AppNameIconPath = 7;
     public final static int AppNameTitle = 8;
+    public final static int AppNameSize=9;
     private  final static String abcAppNames[]={
         "ABCEmpty",
         "abc",
