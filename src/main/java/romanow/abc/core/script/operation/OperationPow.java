@@ -13,7 +13,7 @@ public class OperationPow extends OperationBinary{
         switch (one.getGroup()){
             case ValuesBase.DTGInteger: one.setIntValue((long) Math.pow(one.getIntValue(),two.getIntValue()));
                 return;
-            case ValuesBase.DTGReal: one.setRealValue(Math.pow(one.getIntValue(),two.getIntValue()));
+            case ValuesBase.DTGReal: one.setRealValue(Math.pow(one.getRealValue(),two.getRealValue()));
                 return;
             }
         throw new ScriptException(ValuesBase.SEBug,"Недопустимая операция "+name+" "+" для "+ValuesBase.DTGroupNames[one.getGroup()]);

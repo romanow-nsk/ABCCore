@@ -21,8 +21,8 @@ public abstract class OperationBinary extends Operation{
         TypeFace one = stack.pop();
         if (trace)
             out = toString()+" "+one+" "+two;
-        if (one.getGroup()!=two.getGroup())
-            throwException(context,ValuesBase.SEIllegalTypeConvertion, "Бинарная операция для "+one.getTypeName()+ "-" + two.getTypeName());
+        //if (one.getGroup()!=two.getGroup())
+        //    throwException(context,ValuesBase.SEIllegalTypeConvertion, "Бинарная операция для "+one.getTypeName()+ "-" + two.getTypeName());
         //int commonGroup = one.getCommonGroup(two);
         //if (one.getGroup()!=commonGroup)
         //    one.convertToGroup(true,commonGroup);

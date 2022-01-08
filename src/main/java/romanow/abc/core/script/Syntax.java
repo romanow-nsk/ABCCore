@@ -545,7 +545,8 @@ public FunctionCode procFunctionCall(String funName){
         String name;
         int k;
         boolean minus=false;
-        if (LX.type=='-'){ minus=true; sget(); }
+        if (LX.type=='-'){
+            minus=true; sget(); }
         switch (LX.type){
     case 's':   own.addOne(new OperationPush(new TypeString(LX.value.substring(1,LX.value.length()-1))));
                 own.setResultType(DTString);
@@ -594,9 +595,12 @@ public FunctionCode procFunctionCall(String funName){
     default: error(SEIllegalSyntax,LX.value); lex.get(); break;
              }
     if (minus) {
-        FunctionCode xx = new FunctionCode();
-        xx.addOne(new OperationPush(new TypeInt(0))).add(own).addOne(new OperationSub());
-        own = xx;
+        FunctionCode own1 = new FunctionCode();
+        own1.addOne(new OperationPush(new TypeInt(0)));
+        own1.setResultType(DTInt);
+        setResultTypeForBinary(own1,own);
+        own1.addOne(new OperationSub());
+        own = own1;
         }
     return own;
     }
@@ -610,7 +614,7 @@ public FunctionCode procFunctionCall(String funName){
 public static void main(String[] args) throws ScriptException {
     ValuesBase.init();
     Scaner lex = new Scaner();
-    boolean bb=lex.open("Input02.txt");
+    boolean bb=lex.open("Input01.txt");
     Syntax SS=new Syntax(lex);
     FunctionCode ff = SS.compile();
     System.out.print(ff);
@@ -621,7 +625,7 @@ public static void main(String[] args) throws ScriptException {
     if (SS.errorList.size()==0){
         CallContext context = new CallContext(SS,null);
         try {
-            context.call(true);
+            context.call(false);
             } catch (ScriptException ee){
                 System.out.println(ee.toString());
                 }
