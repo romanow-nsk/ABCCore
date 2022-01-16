@@ -266,6 +266,9 @@ public interface RestAPIBase {
     /** Получить список артефактов помощи - без авторизации */
     @GET("/api/helpfile/list")
     Call<EntityList<HelpFile>> getHelpFileList(@Query("question") String question );
+    /** Записать строку в текстовый файл */
+    @POST("/api/artifact/fromstring")
+    Call<Artifact> createArtifactFromString(@Header("SessionToken") String token,@Query("fileName") String fileName, @Query("text") String text);
     //----------------- Для тестирования ----------------------------------------------------------------------
     @Streaming
     @GET ("/api/file/load2")
