@@ -8,7 +8,7 @@ public class TypeFloat extends TypeDouble {
         this(0);
     }
     public TypeFloat(float vv){
-        setType(ValuesBase.DTInt);
+        setType(ValuesBase.DTFloat);
         setRealValue(vv);
     }
     @Override

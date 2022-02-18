@@ -14,7 +14,7 @@ public class CompileError {
     public String toString(){
         String out =  code+": "+mes+" cтрока "+(lexem.strIdx+1)+"["+(lexem.symIdx+1)+"]\n"+lexem.src+"\n";
         for(int i=0;i<lexem.symIdx;i++)
-            out+=" ";
+            out+="_";
         out+="^";
         return out;
     }
