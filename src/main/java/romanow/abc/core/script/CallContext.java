@@ -35,7 +35,10 @@ public class CallContext {
     private boolean isFinish(){
         return getIP()==code.size();
         }
-    public void reset(){ ip=0; }
+    public void reset(){
+        ip=0;
+        stack.clear();
+        }
     public CallContext(FunctionCode code,VariableList list,HashMap<String, FunctionCall> functionMap0,Object env) {
         errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
         this.code = code;
