@@ -41,7 +41,7 @@ public class TypeVoid extends TypeFace {
         return 0;
         }
     @Override
-    String format() throws ScriptException {
+    public String formatTo() throws ScriptException {
         return "";
         }
     @Override

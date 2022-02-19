@@ -19,7 +19,7 @@ public class TypeString extends TypeFace {
         return 0;
         }
     @Override
-    public String format() throws ScriptException {
+    public String formatTo() throws ScriptException {
         return getSymbolValue();
         }
     @Override
@@ -74,7 +74,7 @@ public class TypeString extends TypeFace {
     @Override
     public void setValue(boolean runTime, TypeFace two) throws ScriptException {
         if (runTime)
-            setSymbolValue(two.format());
+            setSymbolValue(two.formatTo());
         }
     @Override
     public Object cloneWrapper() {

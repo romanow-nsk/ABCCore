@@ -12,13 +12,27 @@ public abstract class TypeFace {
     @Getter @Setter private String symbolValue="";
     @Getter @Setter private int type=ValuesBase.DTVoid;
     @Getter @Setter private String varName="...";
-    abstract public int compare(TypeFace two) throws ScriptException;     // Сравнение
-    abstract String format() throws ScriptException;                      // Форматированный ТД
+    public abstract int compare(TypeFace two) throws ScriptException;     // Сравнение
+    public abstract String formatTo() throws ScriptException;                      // Форматированный ТД
     public abstract void  parse(String value) throws ScriptException;     // Парсинг из строки, !=null - сообщение об ошибке
     abstract public Object cloneWrapper() throws ScriptException;
     public String getTypeName(){
         return ValuesBase.DTTypes[type]; }
+    public String toString(){
+        return varName+"["+getTypeName()+"]:";
+        }
     public TypeFace(TypeFace two){
+        }
+    public String valueToString(){
+        if (isLogical())
+            return ""+boolValue;
+        if (isInteger())
+            return ""+intValue;
+        if (isReal())
+            return ""+String.format("%8.3f",realValue);
+        if (isSymbol())
+            return symbolValue;
+        return "???";
         }
     public TypeFace(){}
     public TypeFace cloneVar() throws ScriptException{
@@ -39,9 +53,6 @@ public abstract class TypeFace {
         return ValuesBase.DTGroup[type]; }
     public void setTypeByGroup(int group){
         type = ValuesBase.DTGTypes[group];
-        }
-    public String toString(){
-        return varName+":"+getTypeName();
         }
     public boolean isNumeric(){
         return getGroup()==ValuesBase.DTGReal || getGroup()==ValuesBase.DTGInteger;}

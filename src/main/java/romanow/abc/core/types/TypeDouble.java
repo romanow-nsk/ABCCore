@@ -27,7 +27,7 @@ public class TypeDouble extends TypeFace {
         return vv <0 ? -1 : 1;
         }
     @Override
-    public String format() throws ScriptException {
+    public String formatTo() throws ScriptException {
         return ""+getRealValue();
         }
     @Override
@@ -97,6 +97,6 @@ public class TypeDouble extends TypeFace {
         }
     @Override
     public String toString(){
-        return super.toString()+" "+getIntValue();
+        return super.toString()+" "+getRealValue();
     }
 }

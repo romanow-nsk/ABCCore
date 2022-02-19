@@ -295,10 +295,11 @@ public FunctionCode procFunctionCall(String funName){
                 }
             }
         }
-    if (LX.type!=';'){
-        error(SEIllegalSymbol,LX.value);
-        error(SEIllegalFunSyntax,LX.value);
-        }
+    //----------- Вызов функции = часть выражения
+    //if (LX.type!=';'){
+    //    error(SEIllegalSymbol,LX.value);
+    //    error(SEIllegalFunSyntax,LX.value);
+    //    }
     if (bad)
         return out;
     FunctionCall fun = functionMap.get(funName);

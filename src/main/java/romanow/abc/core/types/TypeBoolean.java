@@ -20,7 +20,7 @@ public class TypeBoolean extends TypeFace {
         return vv==0 ? 0 :(vv<0 ? -1 : 1);
         }
     @Override
-    public String format() throws ScriptException {
+    public String formatTo() throws ScriptException {
         return ""+isBoolValue();
         }
     @Override

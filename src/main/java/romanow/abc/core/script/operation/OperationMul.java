@@ -2,21 +2,22 @@ package romanow.abc.core.script.operation;
 
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.ScriptException;
+import romanow.abc.core.types.TypeDouble;
 import romanow.abc.core.types.TypeFace;
+import romanow.abc.core.types.TypeLong;
+import romanow.abc.core.types.TypeString;
 
 public class OperationMul extends OperationBinary{
     public OperationMul() {
         super(ValuesBase.OMul, "mul");
         }
     @Override
-    public void operation(TypeFace one, TypeFace two) throws ScriptException {
-        switch (one.getGroup()){
-            case ValuesBase.DTGInteger: one.setIntValue(one.getIntValue()*two.getIntValue());
-                return;
-            case ValuesBase.DTGReal: one.setRealValue(one.getRealValue()*two.getRealValue());
-                return;
-            }
-        throw new ScriptException(ValuesBase.SEBug,"Недопустимая операция "+name+" "+" для "+ValuesBase.DTGroupNames[one.getGroup()]);
+    public TypeFace operation(TypeFace one, TypeFace two) throws ScriptException {
+        if (one.getGroup()==ValuesBase.DTGReal || two.getGroup()==ValuesBase.DTGReal)
+            return new TypeDouble(one.toDouble()*two.toDouble()) ;
+        if (one.getGroup()==ValuesBase.DTGInteger || two.getGroup()==ValuesBase.DTGInteger)
+            return new TypeLong(one.toLong()*two.toLong()) ;
+            throw new ScriptException(ValuesBase.SEBug,"Недопустимая операция "+name+" "+" для "+ValuesBase.DTGroupNames[one.getGroup()]);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package romanow.abc.core.script;
 
 import lombok.Getter;
+import lombok.Setter;
 import romanow.abc.core.ErrorList;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.functions.FunctionCall;
 import romanow.abc.core.script.operation.*;
+import romanow.abc.core.types.TypeFace;
 import romanow.abc.core.types.TypeFactory;
 import romanow.abc.core.types.TypeInt;
 
@@ -13,6 +15,7 @@ import java.util.HashMap;
 
 public class CallContext {
     public final FunctionCode code;
+    @Getter @Setter private TypeFace result = new TypeInt(0);
     @Getter private Object callEnvironment;
     @Getter private ErrorList errorList = new ErrorList();
     @Getter private StringBuffer traceList = new StringBuffer();

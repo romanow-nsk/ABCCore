@@ -32,7 +32,7 @@ public class TypeLong extends TypeFace {
         return 0;
         }
     @Override
-    public String format() throws ScriptException {
+    public String formatTo() throws ScriptException {
         return ""+getIntValue();
         }
     @Override

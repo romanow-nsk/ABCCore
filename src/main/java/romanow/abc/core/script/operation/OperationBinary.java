@@ -13,7 +13,7 @@ public abstract class OperationBinary extends Operation{
     public OperationBinary(int code, String name) {
         super(code,name);
         }
-    public abstract void operation(TypeFace one, TypeFace two) throws ScriptException;
+    public abstract TypeFace operation(TypeFace one, TypeFace two) throws ScriptException;
     @Override
     public void exec(OperationStack stack, CallContext context, boolean trace) throws ScriptException {
         String out="";
@@ -21,16 +21,8 @@ public abstract class OperationBinary extends Operation{
         TypeFace one = stack.pop();
         if (trace)
             out = toString()+" "+one+" "+two;
-        //if (one.getGroup()!=two.getGroup())
-        //    throwException(context,ValuesBase.SEIllegalTypeConvertion, "Бинарная операция для "+one.getTypeName()+ "-" + two.getTypeName());
-        //int commonGroup = one.getCommonGroup(two);
-        //if (one.getGroup()!=commonGroup)
-        //    one.convertToGroup(true,commonGroup);
-        //if (two.getGroup()!=commonGroup)
-        //    two.convertToGroup(true,commonGroup);   // Приведение типов RunTime
-        operation(one,two);
+        stack.push(operation(one,two));
         if (trace)
             out+="->"+one;
-        stack.push(one);
         }
 }
