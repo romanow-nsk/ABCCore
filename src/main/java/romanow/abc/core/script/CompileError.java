@@ -12,10 +12,8 @@ public class CompileError {
         lexem =  lex;
         }
     public String toString(){
-        String out =  code+": "+mes+" cтрока "+(lexem.strIdx+1)+"["+(lexem.symIdx+1)+"]\n"+lexem.src+"\n";
-        for(int i=0;i<lexem.symIdx;i++)
-            out+="_";
-        out+="^";
+        String out =  code+": "+mes+" cтрока "+(lexem.strIdx+1)+"["+(lexem.symIdx+1)+"]\n"
+                +lexem.src.substring(0,lexem.symIdx)+"|...|"+lexem.src.substring(lexem.symIdx);
         return out;
     }
 }

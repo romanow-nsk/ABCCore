@@ -1,6 +1,7 @@
 package romanow.abc.core.script;
 
 import lombok.Getter;
+import romanow.abc.core.ErrorList;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.script.functions.FunctionCall;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 public class CallContext {
     public final FunctionCode code;
     @Getter private Object callEnvironment;
+    @Getter private ErrorList errorList = new ErrorList();
     @Getter private StringBuffer traceList = new StringBuffer();
     @Getter private OperationStack stack = new OperationStack();
     @Getter private VariableList variables = new VariableList();
@@ -37,6 +39,7 @@ public class CallContext {
         variables = list;
         functionMap = functionMap0;
         callEnvironment = env;
+        errorList.clear();
         reset();
         }
     public CallContext(Syntax syntax,Object env) {
