@@ -90,7 +90,7 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     public ArrayList<EntityField> getFields() throws UniException {
         if (fld!=null)
             return fld;
-        TableItem item = ValuesBase.EntityFactory.getItemForSimpleName(getClass().getSimpleName());
+        TableItem item = ValuesBase.EntityFactory().getItemForSimpleName(getClass().getSimpleName());
         fld = item.getFields();
         return fld;
         }
@@ -207,7 +207,7 @@ public class DAO implements I_ExcelRW, I_MongoRW {
         }
     public String getFieldPrefix(EntityField ff){
         String key = getClass().getSimpleName()+"."+ff.name;
-        String out = ValuesBase.PrefixMap.get(key);
+        String out = ValuesBase.PrefixMap().get(key);
         return out;
         }
     final public void getDBValues(String prefix, org.bson.Document out, int level, I_MongoDB mongo,

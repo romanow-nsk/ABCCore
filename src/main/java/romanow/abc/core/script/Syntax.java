@@ -22,12 +22,12 @@ public class Syntax{
     @Getter private FunctionCode codeBase;
     public Syntax(Scaner lex0) {
         lex = lex0;
-        errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
-        typesMap = ValuesBase.constMap.getGroupMapByValue("DType");
+        errorsMap = ValuesBase.constMap().getGroupMapByValue("SError");
+        typesMap = ValuesBase.constMap().getGroupMapByValue("DType");
         createFunctionMap();
         }
     public void createFunctionMap(){
-        createFunctionMap(constMap.getGroupList("ScriptFun"));
+        createFunctionMap(constMap().getGroupList("ScriptFun"));
         }
     public void createFunctionMap(ArrayList<ConstValue> list){
         functionMap.clear();

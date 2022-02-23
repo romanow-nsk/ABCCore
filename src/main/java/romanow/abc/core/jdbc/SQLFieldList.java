@@ -17,7 +17,7 @@ public class SQLFieldList  extends ArrayList<SQLField> {
 
     public String getFieldPrefix(String parent,EntityField ff){
         String key = parent+"."+ff.name;
-        String out = ValuesBase.PrefixMap.get(key);
+        String out = ValuesBase.PrefixMap().get(key);
         return out;
         }
     public String createFields(Entity ent) {
@@ -30,7 +30,7 @@ public class SQLFieldList  extends ArrayList<SQLField> {
         return createFields(null,table,second);
         }
     public String createFields(String prefix, String table, boolean second) {
-        TableItem item = ValuesBase.EntityFactory.getItemForSimpleName(table);
+        TableItem item = ValuesBase.EntityFactory().getItemForSimpleName(table);
         if (item == null)
             return "Entity не найден: " + table;
         if (!second && !item.isTable)

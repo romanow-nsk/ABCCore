@@ -1,5 +1,7 @@
 package romanow.abc.core.constants;
 
+import lombok.Getter;
+import lombok.Setter;
 import romanow.abc.core.ServerState;
 import romanow.abc.core.UniException;
 import romanow.abc.core.entity.EntityIndexedFactory;
@@ -24,16 +26,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ValuesBase {
-    protected static I_Environment env=null;                // Окружение приложения
+    //------------------ Singleton --------------------------------------------------------
+    @Getter @Setter private I_Environment env=null;                // Окружение приложения
+    @Getter @Setter private static ValuesBase one=null;
+    @Getter private EntityIndexedFactory EntityFactory = new EntityIndexedFactory();
+    @Getter private HashMap<String,String> PrefixMap = new HashMap<>();
+    @Getter private ConstMap constMap = new ConstMap();
+    public final static ConstMap constMap(){ return init().getConstMap(); }
+    public final static HashMap<String,String> PrefixMap(){ return init().getPrefixMap(); }
+    public final static EntityIndexedFactory EntityFactory(){ return init().getEntityFactory(); }
+    ValuesBase(){
+        System.out.println("Инициализация ValuesBase");
+        initEnv();
+        DataTypes = new TypeFactory();
+        constMap.createConstList(this);
+        }
+    public static ValuesBase init(){
+        if (one==null)
+            one = new ValuesBase();
+        return one;
+        }
     public static I_Environment env(){
-        return env;
-        }
-    public final static EntityIndexedFactory EntityFactory = new EntityIndexedFactory();
-    public final static ConstMap constMap = new ConstMap();
+        return init().getEnv();}
     public static String title(String group,int cid){
-        return constMap.title(group,cid);
-        }
-    public static ArrayList<ConstValue> title(String group){  return constMap.getValuesList(group); }
+        return init().getConstMap().title(group,cid);}
+    public static ArrayList<ConstValue> title(String group){
+        return init().getConstMap().getValuesList(group); }
     //------------------------------------------------------------------------------------------------------
     private final static int abcReleaseNumber=1;
     public final static String week[] = {"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"};
@@ -75,18 +93,8 @@ public class ValuesBase {
     private static TypeFactory DataTypes;
     public static TypeFactory dataTypes(){ return DataTypes; }
     //------------------------------------------------------------------------------------------------------
-    public static void init(){
-        try {
-            System.out.println("Инициализация ValuesBase");
-            DataTypes = new TypeFactory();
-            Class cc = env().applicationClass(ClassNameValues);
-            constMap.createConstList(cc);
-            } catch (UniException ee) {
-                System.out.println("Ошибка построения карты констант "+ee);
-                }
-        }
     public static Object createEntityByType(String group,int type,String pack) throws UniException {
-        ConstValue constValue = constMap.getGroupMapByValue(group).get(type);
+        ConstValue constValue = init().getConstMap().getGroupMapByValue(group).get(type);
         if (constValue==null)
             throw UniException.bug("Не найдена константа для "+group+":"+type);
         String className = constValue.className();
@@ -101,7 +109,7 @@ public class ValuesBase {
             }
         }
     public static Object createEntityByName(String group,String name,String pack) throws UniException {
-        ConstValue constValue = constMap.getGroupMapByName(group).get(name);
+        ConstValue constValue = init().getConstMap().getGroupMapByName(group).get(name);
         if (constValue==null)
             throw UniException.bug("Не найдена константа для "+group+":"+name);
         String className = constValue.className();
@@ -173,7 +181,7 @@ public class ValuesBase {
                 }
             }
     //---------------------------------------------------------------------------------------------------
-    static {
+    private void initEnv(){
         env = new I_Environment() {
             @Override
             public User superUser() {
@@ -224,10 +232,6 @@ public class ValuesBase {
         EntityFactory.put(new TableItem("Телефоны", PhoneList.class,false));       // Сборка 623 - не таблица
         EntityFactory.put(new TableItem("Сумма", MoneySum.class,false));           // Сборка 636
         EntityFactory.put(new TableItem( "Аккаунт", Account.class));                        // Сборка 637
-        }
-    //------------- Префикся для встроенных объектов ------------------------------------------
-    public final static HashMap<String,String> PrefixMap = new HashMap<>();
-    static  {
         PrefixMap.put("BugMessage.date","d");               //636
         PrefixMap.put("Artifact.date","d");                 //636
         PrefixMap.put("Artifact.original","f");             //636
@@ -631,8 +635,7 @@ public class ValuesBase {
     public final static int SFAlert = 3;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
-        ValuesBase.init();
         System.out.println(ValuesBase.title("User",ValuesBase.UserAdminType));
-        System.out.print(ValuesBase.constMap.toString());
+        System.out.print(ValuesBase.constMap().toString());
         }
 }

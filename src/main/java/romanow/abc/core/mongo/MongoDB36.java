@@ -311,7 +311,7 @@ public class MongoDB36 extends I_MongoDB {
     @Override
     public String clearDB(){
         clearCash();
-        Object olist[] = ValuesBase.EntityFactory.classList().toArray();
+        Object olist[] = ValuesBase.EntityFactory().classList().toArray();
         String out="";
         TableItem item=null;
         for(int i=0;i<olist.length;i++){
@@ -329,7 +329,7 @@ public class MongoDB36 extends I_MongoDB {
                 for(String ss : item.indexes)
                     createIndex(ent,ss);
             } catch (Exception ee){
-                String ss = "Не могу создать "+ ValuesBase.EntityFactory.get(item.clazz.getSimpleName())+"\n"+ee.toString();
+                String ss = "Не могу создать "+ ValuesBase.EntityFactory().get(item.clazz.getSimpleName())+"\n"+ee.toString();
                 System.out.println(ss);
                 out+=ss;
             }
@@ -346,7 +346,7 @@ public class MongoDB36 extends I_MongoDB {
     @Override
     public String clearTable(String table) throws UniException {
         try {
-            TableItem item = ValuesBase.EntityFactory.getItemForSimpleName(table);
+            TableItem item = ValuesBase.EntityFactory().getItemForSimpleName(table);
             if (item==null)
                 return "Entity не найден: "+table;
             if (!item.isTable)
@@ -362,7 +362,7 @@ public class MongoDB36 extends I_MongoDB {
             for(String ss : item.indexes)
                 createIndex(ent,ss);
         } catch (Exception ee){
-            String ss = "Не могу создать "+ ValuesBase.EntityFactory.get(table+"\n"+ee.toString());
+            String ss = "Не могу создать "+ ValuesBase.EntityFactory().get(table+"\n"+ee.toString());
             System.out.println(ss);
             return ss;
             }

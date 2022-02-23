@@ -40,7 +40,7 @@ public class CallContext {
         stack.clear();
         }
     public CallContext(FunctionCode code,VariableList list,HashMap<String, FunctionCall> functionMap0,Object env) {
-        errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
+        errorsMap = ValuesBase.constMap().getGroupMapByValue("SError");
         this.code = code;
         variables = list;
         functionMap = functionMap0;
@@ -49,7 +49,7 @@ public class CallContext {
         reset();
         }
     public CallContext(Syntax syntax,Object env) {
-        errorsMap = ValuesBase.constMap.getGroupMapByValue("SError");
+        errorsMap = ValuesBase.constMap().getGroupMapByValue("SError");
         this.code = syntax.getCodeBase();
         variables = syntax.getVariables();
         functionMap = syntax.getFunctionMap();

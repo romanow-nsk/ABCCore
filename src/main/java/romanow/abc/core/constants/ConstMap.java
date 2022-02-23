@@ -23,15 +23,19 @@ public class ConstMap extends HashMap<String, ConstGroup>{
         gmap.put(new ConstValue(group,constName,title,className,constId));
         }
     //------------------------------------------------------------------------------------------------------
-    public void createConstList(Class cl){
+    public void createConstList(Class cl) {
+        clear();                                    // Очистить для повтороного построения Values-ValuesBase
         Object oo = null;
         try {
             oo = cl.newInstance();
+            createConstList(oo);
             } catch (Exception e) {
                 System.out.println("Не создан список констант");
                 return;
-                }
-        Field[] fields = cl.getFields();
+            }
+        }
+    public void createConstList(Object oo){
+        Field[] fields = oo.getClass().getFields();
         for(Field fd: fields){
             if ((fd.getModifiers() & Modifier.STATIC)==0) continue;
             fd.setAccessible(true);         // Сделать доступными private-поля

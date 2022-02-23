@@ -21,7 +21,7 @@ public class DBRequest extends DAO {
         jsonObject = gson.toJson(ent);
         }
     public Entity get(Gson gson) throws UniException{
-        Class cc = ValuesBase.EntityFactory.getClassForSimpleName(className);
+        Class cc = ValuesBase.EntityFactory().getClassForSimpleName(className);
         if (cc==null)
             throw UniException.bug("Illegal class "+className);
         try {

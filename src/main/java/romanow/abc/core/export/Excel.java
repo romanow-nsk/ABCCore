@@ -124,7 +124,7 @@ public class Excel implements I_Excel {
         try (FileInputStream out = new FileInputStream(new File(fullName))) {
             workbook = new HSSFWorkbook(out);
             int ns = workbook.getNumberOfSheets();
-            for(TableItem item : ValuesBase.EntityFactory.classList()){
+            for(TableItem item : ValuesBase.EntityFactory().classList()){
                 Entity proto = (Entity)item.clazz.newInstance();
                 mongo.dropTable(proto);
             }
@@ -132,7 +132,7 @@ public class Excel implements I_Excel {
                 Sheet sh = workbook.getSheetAt(i);
                 String ss = sh.getSheetName();
                 try {
-                    TableItem item = ValuesBase.EntityFactory.getItemForSimpleName(ss);
+                    TableItem item = ValuesBase.EntityFactory().getItemForSimpleName(ss);
                     if (item==null){
                         pp = "Класс не найден "+ss;
                         xx+=pp+"\n";
