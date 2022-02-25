@@ -30,7 +30,11 @@ public class Syntax{
         createFunctionMap(constMap().getGroupList("ScriptFun"));
         }
     public void createFunctionMap(ArrayList<ConstValue> list){
-        functionMap.clear();
+        createFunctionMap(true,list);
+        }
+    public void createFunctionMap(boolean clear, ArrayList<ConstValue> list){
+        if (clear)
+            functionMap.clear();
         for(ConstValue cc : list) {
             String fClassName = "romanow.abc.core.script.functions." + cc.className();
             try {

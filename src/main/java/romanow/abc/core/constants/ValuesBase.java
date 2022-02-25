@@ -627,11 +627,11 @@ public class ValuesBase {
     @CONST(group = "SError", title = "Функция не определена")
     public final static int SEFunNotDefined=115;
     //------------------------------------ Классы функций --------------------------------------
-    @CONST(group = "ScriptFun", title = "sin", className="FStdSin")
+    @CONST(group = "ScriptFunStd", title = "sin", className="FStdSin")
     public final static int SFSin = 1;
-    @CONST(group = "ScriptFun", title = "cos", className="FStdCos")
+    @CONST(group = "ScriptFunStd", title = "cos", className="FStdCos")
     public final static int SFCos = 2;
-    @CONST(group = "ScriptFun", title = "alert", className="FStdAlert")
+    @CONST(group = "ScriptFunStd", title = "alert", className="FStdAlert")
     public final static int SFAlert = 3;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
