@@ -13,6 +13,6 @@ public abstract class FunctionCall {
         comment = comment0;
         }
     public abstract int getResultType();                                    // Тип результа
-    public abstract int []getParamTypes();                                          // Типы параметров
+    public abstract int []getParamTypes();                                  // Типы параметров
     public abstract void call(CallContext context) throws ScriptException;  // Параметры и результат в стеке
 }

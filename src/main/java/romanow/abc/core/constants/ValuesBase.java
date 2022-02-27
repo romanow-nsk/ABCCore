@@ -627,6 +627,7 @@ public class ValuesBase {
     @CONST(group = "SError", title = "Функция не определена")
     public final static int SEFunNotDefined=115;
     //------------------------------------ Классы функций --------------------------------------
+    public final static String StdScriptFunPackage="romanow.abc.core.script.functions";
     @CONST(group = "ScriptFunStd", title = "sin", className="FStdSin")
     public final static int SFSin = 1;
     @CONST(group = "ScriptFunStd", title = "cos", className="FStdCos")

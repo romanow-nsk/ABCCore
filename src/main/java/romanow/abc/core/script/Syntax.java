@@ -27,16 +27,16 @@ public class Syntax{
         createFunctionMap();
         }
     public void createFunctionMap(){
-        createFunctionMap(constMap().getGroupList("ScriptFun"));
+        createFunctionMap(StdScriptFunPackage,constMap().getGroupList("ScriptFun"));
         }
-    public void createFunctionMap(ArrayList<ConstValue> list){
-        createFunctionMap(true,list);
+    public void createFunctionMap(String funPackage,ArrayList<ConstValue> list){
+        createFunctionMap(true,funPackage, list);
         }
-    public void createFunctionMap(boolean clear, ArrayList<ConstValue> list){
+    public void createFunctionMap(boolean clear, String funPackage, ArrayList<ConstValue> list){
         if (clear)
             functionMap.clear();
         for(ConstValue cc : list) {
-            String fClassName = "romanow.abc.core.script.functions." + cc.className();
+            String fClassName = funPackage+"." + cc.className();
             try {
                 Class cls = Class.forName(fClassName);
                 Object oo = cls.newInstance();
