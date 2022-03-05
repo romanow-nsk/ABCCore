@@ -148,9 +148,7 @@ public class UniException extends Exception{
     public static UniException io(Throwable ee){
         return new UniException(runTime,io,ee,true);
     }
-    public static UniException io(String mes){
-        return new UniException(runTime,io,mes);
-    }
+    public static UniException io(String mes){ return new UniException(runTime,io,mes);}
     public static UniException total(Throwable ee){
         if (ee instanceof UniException){
             UniException vv=(UniException)ee;
