@@ -104,7 +104,7 @@ public class MongoDB36 extends I_MongoDB {
         }
      */
     @Override
-    public int getCountByQuery(Entity ent, BasicDBObject query) throws UniException{
+    synchronized public int getCountByQuery(Entity ent, BasicDBObject query) throws UniException{
         MongoCollection table = table(ent);
         MongoCursor<Document> cursor = table.find(query).iterator();
         int i=0;
@@ -114,7 +114,7 @@ public class MongoDB36 extends I_MongoDB {
         return i;
     }
     @Override
-    public EntityList<Entity> getAllByQuery(Entity ent, BasicDBObject query, int level, String pathsList,RequestStatistic  statistic) throws UniException{
+    synchronized public EntityList<Entity> getAllByQuery(Entity ent, BasicDBObject query, int level, String pathsList,RequestStatistic  statistic) throws UniException{
         HashMap path = pathsList.length()!=0 ? parsePaths(pathsList) : null;
         MongoCollection table = table(ent);
         MongoCursor<Document> cursor = table.find(query).iterator();
@@ -134,7 +134,7 @@ public class MongoDB36 extends I_MongoDB {
     }
     //----------------------------------------------------------------------------------------
     @Override
-    public boolean delete(Entity entity, long id, boolean mode) throws UniException{
+    synchronized public boolean delete(Entity entity, long id, boolean mode) throws UniException{
         if (!getById(entity,id,0,mode,null,null))
             return false;
         entity.setValid(mode);
@@ -151,7 +151,7 @@ public class MongoDB36 extends I_MongoDB {
         return true;
         }
     @Override
-    public boolean getById(Entity ent, long id, int level, boolean mode, HashMap<String,String> path,RequestStatistic statistic) throws UniException{
+    synchronized public boolean getById(Entity ent, long id, int level, boolean mode, HashMap<String,String> path,RequestStatistic statistic) throws UniException{
         if (isCashOn()){
             Entity src = getCashedEntity(ent,id);
             if (src!=null) {
@@ -203,7 +203,7 @@ public class MongoDB36 extends I_MongoDB {
         }
 
     @Override
-    public void remove(Entity entity, long id) throws UniException {
+    synchronized public void remove(Entity entity, long id) throws UniException {
         MongoCollection table = table(entity);
         BasicDBObject query = new BasicDBObject();
         query.put("oid", id);
@@ -233,7 +233,7 @@ public class MongoDB36 extends I_MongoDB {
         }
 
     @Override
-    public long add(Entity ent, int level, boolean ownOid) throws UniException {
+    synchronized public long add(Entity ent, int level, boolean ownOid) throws UniException {
         long id;
         if (!ownOid){
             id = nextOid(ent);
@@ -250,7 +250,7 @@ public class MongoDB36 extends I_MongoDB {
     }
 
     @Override
-    public void update(Entity ent, int level) throws UniException {
+    synchronized public void update(Entity ent, int level) throws UniException {
         MongoCollection table = table(ent);
         Bson filter = Filters.eq("oid",ent.getOid());
         Document document = new Document();
@@ -261,7 +261,7 @@ public class MongoDB36 extends I_MongoDB {
         updateCashedEntity(ent);
     }
 
-    public EntityList<Entity> getAllRecords(Entity ent, int level, String pathsList,RequestStatistic statistic) throws UniException{
+    synchronized public EntityList<Entity> getAllRecords(Entity ent, int level, String pathsList,RequestStatistic statistic) throws UniException{
         HashMap path = pathsList.length()!=0 ? parsePaths(pathsList) : null;
         MongoCollection table = table(ent);
         MongoCursor<Document> cursor = table.find().iterator();
@@ -282,7 +282,7 @@ public class MongoDB36 extends I_MongoDB {
         return out;
     }
     @Override
-    public EntityList<EntityNamed> getListForPattern(Entity ent, String pattern) throws UniException {
+    synchronized public EntityList<EntityNamed> getListForPattern(Entity ent, String pattern) throws UniException {
         EntityList out = new EntityList();
         MongoCollection table = table(ent);
         Pattern regex = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);

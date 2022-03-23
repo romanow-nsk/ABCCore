@@ -107,13 +107,13 @@ public class MongoDB extends I_MongoDB {
         return mongoDB.getCollection(ent.getClass().getSimpleName());
         }
     @Override
-    public int getCountByQuery(Entity ent, BasicDBObject query) throws UniException{
+    synchronized public int getCountByQuery(Entity ent, BasicDBObject query) throws UniException{
         DBCollection table = table(ent);
         DBCursor cursor = table.find(query);
         return cursor.count();
         }
     @Override
-    public EntityList<Entity> getAllByQuery(Entity ent, BasicDBObject query, int level, String pathsList,RequestStatistic statistic) throws UniException{
+    synchronized public EntityList<Entity> getAllByQuery(Entity ent, BasicDBObject query, int level, String pathsList,RequestStatistic statistic) throws UniException{
         //System.out.println(query.toString());
         DBCollection table = table(ent);
         HashMap path = pathsList.length()!=0 ? parsePaths(pathsList) : null;
@@ -137,7 +137,7 @@ public class MongoDB extends I_MongoDB {
         }
     //----------------------------------------------------------------------------------------
     @Override
-    public boolean delete(Entity entity, long id, boolean mode) throws UniException{
+    synchronized public boolean delete(Entity entity, long id, boolean mode) throws UniException{
         if (!getById(entity,id,0,mode,null,null))
             return false;
         entity.setValid(mode);
@@ -154,7 +154,7 @@ public class MongoDB extends I_MongoDB {
         return true;
         }
     @Override
-    public boolean getById(Entity ent, long id, int level, boolean mode, HashMap<String,String> path,RequestStatistic statistic) throws UniException{
+    synchronized public boolean getById(Entity ent, long id, int level, boolean mode, HashMap<String,String> path,RequestStatistic statistic) throws UniException{
         if (isCashOn()){
             Entity src = getCashedEntity(ent,id);
             if (src!=null) {
@@ -204,7 +204,7 @@ public class MongoDB extends I_MongoDB {
         return oid;
         }
     @Override
-    public void remove(Entity entity, long id) throws UniException {
+    synchronized public void remove(Entity entity, long id) throws UniException {
         DBCollection table = table(entity);
         BasicDBObject query = new BasicDBObject();
         query.put("oid", id);
@@ -213,11 +213,11 @@ public class MongoDB extends I_MongoDB {
         }
 
     @Override
-    public EntityList<Entity> getAllByQuery(Entity ent, I_DBQuery query, int level, String pathList, RequestStatistic statistic) throws UniException {
+    synchronized public EntityList<Entity> getAllByQuery(Entity ent, I_DBQuery query, int level, String pathList, RequestStatistic statistic) throws UniException {
         return getAllByQuery(ent,query.getQuery(),level,pathList,statistic);
         }
     @Override
-    public int getCountByQuery(Entity ent, I_DBQuery query) throws UniException {
+    synchronized public int getCountByQuery(Entity ent, I_DBQuery query) throws UniException {
         return getCountByQuery(ent,query.getQuery());
         }
 
@@ -228,7 +228,7 @@ public class MongoDB extends I_MongoDB {
         }
 
     @Override
-    public long add(Entity ent, int level,boolean ownOid) throws UniException {
+    synchronized public long add(Entity ent, int level,boolean ownOid) throws UniException {
         long id;
         if (!ownOid){
             id = nextOid(ent);
@@ -245,7 +245,7 @@ public class MongoDB extends I_MongoDB {
         }
 
     @Override
-    public void update(Entity ent, int level) throws UniException {
+    synchronized public void update(Entity ent, int level) throws UniException {
         DBCollection table = table(ent);
         BasicDBObject query = new BasicDBObject();
         query.put("oid", ent.getOid());
@@ -269,7 +269,7 @@ public class MongoDB extends I_MongoDB {
         table.update(query,result);
         return true;
         }
-    public EntityList<Entity> getAllRecords(Entity ent, int level, String pathsList, RequestStatistic statistic) throws UniException{
+    synchronized public EntityList<Entity> getAllRecords(Entity ent, int level, String pathsList, RequestStatistic statistic) throws UniException{
         HashMap path = pathsList.length()!=0 ? parsePaths(pathsList) : null;
         DBCollection table = table(ent);
         DBCursor cursor = table.find();
@@ -290,7 +290,7 @@ public class MongoDB extends I_MongoDB {
         return out;
         }
     @Override
-    public EntityList<EntityNamed> getListForPattern(Entity ent, String pattern) throws UniException {
+    synchronized public EntityList<EntityNamed> getListForPattern(Entity ent, String pattern) throws UniException {
         EntityList out = new EntityList();
         DBCollection table = table(ent);
         Pattern regex = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
