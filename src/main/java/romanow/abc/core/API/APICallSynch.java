@@ -32,7 +32,7 @@ public abstract class APICallSynch<T> {
                 mes = mes1 + "\n"+res.errorBody().string();
                 }
                 catch (IOException ex){ mes += "\nОшибка: "+ex.toString(); }
-            throw UniException.io(mes1);
+            throw UniException.io(mes);
             }
         return res.body();
     }
