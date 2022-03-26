@@ -84,7 +84,7 @@ public class SQLDBDriver extends I_MongoDB {
         }
 
     @Override
-    public EntityList<Entity> getAllByQuery(Entity ent, BasicDBObject query, int level, String pathList, RequestStatistic statistic) throws UniException {
+    public EntityList<Entity> getAllByQuery(int count,Entity ent, BasicDBObject query, int level, String pathList, RequestStatistic statistic) throws UniException {
         throw UniException.sql("BasicDBObject не поддерживается");
         }
 
@@ -107,7 +107,7 @@ public class SQLDBDriver extends I_MongoDB {
                 }
         }
     @Override
-    public EntityList<Entity> getAllByQuery(Entity ent, I_DBQuery query, int level, String pathsList, RequestStatistic statistic) throws UniException{
+    public EntityList<Entity> getAllByQuery(int count, Entity ent, I_DBQuery query, int level, String pathsList, RequestStatistic statistic) throws UniException{
         HashMap path = pathsList.length()!=0 ? parsePaths(pathsList) : null;
         SQLFieldList flist = new SQLFieldList();
         String ss = flist.createFields(ent);
@@ -115,7 +115,7 @@ public class SQLDBDriver extends I_MongoDB {
         if (ss!=null)
             throw UniException.sql(ss);
         final EntityList<Entity> out = new EntityList<>();
-        String sql = "SELECT * FROM "+table(ent)+(query==null ? "" : " WHERE "+query.getWhere())+" ORDER BY oid;";
+        String sql = "SELECT "+(count==0 ? "*" : "TOP ("+count+")")+" FROM "+table(ent)+(query==null ? "" : " WHERE "+query.getWhere())+" ORDER BY oid;";
         //String sql = "SELECT * FROM "+table(ent)+" ORDER BY oid;";
         jdbc.selectMany(sql, new I_OnRecord(){
             @Override
@@ -271,7 +271,7 @@ public class SQLDBDriver extends I_MongoDB {
         }
 
     public EntityList<Entity> getAllRecords(Entity ent, int level, String pathsList,RequestStatistic statistic) throws UniException{
-        return getAllByQuery(ent,(I_DBQuery) null,level,pathsList,statistic);
+        return getAllByQuery(0,ent,(I_DBQuery) null,level,pathsList,statistic);
         }
     @Override
     public EntityList<EntityNamed> getListForPattern(Entity ent, String pattern) throws UniException {

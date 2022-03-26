@@ -113,8 +113,9 @@ public class MongoDB extends I_MongoDB {
         return cursor.count();
         }
     @Override
-    synchronized public EntityList<Entity> getAllByQuery(Entity ent, BasicDBObject query, int level, String pathsList,RequestStatistic statistic) throws UniException{
+    synchronized public EntityList<Entity> getAllByQuery(int count,Entity ent, BasicDBObject query, int level, String pathsList,RequestStatistic statistic) throws UniException{
         //System.out.println(query.toString());
+        int count1 = count;
         DBCollection table = table(ent);
         HashMap path = pathsList.length()!=0 ? parsePaths(pathsList) : null;
         DBCursor cursor = table.find(query);
@@ -132,6 +133,8 @@ public class MongoDB extends I_MongoDB {
             //xx.setOid(((Long)obj.get("oid")).longValue());  // Читается в getData
             xx.getData("", new DocumentWrap(obj), level, this,path,statistic);
             out.add(xx);
+            if (count!=0 && --count1==0)
+                break;
             }
         return out;
         }
@@ -213,8 +216,8 @@ public class MongoDB extends I_MongoDB {
         }
 
     @Override
-    synchronized public EntityList<Entity> getAllByQuery(Entity ent, I_DBQuery query, int level, String pathList, RequestStatistic statistic) throws UniException {
-        return getAllByQuery(ent,query.getQuery(),level,pathList,statistic);
+    synchronized public EntityList<Entity> getAllByQuery(int count,Entity ent, I_DBQuery query, int level, String pathList, RequestStatistic statistic) throws UniException {
+        return getAllByQuery(count,ent,query.getQuery(),level,pathList,statistic);
         }
     @Override
     synchronized public int getCountByQuery(Entity ent, I_DBQuery query) throws UniException {

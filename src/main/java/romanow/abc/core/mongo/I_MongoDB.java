@@ -19,7 +19,7 @@ public abstract class I_MongoDB {
     public abstract String clearTable(String table) throws UniException;
     public abstract void createIndex(Entity entity, String name) throws UniException;
     public abstract int getCountByQuery(Entity ent, BasicDBObject query) throws UniException;
-    public abstract EntityList<Entity> getAllByQuery(Entity ent, BasicDBObject query, int level,String pathList,RequestStatistic statistic) throws UniException;
+    public abstract EntityList<Entity> getAllByQuery(int count,Entity ent, BasicDBObject query, int level,String pathList,RequestStatistic statistic) throws UniException;
     public abstract boolean delete(Entity entity, long id, boolean mode) throws UniException;
     public abstract boolean getByIdAndUpdate(Entity ent, long id, I_ChangeRecord todo) throws UniException;
     public abstract boolean getById(Entity ent, long id, int level, boolean mode, HashMap<String,String> path, RequestStatistic statistic) throws UniException;
@@ -32,19 +32,25 @@ public abstract class I_MongoDB {
     public abstract long lastOid(Entity ent) throws UniException;
     public abstract void remove(Entity entity, long id) throws UniException;
     //----------------------- Альтернативное query ---------------------------------------------------------
-    public abstract EntityList<Entity> getAllByQuery(Entity ent, I_DBQuery query, int level,String pathList,RequestStatistic statistic) throws UniException;
+    public abstract EntityList<Entity> getAllByQuery(int count, Entity ent, I_DBQuery query, int level,String pathList,RequestStatistic statistic) throws UniException;
     public abstract int getCountByQuery(Entity ent, I_DBQuery query) throws UniException;
     public EntityList<Entity> getAllByQuery(Entity ent, I_DBQuery query) throws UniException{
-        return getAllByQuery(ent,query,0,"",null);
+        return getAllByQuery(0,ent,query,0,"",null);
+        }
+    public EntityList<Entity> getAllByQuery(int count,Entity ent, I_DBQuery query) throws UniException{
+        return getAllByQuery(count,ent,query,0,"",null);
         }
     public EntityList<Entity> getAllByQuery(Entity ent, I_DBQuery query, int level) throws UniException{
-        return getAllByQuery(ent,query,level,"",null);
+        return getAllByQuery(0,ent,query,level,"",null);
         }
     public boolean isSQLDataBase(){
         return false;
         }
     public void execSQL(String sql) throws UniException{
         throw UniException.noFunc("SQL-запросы не поддерживаются");
+        }
+    public EntityList<Entity> getAllByQuery(Entity ent, BasicDBObject query, int level,String pathList,RequestStatistic statistic) throws UniException{
+        return getAllByQuery(0,ent,query,level,pathList,statistic);
         }
     //------------------------ Синхронизированное обновление поля ПО ВСЕЙ БД 628
     public abstract boolean updateField(Entity src, long id, String fname, String prefix) throws UniException;
@@ -72,9 +78,9 @@ public abstract class I_MongoDB {
             case ValuesBase.GetAllModeTotal:
                 return getAllRecords(ent,level,pathList,statistic);
             case ValuesBase.GetAllModeActual:
-                return getAllByQuery(ent,new DBQueryBoolean("valid", true),level,pathList,statistic);
+                return getAllByQuery(0,ent,new DBQueryBoolean("valid", true),level,pathList,statistic);
             case ValuesBase.GetAllModeDeleted:
-                return getAllByQuery(ent,new DBQueryBoolean("valid", false),level,pathList,statistic);
+                return getAllByQuery(0,ent,new DBQueryBoolean("valid", false),level,pathList,statistic);
             default:
                 throw UniException.bug("MongoDB:Illegal get mode="+mode);
             }
