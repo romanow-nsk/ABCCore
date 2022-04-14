@@ -121,13 +121,26 @@ public class Excel implements I_Excel {
     @Override
     public String load(String fullName, I_MongoDB mongo) {
         String xx ="",pp;
+        HashMap<String,String> sheetMap = new HashMap<>();
         try (FileInputStream out = new FileInputStream(new File(fullName))) {
             workbook = new HSSFWorkbook(out);
             int ns = workbook.getNumberOfSheets();
+            for(int i=0;i<ns;i++){
+                String ss = workbook.getSheetAt(i).getSheetName();
+                sheetMap.put(ss,ss);
+                }
             for(TableItem item : ValuesBase.EntityFactory().classList()){
                 Entity proto = (Entity)item.clazz.newInstance();
-                mongo.dropTable(proto);
-            }
+                String name = item.clazz.getSimpleName();
+                if (sheetMap.get(name)==null){
+                    mongo.clearTable(name);
+                    pp = "Нет данных таблицы "+name;
+                    xx+=pp+"\n";
+                    System.out.println(pp);
+                    }
+                else
+                    mongo.dropTable(proto);
+                }
             for(int i=0;i<ns;i++){
                 Sheet sh = workbook.getSheetAt(i);
                 String ss = sh.getSheetName();
@@ -158,18 +171,25 @@ public class Excel implements I_Excel {
                     try {
                         proto.putHeader("",list);
                         for(String ss2 : list){
-                            if (colMap.get(ss2)==null)
-                                xx+="Не найдено "+ss+"."+ss2+"\n";
+                            if (colMap.get(ss2)==null){
+                                pp ="Не найдено "+ss+"."+ss2+"\n";
+                                xx +=pp;
+                                System.out.print(pp);
+                                }
                         }
                     } catch (UniException e) {
-                        xx += ss+ ": "+e.toString()+"\n";
+                        pp = ss+ ": "+e.toString()+"\n";
+                        xx += pp;
+                        System.out.print(pp);
                         continue;
-                    }
+                        }
                     //---------------------------------------------------------------
                     if (!item.isExportXLS())
-                        xx+="Не импортируется класс "+ss+"\n";
+                        pp ="Не импортируется класс "+ss+"\n";
                     else
-                        xx += importSheet(proto,sh,mongo,colMap);
+                        pp = importSheet(proto,sh,mongo,colMap);
+                    xx +=pp;
+                    System.out.print(pp);
                 } catch (Exception e2) {
                     System.out.println(e2.toString());
                     xx+=e2.toString()+"\n";
@@ -178,7 +198,7 @@ public class Excel implements I_Excel {
         } catch (Exception e) {
             pp = e.toString();
             xx+=pp+"\n";
-            System.out.println(pp);
+            System.out.print(pp);
         }
         return xx;
     }

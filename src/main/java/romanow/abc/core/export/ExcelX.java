@@ -119,11 +119,24 @@ public class ExcelX implements I_Excel{
         String xx ="",pp;
         try (FileInputStream out = new FileInputStream(new File(fullName))) {
             workbook = new XSSFWorkbook(out);
+            HashMap<String,String> sheetMap = new HashMap<>();
             int ns = workbook.getNumberOfSheets();
+            for(int i=0;i<ns;i++){
+                String ss = workbook.getSheetAt(i).getSheetName();
+                sheetMap.put(ss,ss);
+                }
             for(TableItem item : ValuesBase.EntityFactory().classList()){
                 Entity proto = (Entity)item.clazz.newInstance();
-                mongo.dropTable(proto);
-            }
+                String name = item.clazz.getSimpleName();
+                if (sheetMap.get(name)==null){
+                    mongo.clearTable(name);
+                    pp = "Нет данных таблицы "+name;
+                    xx+=pp+"\n";
+                    System.out.println(pp);
+                    }
+                else
+                    mongo.dropTable(proto);
+                }
             for(int i=0;i<ns;i++){
                 Sheet sh = workbook.getSheetAt(i);
                 String ss = sh.getSheetName();
@@ -134,7 +147,7 @@ public class ExcelX implements I_Excel{
                         xx+=pp+"\n";
                         System.out.println(pp);
                         continue;
-                    }
+                        }
                     //----------------------------------------------------------------
                     Entity proto = (Entity)item.clazz.newInstance();
                     HashMap<String,Integer> colMap = new HashMap<>();
@@ -143,7 +156,7 @@ public class ExcelX implements I_Excel{
                     for(int k=0;!done;k++){
                         String s1;
                         try {
-                            s1 = hd.getCell(i).getStringCellValue();
+                            s1 = hd.getCell(k).getStringCellValue();
                             if (s1.length()==0)
                                 done=true;
                             else
@@ -154,27 +167,36 @@ public class ExcelX implements I_Excel{
                     try {
                         proto.putHeader("",list);
                         for(String ss2 : list){
-                            if (colMap.get(ss2)==null)
-                                xx+="Не найдено "+ss+"."+ss2+"\n";
+                            if (colMap.get(ss2)==null){
+                                pp ="Не найдено "+ss+"."+ss2+"\n";
+                                xx +=pp;
+                                System.out.print(pp);
+                                }
                         }
                     } catch (UniException e) {
-                        xx += ss+ ": "+e.toString()+"\n";
+                        pp = ss+ ": "+e.toString()+"\n";
+                        xx +=pp;
+                        System.out.print(pp);
                         continue;
                     }
                     //---------------------------------------------------------------
                     if (!item.isExportXLS())
-                        xx+="Не импортируется класс "+ss+"\n";
+                        pp = "Не импортируется класс "+ss+"\n";
                     else
-                        xx += importSheet(proto,sh,mongo,colMap);
+                        pp = importSheet(proto,sh,mongo,colMap);
+                    xx +=pp;
+                    System.out.print(pp);
                 } catch (Exception e2) {
-                    System.out.println(e2.toString());
-                    xx+=e2.toString()+"\n";
-                }                }
+                    pp=e2.toString()+"\n";
+                    xx +=pp;
+                    System.out.print(pp);
+                    }
+                }
         } catch (Exception e) {
             pp = e.toString();
             xx+=pp+"\n";
             System.out.println(pp);
-        }
+            }
         return xx;
     }
 }
