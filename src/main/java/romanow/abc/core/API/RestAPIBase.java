@@ -119,12 +119,18 @@ public interface RestAPIBase {
     /** Экспортировать БД в Excel-файл - артефакт сервера (xls/xlsx) */
     @GET("/api/admin/exportdb")
     Call<Artifact> exportDBxlsx(@Header("SessionToken") String token,@Query("xlsx") boolean xlsx, @Query("blocksize") int blocksize);
+    /** Экспортировать БД в архив MongoDB */
+    @GET("/api/admin/dump")
+    Call<Artifact> dump(@Header("SessionToken") String token);
     /** Перезагрузить сервер */
     @POST("/api/admin/reboot")
     Call<JEmpty> rebootServer(@Header("SessionToken") String token, @Query("pass") String pass);
     /** Импортировать БД из Excel-файла - артефакта сервера (oid), ответ - строка лога */
     @POST("/api/admin/importdb")
     Call<JString> importDBxls(@Header("SessionToken") String token, @Query("pass") String pass,@Query("id") long id);
+    /** Импортировать БД из архива БД */
+    @POST("/api/admin/restore")
+    Call<JString> restore(@Header("SessionToken") String token, @Query("pass") String pass,@Query("id") long id);
     /** Обновить сервер загруженным артефактом и перезагрузить */
     @POST("/api/admin/deploy")
     Call<JString> deploy(@Header("SessionToken") String token, @Query("pass") String pass);
