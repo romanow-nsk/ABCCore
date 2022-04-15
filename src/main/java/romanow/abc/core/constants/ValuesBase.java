@@ -75,7 +75,6 @@ public class ValuesBase {
     public final static String DebugTokenPass="pi31415926";     // Пароль отладочного токена
     public final static int PopupListMaxSize=25;                // Максимальный размер выпадающего списка
     public final static int ServerRebootDelay=10;               // Задержка сервера при перезагрузке
-    public final static int ServerRestoreDelay=30;              // Задержка сервера обновлении
     public final static int ConsolePrintPause=10;               // Тайм-аут паузы вывода при завуске сторонней команды
     public final static int HTTPTimeOut=60;                     // Тайм-аут клиента
     public final static int BackgroundOperationMaxDelay=300;    //
