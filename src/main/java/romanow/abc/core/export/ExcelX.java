@@ -119,8 +119,8 @@ public class ExcelX implements I_Excel{
         String xx ="",pp;
         try (FileInputStream out = new FileInputStream(new File(fullName))) {
             workbook = new XSSFWorkbook(out);
-            HashMap<String,String> sheetMap = new HashMap<>();
             int ns = workbook.getNumberOfSheets();
+            HashMap<String,String> sheetMap = new HashMap<>();
             for(int i=0;i<ns;i++){
                 String ss = workbook.getSheetAt(i).getSheetName();
                 sheetMap.put(ss,ss);

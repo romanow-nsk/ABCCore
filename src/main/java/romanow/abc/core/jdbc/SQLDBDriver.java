@@ -306,6 +306,12 @@ public class SQLDBDriver extends I_MongoDB {
     //            }
         return out;
         }
+
+    @Override
+    public String afterRestoreDB() throws UniException {
+        return "";
+    }
+
     @Override
     public String clearTable(String table) throws UniException {
         try {

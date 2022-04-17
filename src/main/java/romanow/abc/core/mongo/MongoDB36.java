@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
+import org.bson.types.ObjectId;
 import romanow.abc.core.UniException;
 import romanow.abc.core.constants.TableItem;
 import romanow.abc.core.constants.ValuesBase;
@@ -177,6 +178,56 @@ public class MongoDB36 extends I_MongoDB {
             statistic.entityCount++;
         return ent.isValid()!=mode;
         }
+    //------------------------------------------------------------------------------------------------
+    @Override
+    public String afterRestoreDB() throws UniException {
+        Object olist[] = ValuesBase.EntityFactory().classList().toArray();
+        String out="";
+        TableItem item=null;
+        for(int i=0;i<olist.length;i++){
+            try {
+                item = (TableItem)olist[i];
+                if (!item.isTable)
+                    continue;
+                Entity ent = (Entity)(item.clazz.newInstance());
+                MongoCollection table = table(ent);
+                MongoCursor<Document> cursor = table.find().iterator();
+                if (!cursor.hasNext()) {
+                    throw UniException.bug("Ошибка генерации ключа в " + ent.getClass().getSimpleName());
+                    }
+                Document first  = cursor.next();
+                if (!cursor.hasNext())
+                    continue;
+                long oidFirst = ((Long) first.get("oid")).longValue();        // Удалить последний и его oid в заголовок
+                ObjectId _idFirst = (ObjectId) first.get("_id");
+                Document last = null;
+                do {
+                    last = cursor.next();
+                    } while (cursor.hasNext());
+                long oid = ((Long) last.get("oid")).longValue();        // Удалить последний и его oid в заголовок
+                ObjectId _id = (ObjectId) last.get("_id");
+                boolean valid = ((Boolean) last.get("valid")).booleanValue();
+                if (oid!=oidFirst){
+                    if (!valid){
+                        BasicDBObject query = new BasicDBObject();
+                        query.put("_id", _id);
+                        table.deleteOne(query);
+                        System.out.println("Удален пустой "+item.clazz.getSimpleName()+" oid="+oid);
+                        }
+                    first.put("oid",oid+1);
+                    Bson filter = Filters.eq("_id",_idFirst);
+                    table.updateOne(filter,new Document("$set",first));
+                    System.out.println("Скорректирован заголовок "+item.clazz.getSimpleName()+" oid="+oid);
+                    }
+                } catch (Exception ee){
+                    String ss = "Ошибка коррекции таблицы "+ item.clazz.getSimpleName()+"\n"+ee.toString()+"\n";
+                    System.out.println(ss);
+                    out+=ss;
+                    }
+                }
+        return out;
+        }
+    //-----------------------------------------------------------------------------------------------
     @Override
     public synchronized long nextOid(Entity ent,boolean fromEntity) throws UniException {
         MongoCollection table = table(ent);
@@ -204,7 +255,7 @@ public class MongoDB36 extends I_MongoDB {
         long oid = ((Long) result.get("oid")).longValue();
         return oid;
         }
-
+    //----------------------------------------------------------------------------------------------
     @Override
     synchronized public void remove(Entity entity, long id) throws UniException {
         MongoCollection table = table(entity);
@@ -276,14 +327,14 @@ public class MongoDB36 extends I_MongoDB {
             Entity xx = null;
             try {
                 xx = (Entity) ent.getClass().newInstance();
-            } catch (Exception e) {
-                throw UniException.bug("Illegal class " + ent.getClass().getSimpleName());
-            }
+                } catch (Exception e) {
+                    throw UniException.bug("Illegal class " + ent.getClass().getSimpleName());
+                    }
             xx.getData("", obj, level, this,path,statistic);
             out.add(xx);
-        }
+            }
         return out;
-    }
+        }
     @Override
     synchronized public EntityList<EntityNamed> getListForPattern(Entity ent, String pattern) throws UniException {
         EntityList out = new EntityList();
@@ -335,17 +386,11 @@ public class MongoDB36 extends I_MongoDB {
                 String ss = "Не могу создать "+ ValuesBase.EntityFactory().get(item.clazz.getSimpleName())+"\n"+ee.toString();
                 System.out.println(ss);
                 out+=ss;
+                }
             }
-        }
-    //    try {
-    //        add(ValuesBase.superUser,0,false);
-    //        } catch (UniException e) {
-    //            String ss = "Не могу создать суперадмина \n"+e.toString()+"\n";
-    //            System.out.print(ss);
-    //            out+=ss;
-    //            }
         return out;
-    }
+        }
+
     @Override
     public String clearTable(String table) throws UniException {
         try {

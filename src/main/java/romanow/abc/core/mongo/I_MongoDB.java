@@ -16,6 +16,7 @@ public abstract class I_MongoDB {
     public abstract boolean isOpen();
     public abstract void closeDB();
     public abstract String clearDB() throws UniException;
+    public abstract String afterRestoreDB() throws UniException;
     public abstract String clearTable(String table) throws UniException;
     public abstract void createIndex(Entity entity, String name) throws UniException;
     public abstract int getCountByQuery(Entity ent, BasicDBObject query) throws UniException;

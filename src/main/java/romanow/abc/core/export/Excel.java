@@ -121,10 +121,10 @@ public class Excel implements I_Excel {
     @Override
     public String load(String fullName, I_MongoDB mongo) {
         String xx ="",pp;
-        HashMap<String,String> sheetMap = new HashMap<>();
         try (FileInputStream out = new FileInputStream(new File(fullName))) {
             workbook = new HSSFWorkbook(out);
             int ns = workbook.getNumberOfSheets();
+            HashMap<String,String> sheetMap = new HashMap<>();
             for(int i=0;i<ns;i++){
                 String ss = workbook.getSheetAt(i).getSheetName();
                 sheetMap.put(ss,ss);
@@ -141,6 +141,8 @@ public class Excel implements I_Excel {
                 else
                     mongo.dropTable(proto);
                 }
+            //---------------------------------------------------------------------------------------
+            mongo.clearDB();
             for(int i=0;i<ns;i++){
                 Sheet sh = workbook.getSheetAt(i);
                 String ss = sh.getSheetName();

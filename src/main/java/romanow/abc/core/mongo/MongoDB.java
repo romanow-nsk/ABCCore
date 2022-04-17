@@ -1,6 +1,11 @@
 package romanow.abc.core.mongo;
 
 import com.mongodb.*;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Filters;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import romanow.abc.core.UniException;
 import romanow.abc.core.constants.I_Environment;
 import romanow.abc.core.constants.TableItem;
@@ -10,10 +15,7 @@ import romanow.abc.core.entity.EntityList;
 import romanow.abc.core.entity.EntityNamed;
 import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class MongoDB extends I_MongoDB {
@@ -180,6 +182,7 @@ public class MongoDB extends I_MongoDB {
             statistic.entityCount++;
         return ent.isValid()!=mode;
         }
+    //---------------------------------------------------------------------------------------------
     @Override
     public synchronized long nextOid(Entity ent,boolean fromEntity) throws UniException {
         DBCollection table = table(ent);
@@ -206,6 +209,7 @@ public class MongoDB extends I_MongoDB {
         long oid = ((Long) result.get("oid")).longValue();
         return oid;
         }
+    //------------------------------------------------------------------------------------------------
     @Override
     synchronized public void remove(Entity entity, long id) throws UniException {
         DBCollection table = table(entity);
@@ -345,15 +349,60 @@ public class MongoDB extends I_MongoDB {
                     out+=ss;
                 }
             }
-    //    try {
-    //        add(ValuesBase.superUser,0,false);
-    //        } catch (UniException e) {
-    //            String ss = "Не могу создать суперадмина \n"+e.toString()+"\n";
-    //            System.out.print(ss);
-    //            out+=ss;
-    //            }
         return out;
         }
+
+    //------------------------------------------------------------------------------------------------
+    @Override
+    public String afterRestoreDB() throws UniException {
+        Object olist[] = ValuesBase.EntityFactory().classList().toArray();
+        String out="";
+        TableItem item=null;
+        for(int i=0;i<olist.length;i++){
+            try {
+                item = (TableItem)olist[i];
+                if (!item.isTable)
+                    continue;
+                Entity ent = (Entity)(item.clazz.newInstance());
+                DBCollection table = table(ent);
+                DBCursor cursor = table.find();
+                if (!cursor.hasNext()) {
+                    throw UniException.bug("Ошибка генерации ключа в " + ent.getClass().getSimpleName());
+                    }
+                DBObject first  = cursor.next();
+                if (!cursor.hasNext())
+                    continue;
+                long oidFirst = ((Long) first.get("oid")).longValue();        // Удалить последний и его oid в заголовок
+                ObjectId _idFirst = (ObjectId) first.get("_id");
+                DBObject last = null;
+                do {
+                    last = cursor.next();
+                } while (cursor.hasNext());
+                long oid = ((Long) last.get("oid")).longValue();        // Удалить последний и его oid в заголовок
+                ObjectId _id = (ObjectId) last.get("_id");
+                boolean valid = ((Boolean) last.get("valid")).booleanValue();
+                if (oid!=oidFirst){
+                    //if (!valid){
+                    //    BasicDBObject query = new BasicDBObject();
+                    //    query.put("_id", _id);
+                    //    table.deleteOne(query);
+                    //    System.out.println("Удален пустой "+item.clazz.getSimpleName()+" oid="+oid);
+                    //    }
+                    first.put("oid",oid+1);
+                    BasicDBObject query = new BasicDBObject();
+                    query.put("_id",_idFirst);
+                    table.update(query,first);
+                    System.out.println("Скорректирован заголовок "+item.clazz.getSimpleName()+" oid="+oid);
+                    }
+            } catch (Exception ee){
+                String ss = "Ошибка коррекции таблицы "+ item.clazz.getSimpleName()+"\n"+ee.toString()+"\n";
+                System.out.println(ss);
+                out+=ss;
+            }
+        }
+        return out;
+    }
+    //-----------------------------------------------------------------------------------------------
     @Override
     public String clearTable(String table) throws UniException {
             try {
