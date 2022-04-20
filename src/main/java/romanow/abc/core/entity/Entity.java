@@ -18,8 +18,8 @@ import java.util.HashMap;
 public class Entity extends DAO implements I_XStream, I_Name, I_MongoRW, I_ExcelRW {
     private long oid=0;
     private boolean valid=true;
-    public String toFullString(){ return ""+oid+","; }
-    public String toString(){ return ""+oid+","; }
+    public String toFullString(){ return "["+oid+"] "; }
+    public String toString(){ return "["+oid+"] "; }
     public String toShortString(){ return ""; }
     public String getTitle(){ return toString(); }
     public long getOid() {
