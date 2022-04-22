@@ -91,7 +91,7 @@ public class ValuesBase {
     public final static String SQLDBPort="3306";
     public final static String SQLDBPort2="3307";
     public final static String bashPath="/bin/";                // путь к bash для Linux
-    public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "pi31415926","9130000000");
+    public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "schwanensee1969","9139877277");
     private static TypeFactory DataTypes;
     public static TypeFactory dataTypes(){ return DataTypes; }
     //------------------------------------------------------------------------------------------------------
