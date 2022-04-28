@@ -129,6 +129,7 @@ public class Excel implements I_Excel {
                 String ss = workbook.getSheetAt(i).getSheetName();
                 sheetMap.put(ss,ss);
                 }
+            mongo.clearDB();
             for(TableItem item : ValuesBase.EntityFactory().classList()){
                 Entity proto = (Entity)item.clazz.newInstance();
                 String name = item.clazz.getSimpleName();
@@ -142,7 +143,6 @@ public class Excel implements I_Excel {
                     mongo.dropTable(proto);
                 }
             //---------------------------------------------------------------------------------------
-            mongo.clearDB();
             for(int i=0;i<ns;i++){
                 Sheet sh = workbook.getSheetAt(i);
                 String ss = sh.getSheetName();
