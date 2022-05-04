@@ -55,6 +55,9 @@ public class Artifact extends EntityBack {
     public String createArtifactServerPath(){
         return type()+"_"+directoryName()+"/"+createArtifactFileName();
         }
+    public String createArtifactServerDir(){
+        return type()+"_"+directoryName();
+    }
     public String createArtifactFileName(){
         return date.date().toString(DateTimeFormat.forPattern("yyyyMMdd_HHmmss"))+"_"+getOid()+"("+original.fileName()+")"+"."+original.getExt();
         }
