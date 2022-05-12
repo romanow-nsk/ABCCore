@@ -32,7 +32,8 @@ public class EntityIndexedFactory {
         return simpleNameMap.get(name);
         }
     public Class get(String name){
-        return invertMap.get(name).clazz;
+        TableItem item = invertMap.get(name);
+        return item==null ? null : item.clazz;
         }
     public String get(Class cls){
         return foreMap.get(cls).name;
