@@ -126,6 +126,7 @@ public class ValuesBase {
         }
     }
     //---------------------------------------------------------------------------------------------------
+    public final static int StateUndefined = 0;             // Неопределенное состояние (по умолчанию)
     public final static int ClassNameValues = 0;
     public final static int ClassNameWorkSettings = 1;
     public final static int ClassNameDataServer = 2;

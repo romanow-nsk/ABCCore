@@ -13,6 +13,8 @@ public class DBRequest extends DAO {
         this.jsonObject = jsonObject;
         }
     public DBRequest(){}
+    public String getClassName() {
+        return className;}
     public DBRequest(Entity ent, Gson gson){
         put(ent,gson);
         }
