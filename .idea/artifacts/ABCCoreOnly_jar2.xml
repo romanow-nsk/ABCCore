@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ABCCoreOnly:jar2">
+    <output-path>$PROJECT_DIR$/out/artifacts/ABCCoreOnly_jar2</output-path>
+    <root id="archive" name="ABCCore.jar">
+      <element id="module-output" name="ABCCore" />
+    </root>
+  </artifact>
+</component>
