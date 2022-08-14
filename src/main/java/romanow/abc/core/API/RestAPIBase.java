@@ -6,7 +6,6 @@ import retrofit2.Call;
 import retrofit2.http.*;
 import romanow.abc.core.DBRequest;
 import romanow.abc.core.ServerState;
-import romanow.abc.core.constants.ConstList;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.entity.EntityList;
 import romanow.abc.core.entity.EntityNamed;
