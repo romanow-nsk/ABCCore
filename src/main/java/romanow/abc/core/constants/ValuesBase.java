@@ -637,6 +637,15 @@ public class ValuesBase {
     public final static int SFCos = 2;
     @CONST(group = "ScriptFunStd", title = "alert", className="FStdAlert")
     public final static int SFAlert = 3;
+    //-----------------------------------------------------------------------------------------------------------
+    public final static int ColorNone=0;
+    public final static int ColorRed=1;
+    public final static int ColorGreen=2;
+    public final static int ColorBlue=3;
+    public final static int ColorYellow=4;
+    public final static int ColorGrayDark=5;
+    public final static int ColorGrayLight=6;
+    public final static int ColorBrown=7;
     //-----------------------------------------------------------------------------------------------------
     public static void main(String a[]){
         System.out.println(ValuesBase.title("User",ValuesBase.UserAdminType));

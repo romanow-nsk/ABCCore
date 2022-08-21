@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class EntityLinkList<T extends Entity> extends ArrayList<EntityLink<T>> {
     private transient Class typeT = null;
-    private transient HashMap<Integer, T> numMap = null;
+    private transient HashMap<Long, T> numMap = null;
     private transient HashMap<String, T> nameMap = null;
     public void createMap(){
         nameMap = new HashMap<>();

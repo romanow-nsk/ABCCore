@@ -137,9 +137,9 @@ public class TablePDF extends TableData{
 
     private void addMetaData(Document document) {
         document.addTitle(title);
-        document.addSubject("Огнезащитная корпорация");
-        document.addAuthor("Певзнер С.Э.");
-        document.addCreator("Певзнер С.Э.");
+        document.addSubject("ВТ НГТУ");
+        document.addAuthor("Романов Е.Л.");
+        document.addCreator("Романов Е.Л.");
         }
     private void addEmptyLine(Document document) throws DocumentException {
         document.add(new Paragraph(" "));

@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
-//--------------- Массив ссылок, собыраемых по индексам обратных
+//--------------- Массив ссылок, собираемых по индексам обратных
 public class EntityRefList<T extends Entity> extends ArrayList<T> {
     private transient Class typeT = null;
-    private transient HashMap<Integer, T> numMap = null;
+    private transient HashMap<Long, T> numMap = null;
     private transient HashMap<String, T> nameMap = null;
     private transient HashMap<String, T> titleMap = null;
     public void createMap(){
@@ -24,7 +24,7 @@ public class EntityRefList<T extends Entity> extends ArrayList<T> {
             }
         sortByKeyNum();
         }
-    public T getByNumber(int key){
+    public T getByNumber(long key){
         return numMap==null ? null : numMap.get(key);
         }
     public T getByTitle(String key){
