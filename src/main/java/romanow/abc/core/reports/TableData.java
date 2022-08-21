@@ -1,5 +1,6 @@
 package romanow.abc.core.reports;
 
+import lombok.Getter;
 import romanow.abc.core.UniException;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ public class TableData implements I_Report{
     protected boolean verticalHeader=false;
     protected String fileName;
     protected int tableType=0;
-    protected String title="";
+    @Getter protected String title="";
     ArrayList<String> bottoms = new ArrayList<>();
     protected ArrayList<TableCol> cols=new ArrayList<>();
     protected ArrayList<ArrayList<TableCell>> data =new ArrayList();
