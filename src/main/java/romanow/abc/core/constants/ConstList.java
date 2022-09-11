@@ -16,4 +16,7 @@ public class ConstList extends ArrayList<ConstValue>{
                 out.add(cc);
         return out;
         }
+    public static void main(String a[]){
+        ConstList cc = new ConstList("aaa");
+    }
 }
