@@ -2,6 +2,7 @@ package romanow.abc.core.constants;
 
 import lombok.Getter;
 import lombok.Setter;
+import romanow.abc.core.ErrorList;
 import romanow.abc.core.ServerState;
 import romanow.abc.core.UniException;
 import romanow.abc.core.entity.EntityIndexedFactory;
@@ -19,6 +20,7 @@ import romanow.abc.core.entity.users.Account;
 import romanow.abc.core.entity.users.Person;
 import romanow.abc.core.entity.users.User;
 import romanow.abc.core.help.HelpFactory;
+import romanow.abc.core.mongo.access.DAOAccessFactory;
 import romanow.abc.core.types.TypeFactory;
 import romanow.abc.core.utils.*;
 
@@ -32,18 +34,33 @@ public class ValuesBase {
     @Getter private EntityIndexedFactory EntityFactory = new EntityIndexedFactory();
     @Getter private HashMap<String,String> PrefixMap = new HashMap<>();
     @Getter private ConstMap constMap = new ConstMap();
+    @Getter private HashMap<String, Integer> errorsMap = new HashMap<>();      // Накопленные ошибки DAO
+    @Getter private ErrorList errorList = new ErrorList();                     // Ошибки инициализации
+    @Getter private DAOAccessFactory daoAccessFactory = new DAOAccessFactory();// Фабрика объектов доступа DAO
+    @Getter private HashMap<String,ConstValue> daoClassMap = new HashMap<>();
+    //--------------------------------------------------------------------------------------
+    public final static HashMap<String,ConstValue> daoClassMap(){ return init().daoClassMap; }
+    public final static ErrorList errorList(){ return init().errorList; }
     public final static ConstMap constMap(){ return init().getConstMap(); }
     public final static HashMap<String,String> PrefixMap(){ return init().getPrefixMap(); }
     public final static EntityIndexedFactory EntityFactory(){ return init().getEntityFactory(); }
-    ValuesBase(){
+    public ValuesBase(){
         System.out.println("Инициализация ValuesBase");
         initEnv();
         DataTypes = new TypeFactory();
         constMap.createConstList(this);
+        daoClassMap = constMap.getGroupMapByClassName("DAOType");
+        System.out.print(errorList.toString());
+        }
+    public void afterInit(){
+        daoAccessFactory.init();
+        initTables();
         }
     public static ValuesBase init(){
-        if (one==null)
+        if (one==null){
             one = new ValuesBase();
+            one.afterInit();
+            }
         return one;
         }
     public static I_Environment env(){
@@ -184,34 +201,46 @@ public class ValuesBase {
                 }
             }
     //---------------------------------------------------------------------------------------------------
-    private void initEnv(){
+    protected void initEnv() {
         env = new I_Environment() {
             @Override
             public User superUser() {
-                return new User(ValuesBase.UserSuperAdminType, "Система", "", "", "ABCDataserver", "pi31415926","9130000000");
-                }
+                return new User(ValuesBase.UserSuperAdminType, "Система", "", "", "ABCDataserver", "pi31415926", "9130000000");
+            }
+
             @Override
             public Class applicationClass(int classType) throws UniException {
-                return createApplicationClass(classType,abcClassNames);
-                }
+                return createApplicationClass(classType, abcClassNames);
+            }
+
             @Override
             public Object applicationObject(int classType) throws UniException {
-                return createApplicationObject(classType,abcClassNames);
-                }
+                return createApplicationObject(classType, abcClassNames);
+            }
+
             @Override
             public String applicationName(int nameNype) {
                 return abcAppNames[nameNype];
-                }
+            }
+
             @Override
             public String applicationClassName(int classType) {
                 return abcClassNames[classType];
+            }
+
+            @Override
+            public int releaseNumber() {
+                return abcReleaseNumber;
+            }
+
+            @Override
+            public WorkSettingsBase currentWorkSettings() {
+                return new WorkSettingsBase();
                 }
-            @Override
-            public int releaseNumber() { return abcReleaseNumber; }
-            @Override
-            public WorkSettingsBase currentWorkSettings() { return new WorkSettingsBase(); }
             };
-        //--------------------------------------------------------------------------------------------------------------
+        }
+    //--------------------------------------------------------------------------------------------------------------
+    protected void initTables(){
         EntityFactory.put(new TableItem("Настройки_0", WorkSettingsBase.class));
         EntityFactory.put(new TableItem("Метка GPS", GPSPoint.class));
         EntityFactory.put(new TableItem("Адрес", Address.class));
@@ -263,6 +292,32 @@ public class ValuesBase {
     public final static int GetAllModeTotal = 1;                    // Все
     public final static int GetAllModeDeleted = 2;                  // Удаленные
     public final static int DefaultNoAutoAPILevel = 3;              // Уровень загрузки по умолчанию для функций API (не автоматические)
+    //-------------------- Типы DAO ----------------------------------------------
+    public final static String DAOAccessPrefix = "romanow.abc.core.mongo.access.DAO";  // Префикс имени класса доступа DAO
+    @CONST(group = "DAOType", title = "int", className = "int")
+    public final static int DAOInt = 0;
+    @CONST(group = "DAOType", title = "String", className = "String")
+    public final static int DAOString = 1;
+    @CONST(group = "DAOType", title = "double", className = "double")
+    public final static int DAODouble = 2;
+    @CONST(group = "DAOType", title = "boolean", className = "boolean")
+    public final static int DAOBoolean = 3;
+    @CONST(group = "DAOType", title = "short", className = "short")
+    public final static int DAOShort = 4;
+    @CONST(group = "DAOType", title = "long", className = "long")
+    public final static int DAOLong = 5;
+    @CONST(group = "DAOType", title = "String", className = "java.lang.String")
+    public final static int DAOString2 = 6;
+    @CONST(group = "DAOType", title = "EntityLink", className = "romanow.abc.core.entity.EntityLink")
+    public final static int DAOEntityLink = 7;
+    @CONST(group = "DAOType", title = "EntityLinkList", className = "romanow.abc.core.entity.EntityLinkList")
+    public final static int DAOEntityLinkList = 8;
+    @CONST(group = "DAOType", title = "EntityRefList", className = "romanow.abc.core.entity.EntityRefList")
+    public final static int DAOEntityRefList = 9;
+    @CONST(group = "DAOType", title = "DAOLink", className = "")
+    public final static int DAOLink = 10;
+    @CONST(group = "DAOType", title = "void", className = "void")
+    public final static int DAOVoid = 11;
     //------------------------ Типы улиц и нас пунктов -------------------------------------------------
     @CONST(group = "TownType", title = "Город")
     public final static int CTown = 1;

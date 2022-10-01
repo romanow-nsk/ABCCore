@@ -95,6 +95,13 @@ public class ConstMap extends HashMap<String, ConstGroup>{
             map.put(cc.name(),cc);
         return map;
         }
+    public HashMap<String,ConstValue> getGroupMapByClassName(String gName){
+        ConstList list = getValuesList(gName);
+        HashMap<String,ConstValue> map = new HashMap<>();
+        for(ConstValue cc : list)
+            map.put(cc.className(),cc);
+        return map;
+    }
     public HashMap<String,ConstValue> getGroupMapByTitle(String gName){
         ConstList list = getValuesList(gName);
         HashMap<String,ConstValue> map = new HashMap<>();

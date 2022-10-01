@@ -24,7 +24,7 @@ public class DLLFunction {
         method.setAccessible(true);
         }
     public String toString(){
-        String ss =  "Функция: "+name+" "+ DAO.dbTypes[resType]+" "+title+"\n";
+        String ss =  "Функция: "+name+" "+ ValuesBase.constMap().getGroupMapByValue("DAOType").get(resType).name()+" "+title+"\n";
         for(DLLField zz : params)
             ss+=zz.toString();
         return ss;

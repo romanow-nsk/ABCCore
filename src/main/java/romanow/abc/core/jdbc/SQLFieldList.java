@@ -42,28 +42,28 @@ public class SQLFieldList  extends ArrayList<SQLField> {
             for (int i = 0; i < fields.size(); i++) {
                 EntityField ff = fields.get(i);
                 switch (ff.type) {
-                    case DAO.dbInt:
+                    case ValuesBase.DAOInt:
                         add(new SQLField(prefix,ff.name, ff.type, "int"));
                         break;
-                    case DAO.dbDouble:
+                    case ValuesBase.DAODouble:
                         add(new SQLField(prefix,ff.name, ff.type, "real"));
                         break;
-                    case DAO.dbBoolean:
+                    case ValuesBase.DAOBoolean:
                         add(new SQLField(prefix,ff.name, ff.type, "tinyint(1)"));
                         break;
-                    case DAO.dbShort:
+                    case ValuesBase.DAOShort:
                         add(new SQLField(prefix,ff.name, ff.type, "tinyint(2)"));
                         break;
-                    case DAO.dbLong:
-                    case DAO.dbLink:
+                    case ValuesBase.DAOLong:
+                    case ValuesBase.DAOEntityLink:
                         add(new SQLField(prefix,ff.name, ff.type, "long"));
                         break;
-                    case DAO.dbLinkList:                                    // LinkList  как строка id,id,...
-                    case DAO.dbString2:
-                    case DAO.dbString:
+                    case ValuesBase.DAOEntityLinkList:                                    // LinkList  как строка id,id,...
+                    case ValuesBase.DAOString2:
+                    case ValuesBase.DAOString:
                         add(new SQLField(prefix,ff.name, ff.type, "mediumtext"));
                         break;
-                    case DAO.dbDAOLink:
+                    case ValuesBase.DAOLink:
                         String pref = getFieldPrefix(table,ff);
                         if (pref == null)
                             return "Не найден префикс для "+table+"."+ff.name;
@@ -104,25 +104,25 @@ public class SQLFieldList  extends ArrayList<SQLField> {
                 ss = set.getString(ff.name());
                 //System.out.println(ff.name()+":"+ss);
                 switch (ff.DAOType){
-                case DAO.dbInt:
+                case ValuesBase.DAOInt:
                     out.append(ff.name(), set.getInt(ff.name()));
                     break;
-                case DAO.dbDouble:
+                case ValuesBase.DAODouble:
                     out.append(ff.name(), set.getDouble(ff.name()));
                     break;
-                case DAO.dbBoolean:
+                case ValuesBase.DAOBoolean:
                     out.append(ff.name(), set.getBoolean(ff.name()));
                     break;
-                case DAO.dbShort:
+                case ValuesBase.DAOShort:
                     out.append(ff.name(), set.getShort(ff.name()));
                     break;
-                case DAO.dbLong:
-                case DAO.dbLink:
+                case ValuesBase.DAOLong:
+                case ValuesBase.DAOEntityLink:
                     out.append(ff.name(), set.getLong(ff.name()));
                     break;
-                case DAO.dbLinkList:                                    // LinkList  как строка id,id,...
-                case DAO.dbString2:
-                case DAO.dbString:
+                case ValuesBase.DAOEntityLinkList:                                    // LinkList  как строка id,id,...
+                case ValuesBase.DAOString2:
+                case ValuesBase.DAOString:
                     out.append(ff.name(), set.getString(ff.name()));
                     break;
                     }
@@ -151,25 +151,25 @@ public class SQLFieldList  extends ArrayList<SQLField> {
                 else
                     first=false;
                 switch (ff.DAOType){
-                    case DAO.dbInt:
+                    case ValuesBase.DAOInt:
                         out.append(ff.name()+"="+((Integer)set.get(ff.name())).intValue());
                         break;
-                    case DAO.dbDouble:
+                    case ValuesBase.DAODouble:
                         out.append(ff.name()+"="+((Double)set.get(ff.name())).doubleValue());
                         break;
-                    case DAO.dbBoolean:
+                    case ValuesBase.DAOBoolean:
                         out.append(ff.name()+"="+((Boolean)set.get(ff.name())).booleanValue());
                         break;
-                    case DAO.dbShort:
+                    case ValuesBase.DAOShort:
                         out.append(ff.name()+"="+((Short)set.get(ff.name())).shortValue());
                         break;
-                    case DAO.dbLong:
-                    case DAO.dbLink:
+                    case ValuesBase.DAOLong:
+                    case ValuesBase.DAOEntityLink:
                         out.append(ff.name()+"="+((Long)set.get(ff.name())).longValue());
                         break;
-                    case DAO.dbLinkList:                                    // LinkList  как строка id,id,...
-                    case DAO.dbString2:
-                    case DAO.dbString:
+                    case ValuesBase.DAOEntityLinkList:                                    // LinkList  как строка id,id,...
+                    case ValuesBase.DAOString2:
+                    case ValuesBase.DAOString:
                         out.append(ff.name()+"=\'"+(String) set.get(ff.name())+"\'");
                         break;
                     }
@@ -203,25 +203,25 @@ public class SQLFieldList  extends ArrayList<SQLField> {
                 else
                     first=false;
                 switch (ff.DAOType){
-                    case DAO.dbInt:
+                    case ValuesBase.DAOInt:
                         out.append(((Integer)set.get(ff.name())).intValue());
                         break;
-                    case DAO.dbDouble:
+                    case ValuesBase.DAODouble:
                         out.append(((Double)set.get(ff.name())).doubleValue());
                         break;
-                    case DAO.dbBoolean:
+                    case ValuesBase.DAOBoolean:
                         out.append(((Boolean)set.get(ff.name())).booleanValue());
                         break;
-                    case DAO.dbShort:
+                    case ValuesBase.DAOShort:
                         out.append(((Short)set.get(ff.name())).shortValue());
                         break;
-                    case DAO.dbLong:
-                    case DAO.dbLink:
+                    case ValuesBase.DAOLong:
+                    case ValuesBase.DAOEntityLink:
                         out.append(((Long)set.get(ff.name())).longValue());
                         break;
-                    case DAO.dbLinkList:                                    // LinkList  как строка id,id,...
-                    case DAO.dbString2:
-                    case DAO.dbString:
+                    case ValuesBase.DAOEntityLinkList:                                    // LinkList  как строка id,id,...
+                    case ValuesBase.DAOString2:
+                    case ValuesBase.DAOString:
                         out.append("\'"+(String) set.get(ff.name())+"\'");
                         break;
                 }

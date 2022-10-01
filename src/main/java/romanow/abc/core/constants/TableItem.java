@@ -6,6 +6,7 @@ import romanow.abc.core.mongo.DAO;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TableItem {
     public final String name;
@@ -48,13 +49,13 @@ public class TableItem {
     public boolean isExportXLS() {
         return exportXLS; }
     //------------------------------------------------------------------------------------------------------------------
-    public int getDbTypeId(String ss){
-        int i;
-        for (i=0;i<DAO.dbTypes.length;i++){
-            if (DAO.dbTypes[i].equals(ss)) return i;
-            }
-        return -1;
-        }
+    //public int getDbTypeId(String ss){
+    //    int i;
+    //    for (i=0;i<DAO.dbTypes.length;i++){
+    //        if (DAO.dbTypes[i].equals(ss)) return i;
+    //        }
+    //    return -1;
+    //    }
     public static boolean isDAOClass(Class cls){
         for(; cls!= null; cls=cls.getSuperclass()) {    // Цикл по текущему и базовым
             if (cls==DAO.class)
@@ -65,6 +66,7 @@ public class TableItem {
     public void createFields(){
         Class cls=clazz;
         fields = new ArrayList<>();
+        HashMap<String,ConstValue> classMap = ValuesBase.daoClassMap();
         for(; cls!= DAO.class; cls=cls.getSuperclass()){    // Цикл по текущему и базовым
             Field flds[]=cls.getDeclaredFields();    //
             for(int i=0;i<flds.length;i++){          // Перебор всех полей
@@ -72,16 +74,16 @@ public class TableItem {
                 if ((flds[i].getModifiers() & Modifier.TRANSIENT)!=0) continue;
                 if ((flds[i].getModifiers() & Modifier.STATIC)!=0) continue;
                 String tname=flds[i].getType().getName();
-                int type=getDbTypeId(tname);
+                ConstValue cc = classMap.get(tname);
+                //int type=getDbTypeId(tname);
                 String name=flds[i].getName();
-                if (type==-1){
+                if (cc==null){
                     if (isDAOClass(flds[i].getType())) {
-                        fields.add(new EntityField(name, DAO.dbDAOLink, flds[i]));
+                        fields.add(new EntityField(name, ValuesBase.DAOLink, flds[i]));
                         }
                     continue;
                     }
-
-                fields.add(new EntityField(name,type,flds[i]));
+                fields.add(new EntityField(name,cc.value(),flds[i]));
             }
         }
     }
