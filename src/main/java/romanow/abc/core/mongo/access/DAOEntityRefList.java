@@ -3,7 +3,6 @@ package romanow.abc.core.mongo.access;
 import org.apache.poi.ss.usermodel.Row;
 import org.bson.Document;
 import romanow.abc.core.UniException;
-import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.*;
 import romanow.abc.core.export.ExCellCounter;
 import romanow.abc.core.mongo.*;
@@ -62,4 +61,10 @@ class DAOEntityRefList implements I_DAOAccess {
     @Override
     public void putFieldValue(DAO dao, String prefix, Document out, int level, I_MongoDB mongo, EntityField ff) throws Exception {
         }
+
+    @Override
+    public String createKotlinFieldDefine(EntityField ff) {
+        return ff.name+":EntityRefList<"+ff.genericName+"> = EntityRefList<"+ff.genericName+">()";
+        }
+
 }

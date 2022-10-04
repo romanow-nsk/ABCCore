@@ -28,4 +28,9 @@ class DAOvoid implements I_DAOAccess {
     public void copyDBValues(EntityField ff, DAO dao, DAO src) throws Exception {}
     @Override
     public void putFieldValue(DAO dao, String prefix, Document out, int level, I_MongoDB mongo, EntityField ff) throws Exception {}
+
+    @Override
+    public String createKotlinFieldDefine(EntityField ff) {
+        return "";
+    }
 }

@@ -66,4 +66,9 @@ class DAOlong implements I_DAOAccess {
     public void putFieldValue(DAO dao, String prefix, Document out, int level, I_MongoDB mongo, EntityField ff) throws Exception {
         out.put(prefix+ff.name,ff.field.getLong(dao));
         }
+
+    @Override
+    public String createKotlinFieldDefine(EntityField ff) {
+        return ff.name+":Long=0";
+    }
 }

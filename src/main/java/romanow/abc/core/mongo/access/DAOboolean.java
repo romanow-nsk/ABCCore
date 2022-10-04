@@ -5,12 +5,10 @@ import org.bson.Document;
 import romanow.abc.core.UniException;
 import romanow.abc.core.entity.EntityField;
 import romanow.abc.core.export.ExCellCounter;
-import romanow.abc.core.jdbc.SQLField;
 import romanow.abc.core.mongo.DAO;
 import romanow.abc.core.mongo.I_MongoDB;
 import romanow.abc.core.mongo.RequestStatistic;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 class DAOboolean implements I_DAOAccess {
@@ -68,6 +66,11 @@ class DAOboolean implements I_DAOAccess {
     @Override
     public void putFieldValue(DAO dao, String prefix, Document out, int level, I_MongoDB mongo, EntityField ff) throws Exception {
         out.put(prefix+ff.name,ff.field.getBoolean(dao));
+        }
+
+    @Override
+    public String createKotlinFieldDefine(EntityField ff) {
+        return ff.name+":Boolean=false";
         }
 
 }

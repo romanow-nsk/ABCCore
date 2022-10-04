@@ -7,6 +7,8 @@ public class EntityField {
     public final int type;
     public final Field field;
     public String value="";
+    public String genericName="";
+    public String fieldClassName="";
     public EntityField(){
         name="...";
         type=-1;
@@ -22,10 +24,20 @@ public class EntityField {
         type=tp;
         field=null;
         value = value0;
-    }
+        }
+    public EntityField(String nm, int tp, Field fld0, String genericName0, String fclass, String value0){
+        name=nm;
+        type=tp;
+        field=fld0;
+        genericName = genericName0;
+        value = value0;
+        fieldClassName = fclass;
+        }
     public EntityField(EntityField src) {
         name = src.name;
         type = src.type;
         field = src.field;
+        genericName = src.genericName;
+        value = src.value;
         }
 }

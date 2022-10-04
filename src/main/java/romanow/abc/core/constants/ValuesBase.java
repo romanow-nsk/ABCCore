@@ -2,6 +2,7 @@ package romanow.abc.core.constants;
 
 import lombok.Getter;
 import lombok.Setter;
+import romanow.abc.core.DBRequest;
 import romanow.abc.core.ErrorList;
 import romanow.abc.core.ServerState;
 import romanow.abc.core.UniException;
@@ -264,6 +265,7 @@ public class ValuesBase {
         EntityFactory.put(new TableItem("Телефоны", PhoneList.class,false));       // Сборка 623 - не таблица
         EntityFactory.put(new TableItem("Сумма", MoneySum.class,false));           // Сборка 636
         EntityFactory.put(new TableItem( "Аккаунт", Account.class));                        // Сборка 637
+        EntityFactory.put(new TableItem("DBRequest", DBRequest.class,false));
         PrefixMap.put("BugMessage.date","d");               //636
         PrefixMap.put("Artifact.date","d");                 //636
         PrefixMap.put("Artifact.original","f");             //636

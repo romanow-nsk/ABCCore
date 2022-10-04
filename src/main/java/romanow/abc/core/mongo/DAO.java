@@ -3,6 +3,7 @@ package romanow.abc.core.mongo;
 import romanow.abc.core.I_ExcelRW;
 import romanow.abc.core.UniException;
 import romanow.abc.core.Utils;
+import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.TableItem;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.*;
@@ -10,12 +11,16 @@ import romanow.abc.core.export.ExCellCounter;
 import org.apache.poi.ss.usermodel.Row;
 import romanow.abc.core.mongo.access.I_DAOAccess;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DAO implements I_ExcelRW, I_MongoRW {
     private transient ArrayList<EntityField> fld=null;
+    private transient TableItem table=null;
     private static HashMap <String,Integer> errorsMap = new HashMap<>();
     private static int noFieldErrorCount=100;
     public Field getField(String name,int type) throws UniException {
@@ -79,8 +84,8 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     public ArrayList<EntityField> getFields() throws UniException {
         if (fld!=null)
             return fld;
-        TableItem item = ValuesBase.EntityFactory().getItemForSimpleName(getClass().getSimpleName());
-        fld = item.getFields();
+        table = ValuesBase.EntityFactory().getItemForSimpleName(getClass().getSimpleName());
+        fld = table.getFields();
         return fld;
         }
     final public void getDBValues(String prefix, org.bson.Document out) throws UniException{
@@ -312,7 +317,7 @@ public class DAO implements I_ExcelRW, I_MongoRW {
                 map.get(ff.type).copyDBValues(ff,this,src);
                 }
             }
-        catch(Throwable ee){
+        catch(Exception ee){
             throw UniException.bug(getClass().getSimpleName()+"."+ff.name+"\n"+ee.toString());  }
         }
     final public void loadDBValues(DAO src, int level, I_MongoDB mongo) throws UniException{
@@ -323,10 +328,82 @@ public class DAO implements I_ExcelRW, I_MongoRW {
             for(int i=0;i<fld.size();i++){
                 ff=fld.get(i);
                 map.get(ff.type).loadDBValues(ff,this,src,level,mongo);
+                }
             }
-        }
         catch(Exception ee){
             throw UniException.bug(getClass().getSimpleName()+"."+ff.name+"\n"+ee.toString());
             }
         }
+    //------------------------------------------------------------------------------------------------------------------
+    public String createKotlinClassSource() throws UniException {
+        String className =getClass().getSimpleName();
+        getFields();
+        String out = "class "+className;
+        if (table.isTable) out+=":Entity";
+        out+="{\n";
+        EntityField ff=new EntityField();
+        try {
+            HashMap<Integer, I_DAOAccess> map = ValuesBase.getOne().getDaoAccessFactory().getClassMap();
+            HashMap<Integer, ConstValue> map2 = ValuesBase.constMap().getGroupMapByValue("DAOType");
+            for(int i=0;i<fld.size();i++){
+                ff=fld.get(i);
+                if (table.isTable && ff.fieldClassName.equals("Entity"))
+                    continue;
+                I_DAOAccess access = map.get(ff.type);
+                String typeName = map2.get(ff.type).title();
+                typeName = typeName.substring(0,1).toUpperCase()+typeName.substring(1);
+                String ss = "    var "+access.createKotlinFieldDefine(ff)+"\n";
+                out+=ss;
+                }
+            }
+        catch(Exception ee){
+            throw UniException.bug(getClass().getSimpleName()+"."+ff.name+"\n"+ee.toString());
+            }
+        return out+"    constructor() {}\n}\n";
+        }
+    public static void createKotlinClassFile(String outPackage,String className, String ss) throws Exception{
+        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outPackage+"/"+className+".kt"),"UTF-8");
+        out.write("package "+outPackage.replace("/",".")+"\n"+ss);
+        out.flush();
+        out.close();
+        }
+    public static void createKotlinClassSources(){
+        String outPackage = "abc/core/subjectarea";
+        File ff = new File(outPackage+"/");
+        ff.mkdirs();
+        try {
+            createKotlinClassFile(outPackage,"JEmpty","class JEmpty {}\n");
+            createKotlinClassFile(outPackage,"JInt","class JInt { var value = 0 }\n");
+            createKotlinClassFile(outPackage,"JBoolean","class JBoolean { var value = false }\n");
+            createKotlinClassFile(outPackage,"JString","class JString { var value = \"\" }\n");
+            createKotlinClassFile(outPackage,"JLong","class JLong { var value = 0L}\n");
+            createKotlinClassFile(outPackage,"ArtifactList","class ArtifactList : EntityList<Artifact?>(){}\n");
+            createKotlinClassFile(outPackage,"ConstList","class ConstList(val group : String?=\"\") : ArrayList<ConstValue>() { }\n");
+            createKotlinClassFile(outPackage,"ConstValue","class ConstValue(var groupName:String?=\"\", var name:String?=\"\", var title:String?=\"...\", var className:String?=\"\", var value:Int=0) { }");
+            createKotlinClassFile(outPackage,"EntityList","open class EntityList<T : Entity?> : ArrayList<T>() { }");
+            createKotlinClassFile(outPackage,"EntityNamed","open class EntityNamed : Entity() { var name = \"\"}\n");
+            createKotlinClassFile(outPackage,"EntityLinkList","class EntityLinkList<T : Entity?> : ArrayList<EntityLink<T>?>() {}\n");
+            createKotlinClassFile(outPackage,"EntityRefList","class EntityRefList<T : Entity?> : ArrayList<T>() {}\n");
+            createKotlinClassFile(outPackage,"EntityLink","class EntityLink<T : Entity?> {\n"+
+                "    var oid: Long = 0L\n"+
+                "    var ref: T? = null\n}\n");
+            createKotlinClassFile(outPackage,"Entity","open class Entity{\n" +
+                    "    var oid: Long = 0\n" +
+                    "    var isValid = true\n" +
+                    "}\n");
+            } catch (Exception e) {
+                System.out.println("Ошибка создания EntityLink...");
+                }
+        ArrayList<TableItem> tables = ValuesBase.init().getEntityFactory().classList(true,true);
+        for (TableItem item : tables){
+            try {
+                DAO dao = (DAO)item.clazz.newInstance();
+                String ss =  dao.createKotlinClassSource();
+                createKotlinClassFile(outPackage,dao.getClass().getSimpleName(),ss);
+                } catch (Exception e) {
+                    System.out.println("Ошибка создания "+item.name);
+                    }
+            }
+        }
+
 }

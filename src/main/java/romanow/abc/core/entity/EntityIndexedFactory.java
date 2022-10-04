@@ -43,14 +43,17 @@ public class EntityIndexedFactory {
         return item==null ? null : item.name;
         }
     public ArrayList<TableItem> classList(){
-        return classList(false);
+        return classList(false,false);
         }
     public ArrayList<TableItem> classList(final boolean className){
+        return classList(className,false);
+        }
+    public ArrayList<TableItem> classList(final boolean className, final boolean all){
         TableItem cc[] = new TableItem[foreMap.size()];
         foreMap.values().toArray(cc);
         ArrayList<TableItem> out = new ArrayList<>();
         for(int i=0;i<cc.length;i++){
-            if (cc[i].isTable)
+            if (all || cc[i].isTable)
                 out.add(cc[i]);
             }
         out.sort(new Comparator<TableItem>() {

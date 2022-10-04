@@ -148,4 +148,10 @@ class DAOEntityLinkList implements I_DAOAccess {
             }
         out.put(prefix+ff.name,list.getIdListString());
         }
+
+    @Override
+    public String createKotlinFieldDefine(EntityField ff) {
+        return ff.name+":EntityLinkList<"+ff.genericName+"> = EntityLinkList<"+ff.genericName+">()";
+    }
+
 }

@@ -4,12 +4,10 @@ import org.apache.poi.ss.usermodel.Row;
 import romanow.abc.core.UniException;
 import romanow.abc.core.entity.EntityField;
 import romanow.abc.core.export.ExCellCounter;
-import romanow.abc.core.jdbc.SQLField;
 import romanow.abc.core.mongo.DAO;
 import romanow.abc.core.mongo.I_MongoDB;
 import romanow.abc.core.mongo.RequestStatistic;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface I_DAOAccess {
@@ -23,4 +21,5 @@ public interface I_DAOAccess {
     //----------------- Просто клон без ссылок
     public void copyDBValues(EntityField ff, DAO dao, DAO src) throws Exception;
     public void putFieldValue(DAO dao,String prefix, org.bson.Document out, int level, I_MongoDB mongo,EntityField ff) throws Exception;
+    public String createKotlinFieldDefine(EntityField ff);
     }

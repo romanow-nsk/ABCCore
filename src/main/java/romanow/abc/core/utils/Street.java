@@ -7,7 +7,7 @@ import romanow.abc.core.entity.EntityLink;
 public class Street extends Entity {
     private String name="";
     private int type= ValuesBase.SStreet;
-    private EntityLink<City> city = new EntityLink<>(City.class);
+    private EntityLink<City> city = new EntityLink<City>(City.class);
     private GPSPoint location = new GPSPoint();
     public GPSPoint getLocation() {
         return location; }

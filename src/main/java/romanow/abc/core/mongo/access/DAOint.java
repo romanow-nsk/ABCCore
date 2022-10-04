@@ -66,4 +66,9 @@ class DAOint implements I_DAOAccess {
     public void putFieldValue(DAO dao, String prefix, Document out, int level, I_MongoDB mongo, EntityField ff) throws Exception {
         out.put(prefix+ff.name,ff.field.getInt(dao));
         }
+
+    @Override
+    public String createKotlinFieldDefine(EntityField ff) {
+        return ff.name+":Int=0";
+    }
 }

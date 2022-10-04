@@ -5,13 +5,10 @@ import org.bson.Document;
 import romanow.abc.core.UniException;
 import romanow.abc.core.entity.EntityField;
 import romanow.abc.core.export.ExCellCounter;
-import romanow.abc.core.jdbc.SQLField;
-import romanow.abc.core.jdbc.SQLFieldList;
 import romanow.abc.core.mongo.DAO;
 import romanow.abc.core.mongo.I_MongoDB;
 import romanow.abc.core.mongo.RequestStatistic;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 class DAODAOLink implements I_DAOAccess {
@@ -96,4 +93,11 @@ class DAODAOLink implements I_DAOAccess {
         else
             dao.noField(2,ff);
         }
+
+    @Override
+    public String createKotlinFieldDefine(EntityField ff) {
+        String type = ff.field.getType().getSimpleName();
+        return ff.name+":"+type+"="+type+"()";
+    }
+
 }

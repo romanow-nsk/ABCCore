@@ -2,13 +2,14 @@ package romanow.abc.core.entity;
 
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.artifacts.Artifact;
+import romanow.abc.core.mongo.DAO;
 
 /** Ссылка, совмещенная с Id-ом*/
-public class EntityLink<T extends Entity> {
+public class EntityLink<T extends Entity>{
     private long oid=0;
     private T ref=null;
     private int operation= ValuesBase.OperationNone;    // Операция - в БД не пишется, используется при add/update/delete
-    private transient Class typeT=null;             // Класс параметра шаблона для рефлексионной загрузки ссылок
+    private transient Class typeT=null;                 // Класс параметра шаблона для рефлексионной загрузки ссылок
     public EntityLink(){}
     public EntityLink(Class type0){
         typeT = type0; }
