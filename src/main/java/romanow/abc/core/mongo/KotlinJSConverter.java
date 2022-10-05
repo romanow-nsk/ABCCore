@@ -76,7 +76,7 @@ public class KotlinJSConverter {
         //--------------------- Образец---------------------------
         //suspend fun keepAlive(token:String): JInt {
         //    val response = window
-        //            .fetch("localhost:4567/api/keepalive", RequestInit("get",Headers().append("SessionToken",token)))
+        //            .fetch("127.0.0.1:4567/api/keepalive", RequestInit("get",Headers().append("SessionToken",token)))
         //            .await()
         //            .text()
         //            .await()
@@ -132,7 +132,7 @@ public class KotlinJSConverter {
                 }
             out+=" "+parameter.getName()+":"+ss+":"+ typeName;
             }
-        par1 += paramList+") : JInt {\n    val response = window\n        .fetch(ip+\":\"+port+\""+url+par2+"\"";
+        par1 += paramList+") : JInt {\n    val response = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
         par1 +=",RequestInit(\""+name+"\"";
         if (par3.length()!=0)
             par1 += ","+par3+")";
@@ -148,7 +148,7 @@ public class KotlinJSConverter {
             "import kotlinx.coroutines.await\n"+
             "import org.w3c.fetch.Headers\n"+
             "import org.w3c.fetch.RequestInit\n\n"+
-            "class "+apiFace.getSimpleName()+" (var ip: String = \"localhost\", var port: Int = 4567){\n";
+            "class "+apiFace.getSimpleName()+" (var ip: String = \"127.0.0.1\", var port: Int = 4567){\n";
         for(Method method : apiFace.getMethods()){
             if (method.isAnnotationPresent(GET.class)){
                 GET get = (GET) method.getAnnotation(GET.class);
