@@ -62,6 +62,14 @@ public class KotlinJSConverter {
             }
         }
     }
+    //-----------------------------------------------------------------------------------------------------------------
+    public static void createJSAPIFile(Class api,ErrorList errorList){
+        try {
+            createKotlinClassFile(ValuesBase.KotlinJSPackage,"RestAPIBase",createJSAPIFace(api,errorList));
+            } catch (Exception e) {
+                errorList.addError("Ошибка создания "+api.getSimpleName()+": "+e.toString());
+                }
+        }
     //------------------------------------------------------------------------------------------------------------------
     public static String procMethod(String name, String url, Method method, ErrorList errors){
         //--------------------- Образец---------------------------
