@@ -2,6 +2,7 @@ package romanow.abc.core.mongo;
 
 import retrofit2.Call;
 import retrofit2.http.*;
+import romanow.abc.core.API.RestAPIBase;
 import romanow.abc.core.ErrorList;
 import romanow.abc.core.constants.TableItem;
 import romanow.abc.core.constants.ValuesBase;
@@ -46,6 +47,7 @@ public class KotlinJSConverter {
                     "    var oid: Long = 0\n" +
                     "    var isValid = true\n" +
                     "}\n");
+            createKotlinClassFile(outPackage,"RestAPIBase",createJSAPIFace(RestAPIBase.class,errors));
         } catch (Exception e) {
             errors.addError("Ошибка создания EntityLink...: "+e.toString());
             }
@@ -71,6 +73,7 @@ public class KotlinJSConverter {
         //            .await()
         //    return response as JInt
         //}
+        String par1 = "suspend fun ";
         String genericType="";
         Type type = method.getReturnType();
         //TODO - результат Call<T> - параметр типа извлечь
@@ -83,12 +86,19 @@ public class KotlinJSConverter {
                     genericType = genericType.substring(idx+1);
                 }
             }
+        par1 +=method.getName()+"(ip:String,port:int";
+        String par2 = "";
+        String par3="";
         String out = name +" "+url+" "+method.getName()+" "+genericType;
         for(Parameter parameter : method.getParameters()){
             String ss="";
             if (parameter.isAnnotationPresent(Header.class)){
                 Header header = (Header)parameter.getAnnotation(Header.class);
                 ss = "header="+header.value()+" ";
+                if (par3.length()==0)
+                    par3="Headers()";
+                par3 +=".append(\""+header.value()+"\","+header.value();
+                par1+=","+header.value()+":"+parameter.getType().getSimpleName();
                 }
             if (parameter.isAnnotationPresent(Body.class)){
                 Body body = (Body)parameter.getAnnotation(Body.class);
@@ -97,6 +107,9 @@ public class KotlinJSConverter {
             if (parameter.isAnnotationPresent(Query.class)){
                 Query query = (Query) parameter.getAnnotation(Query.class);
                 ss="query="+query.value();
+                par2 += par2.length()==0 ? "?" : "&";
+                par2 += query.value()+"=\"+"+query.value()+"+\"";
+                par1+=","+query.value()+":"+parameter.getType().getSimpleName();
                 }
             if (parameter.isAnnotationPresent(Part.class)){
                 Part part = (Part) parameter.getAnnotation(Part.class);
@@ -104,7 +117,12 @@ public class KotlinJSConverter {
                 }
             out+=" "+parameter.getName()+":"+ss+":"+parameter.getType().getSimpleName();
             }
-        return out+"\n";
+        par1 += ") JEmpty {\n    val response = window\n        .fetch(ip+\":\"+port+\""+url+par2+"\"";
+        par1 +=",RequestInit(\""+name+"\"";
+        if (par3.length()!=0)
+            par1 += ","+par3;
+        par1+=")))\n        .await().text().await()\n    return response as JInt\n    }\n";
+        return par1;
         }
     public static String createJSAPIFace(Class apiFace, ErrorList errors){
         if (!apiFace.isInterface()){
