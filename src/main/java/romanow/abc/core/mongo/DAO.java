@@ -361,49 +361,5 @@ public class DAO implements I_ExcelRW, I_MongoRW {
             }
         return out+"    constructor() {}\n}\n";
         }
-    public static void createKotlinClassFile(String outPackage,String className, String ss) throws Exception{
-        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outPackage+"/"+className+".kt"),"UTF-8");
-        out.write("package "+outPackage.replace("/",".")+"\n"+ss);
-        out.flush();
-        out.close();
-        }
-    public static void createKotlinClassSources(){
-        String outPackage = "abc/core/subjectarea";
-        File ff = new File(outPackage+"/");
-        ff.mkdirs();
-        try {
-            createKotlinClassFile(outPackage,"JEmpty","class JEmpty {}\n");
-            createKotlinClassFile(outPackage,"JInt","class JInt { var value = 0 }\n");
-            createKotlinClassFile(outPackage,"JBoolean","class JBoolean { var value = false }\n");
-            createKotlinClassFile(outPackage,"JString","class JString { var value = \"\" }\n");
-            createKotlinClassFile(outPackage,"JLong","class JLong { var value = 0L}\n");
-            createKotlinClassFile(outPackage,"ArtifactList","class ArtifactList : EntityList<Artifact?>(){}\n");
-            createKotlinClassFile(outPackage,"ConstList","class ConstList(val group : String?=\"\") : ArrayList<ConstValue>() { }\n");
-            createKotlinClassFile(outPackage,"ConstValue","class ConstValue(var groupName:String?=\"\", var name:String?=\"\", var title:String?=\"...\", var className:String?=\"\", var value:Int=0) { }");
-            createKotlinClassFile(outPackage,"EntityList","open class EntityList<T : Entity?> : ArrayList<T>() { }");
-            createKotlinClassFile(outPackage,"EntityNamed","open class EntityNamed : Entity() { var name = \"\"}\n");
-            createKotlinClassFile(outPackage,"EntityLinkList","class EntityLinkList<T : Entity?> : ArrayList<EntityLink<T>?>() {}\n");
-            createKotlinClassFile(outPackage,"EntityRefList","class EntityRefList<T : Entity?> : ArrayList<T>() {}\n");
-            createKotlinClassFile(outPackage,"EntityLink","class EntityLink<T : Entity?> {\n"+
-                "    var oid: Long = 0L\n"+
-                "    var ref: T? = null\n}\n");
-            createKotlinClassFile(outPackage,"Entity","open class Entity{\n" +
-                    "    var oid: Long = 0\n" +
-                    "    var isValid = true\n" +
-                    "}\n");
-            } catch (Exception e) {
-                System.out.println("Ошибка создания EntityLink...");
-                }
-        ArrayList<TableItem> tables = ValuesBase.init().getEntityFactory().classList(true,true);
-        for (TableItem item : tables){
-            try {
-                DAO dao = (DAO)item.clazz.newInstance();
-                String ss =  dao.createKotlinClassSource();
-                createKotlinClassFile(outPackage,dao.getClass().getSimpleName(),ss);
-                } catch (Exception e) {
-                    System.out.println("Ошибка создания "+item.name);
-                    }
-            }
-        }
 
 }

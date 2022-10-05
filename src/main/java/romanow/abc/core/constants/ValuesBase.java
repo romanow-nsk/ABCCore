@@ -109,6 +109,7 @@ public class ValuesBase {
     public final static String SQLDBPort="3306";
     public final static String SQLDBPort2="3307";
     public final static String bashPath="/bin/";                // путь к bash для Linux
+    public final static String KotlinJSPackage = "abc/core/subjectarea";
     public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "schwanensee1969","9139877277");
     private static TypeFactory DataTypes;
     public static TypeFactory dataTypes(){ return DataTypes; }
