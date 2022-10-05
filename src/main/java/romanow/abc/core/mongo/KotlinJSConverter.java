@@ -132,11 +132,11 @@ public class KotlinJSConverter {
                 }
             out+=" "+parameter.getName()+":"+ss+":"+ typeName;
             }
-        par1 += paramList+") : JInt {\n    val response = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
+        par1 += paramList+") : String {\n    val response = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
         par1 +=",RequestInit(\""+name+"\"";
         if (par3.length()!=0)
             par1 += ","+par3+")";
-        par1+="))\n        .await().text().await()\n    return response as JInt\n    }\n";
+        par1+="))\n        .await().text().await()\n    return response as String\n    }\n";
         return par1;
         }
     public static String createJSAPIFace(Class apiFace, ErrorList errors){
