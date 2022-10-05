@@ -138,6 +138,9 @@ public class Utils {
             default:  return ss+'a';
             }
         }
+    public static String toUpperFirst(String ss){
+        return ss.substring(0,1).toUpperCase()+ss.substring(1);
+        }
     public static void main(String a[]){
         System.out.println(when("Иванов"));
         System.out.println(when("Зуева"));

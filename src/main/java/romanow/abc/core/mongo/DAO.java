@@ -351,7 +351,7 @@ public class DAO implements I_ExcelRW, I_MongoRW {
                     continue;
                 I_DAOAccess access = map.get(ff.type);
                 String typeName = map2.get(ff.type).title();
-                typeName = typeName.substring(0,1).toUpperCase()+typeName.substring(1);
+                typeName = Utils.toUpperFirst(typeName);
                 String ss = "    var "+access.createKotlinFieldDefine(ff)+"\n";
                 out+=ss;
                 }

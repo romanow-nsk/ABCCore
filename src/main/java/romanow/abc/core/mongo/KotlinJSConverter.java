@@ -4,6 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.*;
 import romanow.abc.core.API.RestAPIBase;
 import romanow.abc.core.ErrorList;
+import romanow.abc.core.Utils;
 import romanow.abc.core.constants.TableItem;
 import romanow.abc.core.constants.ValuesBase;
 
@@ -65,7 +66,7 @@ public class KotlinJSConverter {
     //-----------------------------------------------------------------------------------------------------------------
     public static void createJSAPIFile(Class api,ErrorList errorList){
         try {
-            createKotlinClassFile(ValuesBase.KotlinJSPackage,"RestAPIBase",createJSAPIFace(api,errorList));
+            createKotlinClassFile(ValuesBase.KotlinJSPackage,api.getSimpleName(),createJSAPIFace(api,errorList));
             } catch (Exception e) {
                 errorList.addError("Ошибка создания "+api.getSimpleName()+": "+e.toString());
                 }
@@ -83,6 +84,7 @@ public class KotlinJSConverter {
         //}
         String par1 = "suspend fun ";
         String genericType="";
+        String paramList = "";
         Type type = method.getReturnType();
         //TODO - результат Call<T> - параметр типа извлечь
         if (type instanceof ParameterizedType) {
@@ -94,19 +96,22 @@ public class KotlinJSConverter {
                     genericType = genericType.substring(idx+1);
                 }
             }
-        par1 +=method.getName()+"(ip:String,port:int";
+        par1 +=method.getName()+"(";
         String par2 = "";
         String par3="";
         String out = name +" "+url+" "+method.getName()+" "+genericType;
         for(Parameter parameter : method.getParameters()){
             String ss="";
+            String typeName = Utils.toUpperFirst(parameter.getType().getSimpleName());
             if (parameter.isAnnotationPresent(Header.class)){
                 Header header = (Header)parameter.getAnnotation(Header.class);
                 ss = "header="+header.value()+" ";
                 if (par3.length()==0)
                     par3="Headers()";
                 par3 +=".append(\""+header.value()+"\","+header.value();
-                par1+=","+header.value()+":"+parameter.getType().getSimpleName();
+                if (paramList.length()!=0)
+                    paramList +=",";
+                paramList += header.value()+":"+typeName;
                 }
             if (parameter.isAnnotationPresent(Body.class)){
                 Body body = (Body)parameter.getAnnotation(Body.class);
@@ -117,19 +122,21 @@ public class KotlinJSConverter {
                 ss="query="+query.value();
                 par2 += par2.length()==0 ? "?" : "&";
                 par2 += query.value()+"=\"+"+query.value()+"+\"";
-                par1+=","+query.value()+":"+parameter.getType().getSimpleName();
+                if (paramList.length()!=0)
+                    paramList +=",";
+                paramList += query.value()+":"+typeName;
                 }
             if (parameter.isAnnotationPresent(Part.class)){
                 Part part = (Part) parameter.getAnnotation(Part.class);
                 ss="part="+part.value();
                 }
-            out+=" "+parameter.getName()+":"+ss+":"+parameter.getType().getSimpleName();
+            out+=" "+parameter.getName()+":"+ss+":"+ typeName;
             }
-        par1 += ") JEmpty {\n    val response = window\n        .fetch(ip+\":\"+port+\""+url+par2+"\"";
+        par1 += paramList+") : JInt {\n    val response = window\n        .fetch(ip+\":\"+port+\""+url+par2+"\"";
         par1 +=",RequestInit(\""+name+"\"";
         if (par3.length()!=0)
-            par1 += ","+par3;
-        par1+=")))\n        .await().text().await()\n    return response as JInt\n    }\n";
+            par1 += ","+par3+")";
+        par1+="))\n        .await().text().await()\n    return response as JInt\n    }\n";
         return par1;
         }
     public static String createJSAPIFace(Class apiFace, ErrorList errors){
@@ -137,7 +144,11 @@ public class KotlinJSConverter {
             errors.addError(apiFace.getSimpleName()+" - не интерфейс");
             return null;
             }
-        String out="";
+        String out="\nimport kotlinx.browser.window\n"+
+            "import kotlinx.coroutines.await\n"+
+            "import org.w3c.fetch.Headers\n"+
+            "import org.w3c.fetch.RequestInit\n\n"+
+            "class "+apiFace.getSimpleName()+" (var ip: String = \"localhost\", var port: Int = 4567){\n";
         for(Method method : apiFace.getMethods()){
             if (method.isAnnotationPresent(GET.class)){
                 GET get = (GET) method.getAnnotation(GET.class);
@@ -148,6 +159,6 @@ public class KotlinJSConverter {
                 out+=procMethod("post",get.value(),method,errors);
             }
             }
-        return out;
+        return out+"}\n";
     }
 }
