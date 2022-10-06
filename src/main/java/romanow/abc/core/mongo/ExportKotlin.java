@@ -28,6 +28,7 @@ public class ExportKotlin {
         File ff = new File(outPackage+"/");
         ff.mkdirs();
         try {
+            createKotlinClassFile(outPackage,"ResponseBody",DAO.classHeader+"ResponseBody {}\n");
             createKotlinClassFile(outPackage,"JEmpty",DAO.classHeader+"JEmpty {}\n");
             createKotlinClassFile(outPackage,"JInt",DAO.classHeader+"JInt { var value = 0 }\n");
             createKotlinClassFile(outPackage,"JBoolean",DAO.classHeader+"JBoolean { var value = false }\n");
@@ -130,9 +131,7 @@ public class ExportKotlin {
             if (parameter.isAnnotationPresent(Header.class)){
                 Header header = (Header)parameter.getAnnotation(Header.class);
                 ss = "header="+header.value()+" ";
-                if (par3.length()==0)
-                    par3="Headers()";
-                par3 +=".append(\""+header.value()+"\","+header.value();
+                par3 +="        headers.append(\""+header.value()+"\","+header.value()+")\n";
                 if (paramList.length()!=0)
                     paramList +=",";
                 paramList += header.value()+":"+typeName;
@@ -156,10 +155,15 @@ public class ExportKotlin {
                 }
             out+=" "+parameter.getName()+":"+ss+":"+ typeName;
             }
-        par1 += paramList+") : "+genericType+" {\n        val response = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
+        par1 += paramList+") : "+genericType+" {\n";
+        if (par3.length()!=0) {
+            par1 += "        val headers = Headers()\n";
+            par1 += par3;
+            }
+        par1 +="        val response = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
         par1 +=",RequestInit(\""+name+"\"";
         if (par3.length()!=0)
-            par1 += ","+par3+")";
+            par1 += ",headers";
         par1+="))\n            .await().text().await()\n" +
                 "        val format = Json { ignoreUnknownKeys = true }\n" +
                 "        return format.decodeFromString<"+genericType+">(response)\n        }\n";
