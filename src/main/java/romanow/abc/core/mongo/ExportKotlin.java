@@ -28,6 +28,8 @@ public class ExportKotlin {
         File ff = new File(outPackage+"/");
         ff.mkdirs();
         try {
+            createKotlinClassFile(outPackage,"R",DAO.classHeader+"R<T>(var mes:String=\"\",var data:T?=null) {\n"+
+                    "fun valid():Boolean { return mes.length==0 }}");
             createKotlinClassFile(outPackage,"ResponseBody",DAO.classHeader+"ResponseBody {}\n");
             createKotlinClassFile(outPackage,"JEmpty",DAO.classHeader+"JEmpty {}\n");
             createKotlinClassFile(outPackage,"JInt",DAO.classHeader+"JInt { var value = 0 }\n");
@@ -155,7 +157,7 @@ public class ExportKotlin {
                 }
             out+=" "+parameter.getName()+":"+ss+":"+ typeName;
             }
-        par1 += paramList+") : Pair<String?,"+genericType+"?> {\n";
+        par1 += paramList+") : R<"+genericType+"> {\n";
         if (par3.length()!=0) {
             par1 += "        val headers = Headers()\n";
             par1 += par3;
@@ -166,10 +168,10 @@ public class ExportKotlin {
             par1 += ",headers";
         par1+="))\n            .await()\n" +
                 "        if (!res.ok)\n"+
-                "            return Pair(res.statusText+\" \"+res.text().await(),null)\n" +
+                "            return R(res.statusText+\" \"+res.text().await(),null)\n" +
                 "        val res2 = res.text().await()\n" +
                 "        val format = Json { ignoreUnknownKeys = true }\n" +
-                "        return Pair(null,format.decodeFromString<"+genericType+">(res2))\n" +
+                "        return R(\"\",format.decodeFromString<"+genericType+">(res2))\n" +
                 "    }\n";
         return par1;
         }
