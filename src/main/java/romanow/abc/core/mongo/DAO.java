@@ -338,7 +338,7 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     public String createKotlinClassSource() throws UniException {
         String className =getClass().getSimpleName();
         getFields();
-        String out = "class "+className;
+        String out = "@Serializable\nclass "+className;
         if (table.isTable) out+=":Entity";
         out+="{\n";
         EntityField ff=new EntityField();
