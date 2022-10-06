@@ -160,7 +160,9 @@ public class ExportKotlin {
         par1 +=",RequestInit(\""+name+"\"";
         if (par3.length()!=0)
             par1 += ","+par3+")";
-        par1+="))\n            .await().text().await()\n        return Json.decodeFromString<"+genericType+">(response)\n        }\n";
+        par1+="))\n            .await().text().await()\n" +
+                "        val format = Json { ignoreUnknownKeys = true }\n" +
+                "        return format.decodeFromString<"+genericType+">(response)\n        }\n";
         return par1;
         }
     public static String createJSAPIFace(Class apiFace, ErrorList errors){
