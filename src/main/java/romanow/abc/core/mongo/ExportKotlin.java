@@ -155,18 +155,22 @@ public class ExportKotlin {
                 }
             out+=" "+parameter.getName()+":"+ss+":"+ typeName;
             }
-        par1 += paramList+") : "+genericType+" {\n";
+        par1 += paramList+") : Pair<String?,"+genericType+"?> {\n";
         if (par3.length()!=0) {
             par1 += "        val headers = Headers()\n";
             par1 += par3;
             }
-        par1 +="        val response = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
+        par1 +="        val res = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
         par1 +=",RequestInit(\""+name+"\"";
         if (par3.length()!=0)
             par1 += ",headers";
-        par1+="))\n            .await().text().await()\n" +
+        par1+="))\n            .await()\n" +
+                "        if (!res.ok)\n"+
+                "            return Pair(res.statusText+\" \"+res.text().await(),null)\n" +
+                "        val res2 = res.text().await()\n" +
                 "        val format = Json { ignoreUnknownKeys = true }\n" +
-                "        return format.decodeFromString<"+genericType+">(response)\n        }\n";
+                "        return Pair(null,format.decodeFromString<"+genericType+">(res2))\n" +
+                "    }\n";
         return par1;
         }
     public static String createJSAPIFace(Class apiFace, ErrorList errors){
