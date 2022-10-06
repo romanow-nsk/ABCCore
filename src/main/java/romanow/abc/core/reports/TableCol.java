@@ -1,6 +1,8 @@
 package romanow.abc.core.reports;
 
-public class TableCol {
+import romanow.abc.core.mongo.DAO;
+
+public class TableCol extends DAO {
     public final static int AlignLeft=0;
     public final static int AlignCenter=1;
     public final static int AlignRight=2;
@@ -9,6 +11,7 @@ public class TableCol {
     int hexBackColor=0;
     int align=AlignLeft;
     int linkIndex=0;                // Индекс сноски
+    public TableCol(){}
     public TableCol(String name, int size) {
         this.name = name;
         this.size = size;

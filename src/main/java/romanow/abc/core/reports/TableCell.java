@@ -1,13 +1,16 @@
 package romanow.abc.core.reports;
 
-public class TableCell {
-    int row=0,col=0;
-    String value="";
-    int hexBackColor=0;
-    int hexTextColor=0;
-    boolean selected=false;
-    int textSize;
-    TableCell(){}
+import romanow.abc.core.mongo.DAO;
+
+public class TableCell extends DAO {
+    public int row=0;
+    public int col=0;
+    public String value="";
+    public int hexBackColor=0;
+    public int hexTextColor=0;
+    public boolean selected=false;
+    public int textSize=0;
+    public TableCell(){}
     public int getRow() {
         return row; }
     public int getCol() {

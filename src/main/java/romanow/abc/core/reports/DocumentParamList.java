@@ -1,6 +1,8 @@
 package romanow.abc.core.reports;
 
-public class DocumentParamList {
+import romanow.abc.core.mongo.DAO;
+
+public class DocumentParamList extends DAO {
     private boolean landscape=false;
     private boolean full=false;
     private int nLines=1;

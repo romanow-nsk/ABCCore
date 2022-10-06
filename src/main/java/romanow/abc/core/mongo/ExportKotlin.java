@@ -1,6 +1,5 @@
 package romanow.abc.core.mongo;
 
-import retrofit2.Call;
 import retrofit2.http.*;
 import romanow.abc.core.API.RestAPIBase;
 import romanow.abc.core.ErrorList;
@@ -17,7 +16,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class KotlinJSConverter {
+public class ExportKotlin {
     public static void createKotlinClassFile(String outPackage,String className, String ss) throws Exception{
         OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outPackage+"/"+className+".kt"),"UTF-8");
         out.write("package "+outPackage.replace("/",".")+"\n"+ss);
@@ -29,19 +28,20 @@ public class KotlinJSConverter {
         File ff = new File(outPackage+"/");
         ff.mkdirs();
         try {
-            createKotlinClassFile(outPackage,"JEmpty","class JEmpty {}\n");
-            createKotlinClassFile(outPackage,"JInt","class JInt { var value = 0 }\n");
-            createKotlinClassFile(outPackage,"JBoolean","class JBoolean { var value = false }\n");
-            createKotlinClassFile(outPackage,"JString","class JString { var value = \"\" }\n");
-            createKotlinClassFile(outPackage,"JLong","class JLong { var value = 0L}\n");
-            createKotlinClassFile(outPackage,"ArtifactList","class ArtifactList : EntityList<Artifact?>(){}\n");
-            createKotlinClassFile(outPackage,"ConstList","class ConstList(val group : String?=\"\") : ArrayList<ConstValue>() { }\n");
-            createKotlinClassFile(outPackage,"ConstValue","class ConstValue(var groupName:String?=\"\", var name:String?=\"\", var title:String?=\"...\", var className:String?=\"\", var value:Int=0) { }");
+            createKotlinClassFile(outPackage,"JEmpty",DAO.classHeader+"JEmpty {}\n");
+            createKotlinClassFile(outPackage,"JInt",DAO.classHeader+"JInt { var value = 0 }\n");
+            createKotlinClassFile(outPackage,"JBoolean",DAO.classHeader+"JBoolean { var value = false }\n");
+            createKotlinClassFile(outPackage,"JString",DAO.classHeader+"JString { var value = \"\" }\n");
+            createKotlinClassFile(outPackage,"JLong",DAO.classHeader+"JLong { var value = 0L}\n");
+            createKotlinClassFile(outPackage,"ArtifactList",DAO.classHeader+"ArtifactList : EntityList<Artifact?>(){}\n");
+            createKotlinClassFile(outPackage,"StringList",DAO.classHeader+"StringList : ArrayList<String?>(){}\n");
+            createKotlinClassFile(outPackage,"ConstList",DAO.classHeader+"ConstList(val group : String?=\"\") : ArrayList<ConstValue>() { }\n");
+            createKotlinClassFile(outPackage,"ConstValue",DAO.classHeader+"ConstValue(var groupName:String?=\"\", var name:String?=\"\", var title:String?=\"...\", var className:String?=\"\", var value:Int=0) { }");
             createKotlinClassFile(outPackage,"EntityList","open class EntityList<T : Entity?> : ArrayList<T>() { }");
             createKotlinClassFile(outPackage,"EntityNamed","open class EntityNamed : Entity() { var name = \"\"}\n");
-            createKotlinClassFile(outPackage,"EntityLinkList","class EntityLinkList<T : Entity?> : ArrayList<EntityLink<T>?>() {}\n");
-            createKotlinClassFile(outPackage,"EntityRefList","class EntityRefList<T : Entity?> : ArrayList<T>() {}\n");
-            createKotlinClassFile(outPackage,"EntityLink","class EntityLink<T : Entity?> {\n"+
+            createKotlinClassFile(outPackage,"EntityLinkList",DAO.classHeader+"EntityLinkList<T : Entity?> : ArrayList<EntityLink<T>?>() {}\n");
+            createKotlinClassFile(outPackage,"EntityRefList",DAO.classHeader+"EntityRefList<T : Entity?> : ArrayList<T>() {}\n");
+            createKotlinClassFile(outPackage,"EntityLink",DAO.classHeader+"EntityLink<T : Entity?> {\n"+
                     "    var oid: Long = 0L\n"+
                     "    var ref: T? = null\n}\n");
             createKotlinClassFile(outPackage,"Entity","open class Entity{\n" +
@@ -49,6 +49,7 @@ public class KotlinJSConverter {
                     "    var isValid = true\n" +
                     "}\n");
             createKotlinClassFile(outPackage,"RestAPIBase",createJSAPIFace(RestAPIBase.class,errors));
+            createJSAPIFile(RestAPIBase.class,errors);
         } catch (Exception e) {
             errors.addError("Ошибка создания EntityLink...: "+e.toString());
             }
@@ -72,6 +73,32 @@ public class KotlinJSConverter {
                 }
         }
     //------------------------------------------------------------------------------------------------------------------
+    public final static String apiHeader="\n"+
+            "import kotlinx.browser.window\n"+
+            "import kotlinx.coroutines.await\n"+
+            "import org.w3c.fetch.Headers\n"+
+            "import org.w3c.fetch.RequestInit\n\n"+
+            "import kotlinx.serialization.Serializable\n" +
+            "import kotlinx.serialization.decodeFromString\n" +
+            "import kotlinx.serialization.json.Json\n" +
+            "\n";
+    //-------------------------------------------------------------------------------------------------------------------
+    private static String stripOne(String ss){
+        int idx = ss.lastIndexOf(".");
+        if (idx!=-1)
+            ss = ss.substring(idx+1);
+        return ss;
+        }
+    private static String stripFullClassPath(String ss){
+        int idx1=ss.indexOf("<");
+        if (idx1==-1){
+            return stripOne(ss);
+            }
+        int idx2 = ss.lastIndexOf(">");
+        String ss1 = stripOne(ss.substring(0,idx1));
+        String ss2 = stripFullClassPath(ss.substring(idx1+1,idx2));
+        return  ss1+"<"+ss2+">";
+        }
     public static String procMethod(String name, String url, Method method, ErrorList errors){
         //--------------------- Образец---------------------------
         //suspend fun keepAlive(token:String): JInt {
@@ -82,18 +109,15 @@ public class KotlinJSConverter {
         //            .await()
         //    return response as JInt
         //}
-        String par1 = "suspend fun ";
+        String par1 = "    suspend fun ";
         String genericType="";
         String paramList = "";
-        Type type = method.getReturnType();
-        //TODO - результат Call<T> - параметр типа извлечь
+        Type type = method.getGenericReturnType();
         if (type instanceof ParameterizedType) {
             Type[] typeArguments = ((ParameterizedType) type).getActualTypeArguments();
             if (typeArguments.length!=0){
                 genericType = typeArguments[0].getTypeName();
-                int idx = genericType.lastIndexOf(".");
-                if (idx!=-1)
-                    genericType = genericType.substring(idx+1);
+                genericType = stripFullClassPath(genericType);
                 }
             }
         par1 +=method.getName()+"(";
@@ -132,11 +156,11 @@ public class KotlinJSConverter {
                 }
             out+=" "+parameter.getName()+":"+ss+":"+ typeName;
             }
-        par1 += paramList+") : String {\n    val response = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
+        par1 += paramList+") : "+genericType+" {\n        val response = window\n        .fetch(\"http://\"+ip+\":\"+port+\""+url+par2+"\"";
         par1 +=",RequestInit(\""+name+"\"";
         if (par3.length()!=0)
             par1 += ","+par3+")";
-        par1+="))\n        .await().text().await()\n    return response as String\n    }\n";
+        par1+="))\n            .await().text().await()\n        return Json.decodeFromString<"+genericType+">(response)\n        }\n";
         return par1;
         }
     public static String createJSAPIFace(Class apiFace, ErrorList errors){
@@ -144,11 +168,7 @@ public class KotlinJSConverter {
             errors.addError(apiFace.getSimpleName()+" - не интерфейс");
             return null;
             }
-        String out="\nimport kotlinx.browser.window\n"+
-            "import kotlinx.coroutines.await\n"+
-            "import org.w3c.fetch.Headers\n"+
-            "import org.w3c.fetch.RequestInit\n\n"+
-            "class "+apiFace.getSimpleName()+" (var ip: String = \"127.0.0.1\", var port: Int = 4567){\n";
+        String out=apiHeader+"class "+apiFace.getSimpleName()+" (var ip: String = \"127.0.0.1\", var port: Int = 4567){\n";
         for(Method method : apiFace.getMethods()){
             if (method.isAnnotationPresent(GET.class)){
                 GET get = (GET) method.getAnnotation(GET.class);
@@ -162,4 +182,23 @@ public class KotlinJSConverter {
         return out+"}\n";
     }
     //----------------------------------------------------------------------------------------------------
+    public static void main(String aa[]){
+        ValuesBase.init();
+        ErrorList errorList = new ErrorList();
+        createKotlinClassSources(errorList);
+        try {
+            System.out.println(errorList.toString());
+            File ff = new File("ExportKotlinErrors.kt");
+            ff.delete();
+            if (errorList.valid())
+                return;
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream("ExportKotlinErrors.kt"), "UTF-8");
+            out.write(errorList.toString());
+            out.flush();
+            out.close();
+        } catch (Exception ee){
+            System.out.println("ExportKotlinErrors.kt: "+ee.toString());
+        }
+
+    }
 }

@@ -22,6 +22,7 @@ import romanow.abc.core.entity.users.Person;
 import romanow.abc.core.entity.users.User;
 import romanow.abc.core.help.HelpFactory;
 import romanow.abc.core.mongo.access.DAOAccessFactory;
+import romanow.abc.core.reports.*;
 import romanow.abc.core.types.TypeFactory;
 import romanow.abc.core.utils.*;
 
@@ -267,6 +268,11 @@ public class ValuesBase {
         EntityFactory.put(new TableItem("Сумма", MoneySum.class,false));           // Сборка 636
         EntityFactory.put(new TableItem( "Аккаунт", Account.class));                        // Сборка 637
         EntityFactory.put(new TableItem("DBRequest", DBRequest.class,false));
+        EntityFactory.put(new TableItem("TableCol", TableCol.class,false));
+        EntityFactory.put(new TableItem("TableRowItem", TableRowItem.class,false));
+        EntityFactory.put(new TableItem("TableData", TableData.class,false));
+        EntityFactory.put(new TableItem("DocumentParamList", DocumentParamList.class,false));
+        EntityFactory.put(new TableItem("TableCell", TableCell.class,false));
         PrefixMap.put("BugMessage.date","d");               //636
         PrefixMap.put("Artifact.date","d");                 //636
         PrefixMap.put("Artifact.original","f");             //636

@@ -2,10 +2,11 @@ package romanow.abc.core.reports;
 
 import lombok.Getter;
 import romanow.abc.core.UniException;
+import romanow.abc.core.mongo.DAO;
 
 import java.util.ArrayList;
 
-public class TableData implements I_Report{
+public class TableData extends DAO implements I_Report{
     protected DocumentParamList paramList = new DocumentParamList();
     protected boolean verticalHeader=false;
     protected String fileName;

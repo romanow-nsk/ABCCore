@@ -335,10 +335,16 @@ public class DAO implements I_ExcelRW, I_MongoRW {
             }
         }
     //------------------------------------------------------------------------------------------------------------------
+    public final static String classHeader="import kotlinx.serialization.Serializable\n" +
+            "import kotlinx.serialization.decodeFromString\n" +
+            "import kotlinx.serialization.json.Json\n" +
+            "\n" +
+            "@Serializable\n" +
+            "class ";
     public String createKotlinClassSource() throws UniException {
         String className =getClass().getSimpleName();
         getFields();
-        String out = "@Serializable\nclass "+className;
+        String out = classHeader+className;
         if (table.isTable) out+=":Entity";
         out+="{\n";
         EntityField ff=new EntityField();
@@ -359,7 +365,9 @@ public class DAO implements I_ExcelRW, I_MongoRW {
         catch(Exception ee){
             throw UniException.bug(getClass().getSimpleName()+"."+ff.name+"\n"+ee.toString());
             }
-        return out+"    constructor() {}\n}\n";
+        out +=  "    constructor() {}\n"+
+                "}\n";
+        return out;
         }
 
 }
