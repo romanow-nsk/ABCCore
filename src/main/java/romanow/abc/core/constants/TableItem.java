@@ -75,6 +75,8 @@ public class TableItem {
             Field flds[]=cls.getDeclaredFields();    //
             for(int i=0;i<flds.length;i++){          // Перебор всех полей
                 Field ff = flds[i];
+                if ((ff.getModifiers() & Modifier.TRANSIENT)!=0) continue;
+                if ((ff.getModifiers() & Modifier.STATIC)!=0) continue;
                 String genericType="";
                 Type type = ff.getGenericType();
                 if (type instanceof ParameterizedType) {
@@ -87,8 +89,6 @@ public class TableItem {
                         }
                     }
                 ff.setAccessible(true);         // Сделать доступными private-поля
-                if ((ff.getModifiers() & Modifier.TRANSIENT)!=0) continue;
-                if ((ff.getModifiers() & Modifier.STATIC)!=0) continue;
                 String tname=ff.getType().getName();
                 ConstValue cc = classMap.get(tname);
                 //int type=getDbTypeId(tname);
