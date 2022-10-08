@@ -30,6 +30,10 @@ public class ExportKotlin {
         try {
             createKotlinClassFile(outPackage,"R",DAO.classHeader+"R<T>(var mes:String=\"\",var data:T?=null) {\n"+
                     "fun valid():Boolean { return mes.length==0 }}");
+            createKotlinClassFile(outPackage,"IntegerList",DAO.classHeader+"IntegerList : ArrayList<Int?>()\n");
+            createKotlinClassFile(outPackage,"OidString",DAO.classHeader+"OidString {\n    val mes: String = \"\"\n    val oid: Long = 0\n    val errorCount = 0\n}\n");
+            createKotlinClassFile(outPackage,"ErrorList",DAO.openClassHeader+"ErrorList {\n    val errCount = 0\n    val info = \"\"\n}\n");
+            createKotlinClassFile(outPackage,"CallResult",DAO.classHeader+"CallResult : ErrorList() {\n    val state = 0\n}\n");
             createKotlinClassFile(outPackage,"ResponseBody",DAO.classHeader+"ResponseBody {}\n");
             createKotlinClassFile(outPackage,"JEmpty",DAO.classHeader+"JEmpty {}\n");
             createKotlinClassFile(outPackage,"JInt",DAO.classHeader+"JInt { var value = 0 }\n");

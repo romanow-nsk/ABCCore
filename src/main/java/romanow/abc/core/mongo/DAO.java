@@ -335,12 +335,13 @@ public class DAO implements I_ExcelRW, I_MongoRW {
             }
         }
     //------------------------------------------------------------------------------------------------------------------
-    public final static String classHeader="import kotlinx.serialization.Serializable\n" +
+    public final static String importHeader="import kotlinx.serialization.Serializable\n" +
             "import kotlinx.serialization.decodeFromString\n" +
             "import kotlinx.serialization.json.Json\n" +
             "\n" +
-            "@Serializable\n" +
-            "class ";
+            "@Serializable\n";
+    public final static String classHeader = importHeader+ "class ";
+    public final static String openClassHeader = importHeader+ "open class ";
     public String createKotlinClassSource() throws UniException {
         String className =getClass().getSimpleName();
         getFields();
