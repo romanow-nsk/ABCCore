@@ -183,8 +183,11 @@ public interface RestAPIBase {
     @POST("/api/admin/cashmode")
     Call<JEmpty> setCashMode(@Header("SessionToken") String token,@Query("mode") boolean mode,@Query("pass") String pass);
     /** Клонировать БД */
-    @POST("/api/admin/clonedb")
-    Call<ErrorList> cloneDB(@Header("SessionToken") String token, @Query("pass") String pass,@Query("port") int port);
+    @POST("/api/admin/copydbto")
+    Call<ErrorList> copyDBTo(@Header("SessionToken") String token, @Query("pass") String pass,@Query("port") int port);
+    /** Клонировать БД */
+    @POST("/api/admin/copydbfrom")
+    Call<ErrorList> copyDBFrom(@Header("SessionToken") String token, @Query("pass") String pass,@Query("port") int port);
     //------------------------------------------------------------------------- не используются
     /** Список имен из таблицы по шаблону */
     @GET("/api/names/get")
