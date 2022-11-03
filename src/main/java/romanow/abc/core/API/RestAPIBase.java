@@ -5,6 +5,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 import romanow.abc.core.DBRequest;
+import romanow.abc.core.ErrorList;
 import romanow.abc.core.ServerState;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.entity.EntityList;
@@ -181,6 +182,9 @@ public interface RestAPIBase {
     /** Режим кэширования сервера */
     @POST("/api/admin/cashmode")
     Call<JEmpty> setCashMode(@Header("SessionToken") String token,@Query("mode") boolean mode,@Query("pass") String pass);
+    /** Клонировать БД */
+    @POST("/api/admin/clonedb")
+    Call<ErrorList> cloneDB(@Header("SessionToken") String token, @Query("pass") String pass,@Query("port") int port);
     //------------------------------------------------------------------------- не используются
     /** Список имен из таблицы по шаблону */
     @GET("/api/names/get")
