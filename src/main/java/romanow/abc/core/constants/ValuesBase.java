@@ -466,6 +466,7 @@ public class ValuesBase {
     @CONST(group = "Report", title = "Прочее")
     public final static int RepOther = 0;
     //------------------------ Препарирования БД --------------------------------------
+    public final static String DBOperationPrefix = "romanow.abc.dataserver.operations";
     @CONST(group = "DBOperation", title = "...")
     public final static int DBOClearContent = 0;
     @CONST(group = "DBOperation", title = "Обратные ссылки")
