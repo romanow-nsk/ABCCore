@@ -2,6 +2,7 @@ package romanow.abc.core;
 
 import lombok.Getter;
 import lombok.Setter;
+import romanow.abc.core.utils.OwnDateTime;
 
 import java.util.ArrayList;
 
@@ -9,13 +10,25 @@ public class ErrorList {
     @Getter
     private ArrayList<String> errors = new ArrayList<>();
     private ArrayList<String> info = new ArrayList<>();
+    @Getter
+    private long duration=0;            // Продолжительность в МС
+    private transient long startTime=0;
+    public void setDuration(){
+        startTime = new OwnDateTime().timeInMS();
+        }
+    public void calcDuration(){
+        duration = new OwnDateTime().timeInMS()-startTime;
+        }
     public ErrorList addError(String ss){
         errors.add(ss);
         return this;
         }
-    public ErrorList(){}
+    public ErrorList(){
+        setDuration();
+        }
     public ErrorList(String ss){
         info.add(ss);
+        setDuration();
         }
     public void clear(){
         errors.clear();
@@ -45,6 +58,8 @@ public class ErrorList {
             ss+="Ошибок: "+errors.size()+"\n";
         for(String vv : errors)
             ss+=vv+"\n";
+        if (duration!=0)
+            ss+="Продолжительность " + duration + " мс";
         return ss;
         }
     public int getErrCount(){
