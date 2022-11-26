@@ -3,32 +3,52 @@ package romanow.abc.core;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 public class ErrorList {
     @Getter
-    @Setter
-    private int errCount=0;
-    @Getter @Setter private String info="";
-    public void addError(String ss){
-        errCount++;
-        info+=ss+"\n";
-    }
+    private ArrayList<String> errors = new ArrayList<>();
+    private ArrayList<String> info = new ArrayList<>();
+    public ErrorList addError(String ss){
+        errors.add(ss);
+        return this;
+        }
+    public ErrorList(){}
+    public ErrorList(String ss){
+        info.add(ss);
+        }
     public void clear(){
-        errCount=0;
-        info="";
-    }
-    public boolean valid(){ return errCount==0; }
+        errors.clear();
+        info.clear();
+        }
+    public boolean valid(){ return errors.size()==0; }
+    public boolean isEmpty(){ return errors.size()==0 && info.size()==0; }
     public ErrorList addError(ErrorList two){
-        errCount += two.errCount;
-        if (two.info.length()!=0)
-            info+=two.info;
+        for(String ss : two.errors)
+            errors.add(ss);
+        for(String ss : two.info)
+            info.add(ss);
         return this;
-    }
+        }
     public ErrorList addInfo(String ss){
-        info+=ss+"\n";
+        info.add(ss);
         return this;
-    }
+        }
+    //public String getInfo(){
+    //     return toString();
+    //     }
     public String toString(){
-        return (errCount ==0 ? "" : "Ошибок: "+errCount+"\n")+info;
+        String ss="";
+        for(String vv : info)
+            ss+=vv+"\n";
+        if (errors.size()!=0)
+            ss+="Ошибок: "+errors.size()+"\n";
+        for(String vv : errors)
+            ss+=vv+"\n";
+        return ss;
+        }
+    public int getErrCount(){
+        return errors.size();
+        }
     }
 
-}

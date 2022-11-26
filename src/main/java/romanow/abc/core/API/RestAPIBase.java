@@ -145,10 +145,10 @@ public interface RestAPIBase {
     Call<JString> shutdown(@Header("SessionToken") String token, @Query("pass") String pass);
     /** Выполнить продолжительную операцию на сервере с опросом в long polling */
     @GET("/api/admin/preparedb")
-    Call<JString> prepareDB(@Header("SessionToken") String token,@Query("operation") int operation,@Query("pass") String pass);
+    Call<ErrorList> prepareDB(@Header("SessionToken") String token,@Query("operation") int operation,@Query("pass") String pass);
     /** long polling продолжительной операции */
     @GET("/api/admin/longpoll")
-    Call<JString> longPolling(@Header("SessionToken") String token,@Query("pass") String pass);
+    Call<ErrorList> longPolling(@Header("SessionToken") String token,@Query("pass") String pass);
     /** Заблокировать login-ы для монопольной операции */
     @POST("/api/admin/lock")
     Call<JEmpty> lock(@Header("SessionToken") String token,@Query("pass") String pass, @Query("on") boolean on);

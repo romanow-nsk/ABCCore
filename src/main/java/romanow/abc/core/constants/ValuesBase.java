@@ -466,8 +466,8 @@ public class ValuesBase {
     @CONST(group = "Report", title = "Прочее")
     public final static int RepOther = 0;
     //------------------------ Препарирования БД --------------------------------------
-    @CONST(group = "DBOperation", title = "Очистка контента (заявки)")
-    public final static int DBOClearContent1 = 0;
+    @CONST(group = "DBOperation", title = "...")
+    public final static int DBOClearContent = 0;
     @CONST(group = "DBOperation", title = "Обратные ссылки")
     public final static int DBOBackLinks = 1;
     @CONST(group = "DBOperation", title = "Сжать таблицы")
