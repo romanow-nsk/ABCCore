@@ -18,7 +18,7 @@ class DAOEntityLink implements I_DAOAccess {
         //-----------------------------------------------------------------------------------------------------------------
         @Override
         public void getField(EntityField ff, DAO dao) throws Exception{
-            ff.value = "" + ff.field.getLong(dao);
+            ff.value = "" + ((EntityLink)ff.field.get(dao)).getOid();
             }
     @Override
     public void getDBValue(EntityField ff, DAO dao, String prefix, Document out, int level, I_MongoDB mongo, HashMap<String, String> path, RequestStatistic statistic) throws UniException {
