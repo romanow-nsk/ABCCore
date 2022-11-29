@@ -17,46 +17,48 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ExportKotlin {
-    public static void createKotlinClassFile(String outPackage,String className, String ss) throws Exception{
-        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outPackage+"/"+className+".kt"),"UTF-8");
+    public static void createKotlinClassFile(String path,String outPackage,String className, String ss) throws Exception{
+        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(path+outPackage+"/"+className+".kt"),"UTF-8");
         out.write("package "+outPackage.replace("/",".")+"\n"+ss);
         out.flush();
         out.close();
         }
-    public static void createKotlinClassSources(ErrorList errors){
+    public static void createKotlinClassSources(String path,ErrorList errors){
+        if (path.length()!=0)
+            path+="/";
         String outPackage = ValuesBase.KotlinJSPackage;
-        File ff = new File(outPackage+"/");
+        File ff = new File(path+outPackage+"/");
         ff.mkdirs();
         try {
-            createKotlinClassFile(outPackage,"R",DAO.classHeader+"R<T>(var mes:String=\"\",var data:T?=null) {\n"+
+            createKotlinClassFile(path,outPackage,"R",DAO.classHeader+"R<T>(var mes:String=\"\",var data:T?=null) {\n"+
                     "fun valid():Boolean { return mes.length==0 }}");
-            createKotlinClassFile(outPackage,"IntegerList",DAO.classHeader+"IntegerList : ArrayList<Int?>()\n");
-            createKotlinClassFile(outPackage,"OidString",DAO.classHeader+"OidString {\n    val mes: String = \"\"\n    val oid: Long = 0\n    val errorCount = 0\n}\n");
-            createKotlinClassFile(outPackage,"ErrorList",DAO.openClassHeader+"ErrorList {\n    val errCount = 0\n    val info = \"\"\n}\n");
-            createKotlinClassFile(outPackage,"CallResult",DAO.classHeader+"CallResult : ErrorList() {\n    val state = 0\n}\n");
-            createKotlinClassFile(outPackage,"ResponseBody",DAO.classHeader+"ResponseBody {}\n");
-            createKotlinClassFile(outPackage,"JEmpty",DAO.classHeader+"JEmpty {}\n");
-            createKotlinClassFile(outPackage,"JInt",DAO.classHeader+"JInt { var value = 0 }\n");
-            createKotlinClassFile(outPackage,"JBoolean",DAO.classHeader+"JBoolean { var value = false }\n");
-            createKotlinClassFile(outPackage,"JString",DAO.classHeader+"JString { var value = \"\" }\n");
-            createKotlinClassFile(outPackage,"JLong",DAO.classHeader+"JLong { var value = 0L}\n");
-            createKotlinClassFile(outPackage,"ArtifactList",DAO.classHeader+"ArtifactList : EntityList<Artifact?>(){}\n");
-            createKotlinClassFile(outPackage,"StringList",DAO.classHeader+"StringList : ArrayList<String?>(){}\n");
-            createKotlinClassFile(outPackage,"ConstList",DAO.classHeader+"ConstList(val group : String?=\"\") : ArrayList<ConstValue>() { }\n");
-            createKotlinClassFile(outPackage,"ConstValue",DAO.classHeader+"ConstValue(var groupName:String?=\"\", var name:String?=\"\", var title:String?=\"...\", var className:String?=\"\", var value:Int=0) { }");
-            createKotlinClassFile(outPackage,"EntityList","open class EntityList<T : Entity?> : ArrayList<T>() { }");
-            createKotlinClassFile(outPackage,"EntityNamed","open class EntityNamed : Entity() { var name = \"\"}\n");
-            createKotlinClassFile(outPackage,"EntityLinkList",DAO.classHeader+"EntityLinkList<T : Entity?> : ArrayList<EntityLink<T>?>() {}\n");
-            createKotlinClassFile(outPackage,"EntityRefList",DAO.classHeader+"EntityRefList<T : Entity?> : ArrayList<T>() {}\n");
-            createKotlinClassFile(outPackage,"EntityLink",DAO.classHeader+"EntityLink<T : Entity?> {\n"+
+            createKotlinClassFile(path,outPackage,"IntegerList",DAO.classHeader+"IntegerList : ArrayList<Int?>()\n");
+            createKotlinClassFile(path,outPackage,"OidString",DAO.classHeader+"OidString {\n    val mes: String = \"\"\n    val oid: Long = 0\n    val errorCount = 0\n}\n");
+            createKotlinClassFile(path,outPackage,"ErrorList",DAO.openClassHeader+"ErrorList {\n    val errCount = 0\n    val info = \"\"\n}\n");
+            createKotlinClassFile(path,outPackage,"CallResult",DAO.classHeader+"CallResult : ErrorList() {\n    val state = 0\n}\n");
+            createKotlinClassFile(path,outPackage,"ResponseBody",DAO.classHeader+"ResponseBody {}\n");
+            createKotlinClassFile(path,outPackage,"JEmpty",DAO.classHeader+"JEmpty {}\n");
+            createKotlinClassFile(path,outPackage,"JInt",DAO.classHeader+"JInt { var value = 0 }\n");
+            createKotlinClassFile(path,outPackage,"JBoolean",DAO.classHeader+"JBoolean { var value = false }\n");
+            createKotlinClassFile(path,outPackage,"JString",DAO.classHeader+"JString { var value = \"\" }\n");
+            createKotlinClassFile(path,outPackage,"JLong",DAO.classHeader+"JLong { var value = 0L}\n");
+            createKotlinClassFile(path,outPackage,"ArtifactList",DAO.classHeader+"ArtifactList : EntityList<Artifact?>(){}\n");
+            createKotlinClassFile(path,outPackage,"StringList",DAO.classHeader+"StringList : ArrayList<String?>(){}\n");
+            createKotlinClassFile(path,outPackage,"ConstList",DAO.classHeader+"ConstList(val group : String?=\"\") : ArrayList<ConstValue>() { }\n");
+            createKotlinClassFile(path,outPackage,"ConstValue",DAO.classHeader+"ConstValue(var groupName:String?=\"\", var name:String?=\"\", var title:String?=\"...\", var className:String?=\"\", var value:Int=0) { }");
+            createKotlinClassFile(path,outPackage,"EntityList","open class EntityList<T : Entity?> : ArrayList<T>() { }");
+            createKotlinClassFile(path,outPackage,"EntityNamed","open class EntityNamed : Entity() { var name = \"\"}\n");
+            createKotlinClassFile(path,outPackage,"EntityLinkList",DAO.classHeader+"EntityLinkList<T : Entity?> : ArrayList<EntityLink<T>?>() {}\n");
+            createKotlinClassFile(path,outPackage,"EntityRefList",DAO.classHeader+"EntityRefList<T : Entity?> : ArrayList<T>() {}\n");
+            createKotlinClassFile(path,outPackage,"EntityLink",DAO.classHeader+"EntityLink<T : Entity?> {\n"+
                     "    var oid: Long = 0L\n"+
                     "    var ref: T? = null\n}\n");
-            createKotlinClassFile(outPackage,"Entity","open class Entity{\n" +
+            createKotlinClassFile(path,outPackage,"Entity","open class Entity{\n" +
                     "    var oid: Long = 0\n" +
                     "    var isValid = true\n" +
                     "}\n");
-            createKotlinClassFile(outPackage,"RestAPIBase",createJSAPIFace(RestAPIBase.class,errors));
-            createJSAPIFile(RestAPIBase.class,errors);
+            createKotlinClassFile(path,outPackage,"RestAPIBase",createJSAPIFace(RestAPIBase.class,errors));
+            createJSAPIFile(path,RestAPIBase.class,errors);
         } catch (Exception e) {
             errors.addError("Ошибка создания EntityLink...: "+e.toString());
             }
@@ -65,16 +67,16 @@ public class ExportKotlin {
             try {
                 DAO dao = (DAO)item.clazz.newInstance();
                 String ss =  dao.createKotlinClassSource();
-                createKotlinClassFile(outPackage,dao.getClass().getSimpleName(),ss);
+                createKotlinClassFile(path,outPackage,dao.getClass().getSimpleName(),ss);
             } catch (Exception e) {
                 errors.addError("Ошибка создания "+item.name+": "+e.toString());
             }
         }
     }
     //-----------------------------------------------------------------------------------------------------------------
-    public static void createJSAPIFile(Class api,ErrorList errorList){
+    public static void createJSAPIFile(String path,Class api,ErrorList errorList){
         try {
-            createKotlinClassFile(ValuesBase.KotlinJSPackage,api.getSimpleName(),createJSAPIFace(api,errorList));
+            createKotlinClassFile(path,ValuesBase.KotlinJSPackage,api.getSimpleName(),createJSAPIFace(api,errorList));
             } catch (Exception e) {
                 errorList.addError("Ошибка создания "+api.getSimpleName()+": "+e.toString());
                 }
@@ -201,7 +203,7 @@ public class ExportKotlin {
     public static void main(String aa[]){
         ValuesBase.init();
         ErrorList errorList = new ErrorList();
-        createKotlinClassSources(errorList);
+        createKotlinClassSources("",errorList);
         try {
             System.out.println(errorList.toString());
             File ff = new File("ExportKotlinErrors.kt");
