@@ -42,6 +42,7 @@ public class ClientFileWriter extends Thread{
         ip = ip0;
         port = port0;
         pass = pass0;
+        setName("ClientFileWriter");
         start();
         }
     public void run(){

@@ -30,6 +30,7 @@ public class ClientFileReader extends Thread{
         fname = fname0;
         ip = ip0;
         back = back0;
+        setName("ClientFileReader ");
         start();
         }
     public void run(){
