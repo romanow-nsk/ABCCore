@@ -134,12 +134,6 @@
             <artifactId>core</artifactId>
             <version>3.3.3</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/xpp3/xpp3_min -->
         <dependency>
             <groupId>xpp3</groupId>
