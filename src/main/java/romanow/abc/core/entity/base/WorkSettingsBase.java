@@ -21,6 +21,7 @@ public class WorkSettingsBase extends Entity {
     @Getter @Setter private String mailToSend="romanow@ngs.ru";
     @Getter @Setter private boolean mailNotifycation=false;
     @Getter @Setter private String nodeName="noname";
+    @Getter @Setter private int traceLevel=0;                       // Режим трассировки
     //------------------------------------------------------------------------------------------------------------------
     public boolean isMainServer(){ return false; }
     public static void main(String ss[]){
