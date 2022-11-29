@@ -198,25 +198,27 @@ public class ExportKotlin {
             }
             }
         return out+"}\n";
-    }
+        }
+    public static void exrortKotlinErrors(String path, ErrorList errorList){
+        try {
+            System.out.println(errorList.toString());
+            File ff = new File(path+"ExportKotlinErrors.kt");
+            ff.delete();
+            if (errorList.valid())
+                return;
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(path+"ExportKotlinErrors.kt"), "UTF-8");
+            out.write(errorList.toString());
+            out.flush();
+            out.close();
+            } catch (Exception ee) {
+                System.out.println("ExportKotlinErrors.kt: " + ee.toString());
+                }
+            }
     //----------------------------------------------------------------------------------------------------
     public static void main(String aa[]){
         ValuesBase.init();
         ErrorList errorList = new ErrorList();
         createKotlinClassSources("",errorList);
-        try {
-            System.out.println(errorList.toString());
-            File ff = new File("ExportKotlinErrors.kt");
-            ff.delete();
-            if (errorList.valid())
-                return;
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream("ExportKotlinErrors.kt"), "UTF-8");
-            out.write(errorList.toString());
-            out.flush();
-            out.close();
-        } catch (Exception ee){
-            System.out.println("ExportKotlinErrors.kt: "+ee.toString());
+        exrortKotlinErrors("",errorList);
         }
-
-    }
 }
