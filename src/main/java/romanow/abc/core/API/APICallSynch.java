@@ -20,7 +20,7 @@ public abstract class APICallSynch<T> {
             tt = System.currentTimeMillis();
             res = apiFun().execute();
             } catch (Exception ex) {
-                throw UniException.bug(ex);
+                throw UniException.io(ex);
                 }
         if (!res.isSuccessful()){
             if (res.code()== ValuesBase.HTTPAuthorization){
