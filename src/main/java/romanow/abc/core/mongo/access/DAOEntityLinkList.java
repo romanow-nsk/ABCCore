@@ -151,7 +151,9 @@ class DAOEntityLinkList implements I_DAOAccess {
 
     @Override
     public String createKotlinFieldDefine(EntityField ff) {
-        return ff.name+":EntityLinkList<"+ff.genericName+"> = EntityLinkList<"+ff.genericName+">()";
+        //------------- Замена на прямой ArrayList ------------------------------------------------
+        return ff.name+":ArrayList<EntityLink<"+ff.genericName+">> = ArrayList<EntityLink<"+ff.genericName+">>()";
+        //return ff.name+":EntityLinkList<"+ff.genericName+"> = EntityLinkList<"+ff.genericName+">()";
     }
 
 }

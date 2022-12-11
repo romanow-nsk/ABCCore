@@ -64,7 +64,9 @@ class DAOEntityRefList implements I_DAOAccess {
 
     @Override
     public String createKotlinFieldDefine(EntityField ff) {
-        return ff.name+":EntityRefList<"+ff.genericName+"> = EntityRefList<"+ff.genericName+">()";
+        //------------- Замена на прямой ArrayList ------------------------------------------------
+        return ff.name+":ArrayList<"+ff.genericName+"> = ArrayList<"+ff.genericName+">()";
+        //return ff.name+":EntityRefList<"+ff.genericName+"> = EntityRefList<"+ff.genericName+">()";
         }
 
 }

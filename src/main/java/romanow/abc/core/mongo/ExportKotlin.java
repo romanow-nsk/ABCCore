@@ -48,9 +48,10 @@ public class ExportKotlin {
             createKotlinClassFile(path,outPackage,"ConstValue",DAO.classHeader+"ConstValue(var groupName:String?=\"\", var name:String?=\"\", var title:String?=\"...\", var className:String?=\"\", var value:Int=0) { }");
             createKotlinClassFile(path,outPackage,"EntityList","open class EntityList<T : Entity?> : ArrayList<T>() { }");
             createKotlinClassFile(path,outPackage,"EntityNamed","open class EntityNamed : Entity() { var name = \"\"}\n");
-            createKotlinClassFile(path,outPackage,"EntityLinkList",DAO.classHeader+"EntityLinkList<T : Entity?> : ArrayList<EntityLink<T>?>() {}\n");
-            createKotlinClassFile(path,outPackage,"EntityRefList",DAO.classHeader+"EntityRefList<T : Entity?> : ArrayList<T>() {}\n");
             createKotlinClassFile(path,outPackage,"EntityLink",DAO.classHeader+"EntityLink<T : Entity?> {\n"+
+            //--------------------- Замена на прямые ArrayList -----------------------------------------------------------------------
+            //createKotlinClassFile(path,outPackage,"EntityLinkList",DAO.classHeader+"EntityLinkList<T : Entity?> : ArrayList<EntityLink<T>?>() {}\n");
+            //createKotlinClassFile(path,outPackage,"EntityRefList",DAO.classHeader+"EntityRefList<T : Entity?> : ArrayList<T>() {}\n");
                     "    var oid: Long = 0L\n"+
                     "    var ref: T? = null\n}\n");
             createKotlinClassFile(path,outPackage,"Entity","open class Entity{\n" +
