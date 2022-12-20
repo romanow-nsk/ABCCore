@@ -38,11 +38,13 @@ public class LogStream extends OutputStream {
             ss= str.substring(0,sz-1);
         else
             ss=str.toString();
-        ss = new OwnDateTime().timeFullToString()+" "+ss;
-        if (back!=null)
-            back.onEvent(ss);
-        if (fifo!=null)
-            fifo.add(str.toString());
+        if (ss.indexOf("DEBUG")==-1){
+            ss = new OwnDateTime().timeFullToString()+" "+ss;
+            if (back!=null)
+                back.onEvent(ss);
+            if (fifo!=null)
+                fifo.add(str.toString());
+            }
         str = new StringBuffer();
         }
     @Override
