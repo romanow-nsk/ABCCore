@@ -102,7 +102,7 @@ public class ValuesBase {
     public final static int FatalExceptionStackSize=20;         // Стек вызовов при исключении
     public final static int PopupMessageDelay=6;                // Тайм-аут всплывающего окна
     public final static int PopupLongDelay=20;                  // Тайм-аут всплывающего окна
-    public final static int SparkThreadPoolSize=10;             // Размер буферного пула потоков Spark
+    public final static int SparkThreadPoolSize=20;             // Размер буферного пула потоков Spark
 
     public final static String SQLDBUser="UnityDataServer";
     public final static String SQLDBPass="Fireplace311";
