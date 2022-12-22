@@ -6,6 +6,7 @@ import romanow.abc.core.utils.StringFIFO;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
 
 public class LogStream extends OutputStream {
     private StringBuffer str = new StringBuffer();
@@ -15,6 +16,7 @@ public class LogStream extends OutputStream {
     private boolean utf8;
     private I_String back;
     private StringFIFO fifo=null;
+    private boolean filtered=false;
     public LogStream(boolean utf80, StringFIFO fifo0, I_String back0){        // ВОЗВРАЩАЕТ БЕЗ КОНЦА СТРОКИ
         super();
         utf8 = utf80;
@@ -38,14 +40,26 @@ public class LogStream extends OutputStream {
             ss= str.substring(0,sz-1);
         else
             ss=str.toString();
-        if (ss.indexOf("DEBUG")==-1){
-            ss = new OwnDateTime().timeFullToString()+" "+ss;
-            if (back!=null)
-                back.onEvent(ss);
-            if (fifo!=null)
-                fifo.add(str.toString());
-            }
         str = new StringBuffer();
+        //------------------- Фильтрация логов, т.к. не удалось установить режим логгеров в ком.строке
+        if (ss.length()==0){
+            filtered=false;
+            return;
+            }
+        if (ss.indexOf("DEBUG")!=-1)
+            return;
+        if (filtered)
+            return;
+        if (ss.indexOf("HTTP")!=-1 || ss.indexOf("Content-Type:")!=-1) {
+            filtered=true;
+            return;
+            }
+        //-----------------------------------------------------------------------------------------------
+        ss = new OwnDateTime().timeFullToString()+" "+ss;
+        if (back!=null)
+            back.onEvent(ss);
+        if (fifo!=null)
+            fifo.add(str.toString());
         }
     @Override
     public void write(int b) throws IOException {
