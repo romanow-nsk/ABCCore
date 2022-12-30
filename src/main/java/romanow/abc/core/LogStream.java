@@ -26,7 +26,7 @@ public class LogStream extends OutputStream {
     public void setStringFIFO(StringFIFO fifo0){
         fifo = fifo0;
         }
-    private void procString(){
+    private synchronized void procString(){
         String ss;
         int sz = str.length();
         char c1 = sz==0 ? 0 : str.charAt(sz-1);
@@ -48,12 +48,13 @@ public class LogStream extends OutputStream {
             }
         if (ss.indexOf("DEBUG")!=-1)
             return;
-        if (filtered)
-            return;
-        if (ss.indexOf("HTTP")!=-1 || ss.indexOf("Content-Type:")!=-1) {
-            filtered=true;
-            return;
-            }
+        //---------------- Фильтрация логов Spark Jetty  ------------------------------------------------
+        //if (ss.indexOf("HTTP")!=-1 && ss.indexOf("HTTP:")==-1 || ss.indexOf("Content-Type:")!=-1) {
+        //    filtered=true;
+        //    return;
+        //    }
+        //if (filtered)
+        //    return;
         //-----------------------------------------------------------------------------------------------
         ss = new OwnDateTime().timeFullToString()+" "+ss;
         if (back!=null)
