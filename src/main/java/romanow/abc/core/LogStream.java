@@ -6,6 +6,7 @@ import romanow.abc.core.utils.StringFIFO;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LogStream extends OutputStream {
@@ -17,16 +18,29 @@ public class LogStream extends OutputStream {
     private I_String back;
     private StringFIFO fifo=null;
     private boolean filtered=false;
+    private ArrayList<String> fiter = new ArrayList<>();
     public LogStream(boolean utf80, StringFIFO fifo0, I_String back0){        // ВОЗВРАЩАЕТ БЕЗ КОНЦА СТРОКИ
         super();
         utf8 = utf80;
         back = back0;
         fifo = fifo0;
+        fiter.add("HTTP/1.1");
+        fiter.add("Host:");
+        fiter.add("SessionToken:");
+        fiter.add("Connection:");
+        fiter.add("Accept-Encoding:");
+        fiter.add("User-Agent:");
+        fiter.add("Date:");
+        fiter.add("Content-Type:");
+        fiter.add("Content-Length:");
+        fiter.add("Access-Control");
+        fiter.add("Content-Type:");
         }
     public void setStringFIFO(StringFIFO fifo0){
         fifo = fifo0;
         }
     private synchronized void procString(){
+        String threadName = Thread.currentThread().getName();
         String ss;
         int sz = str.length();
         char c1 = sz==0 ? 0 : str.charAt(sz-1);
@@ -49,14 +63,16 @@ public class LogStream extends OutputStream {
         if (ss.indexOf("DEBUG")!=-1)
             return;
         //---------------- Фильтрация логов Spark Jetty  ------------------------------------------------
-        //if (ss.indexOf("HTTP")!=-1 && ss.indexOf("HTTP:")==-1 || ss.indexOf("Content-Type:")!=-1) {
-        //    filtered=true;
-        //    return;
-        //    }
-        //if (filtered)
-        //    return;
+        if (threadName.startsWith("qtp")) {
+            for(String xx : fiter)
+                if (ss.indexOf(xx)!=-1)
+                    return;
+            }
+        //---------------- Фильтрация логов потоков через API -------------------------------------------
+        if (ss.indexOf("/api/ess2/clock")!=-1)
+            return;
         //-----------------------------------------------------------------------------------------------
-        ss = new OwnDateTime().timeFullToString()+" "+ss;
+        ss = new OwnDateTime().timeFullToString()+" ["+threadName+"] "+ss;
         if (back!=null)
             back.onEvent(ss);
         if (fifo!=null)
