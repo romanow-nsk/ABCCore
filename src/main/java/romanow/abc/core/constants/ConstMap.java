@@ -1,5 +1,7 @@
 package romanow.abc.core.constants;
 
+import lombok.Getter;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class ConstMap extends HashMap<String, ConstGroup>{
+    @Getter private ArrayList<ConstValue> constList = new ArrayList<>();
     public String title(String group, int constId){
         ConstGroup gmap = get(group);
         if (gmap==null)
@@ -14,13 +17,14 @@ public class ConstMap extends HashMap<String, ConstGroup>{
         ConstValue ss = gmap.get(constId);
         return ss!=null ? ss.title() : "???: "+group+":"+constId;
         }
-    public void put(String group, int constId, String title, String className, String constName){
+    public void put(ConstValue value){
+        String group = value.groupName();
         ConstGroup gmap = get(group);
         if (gmap==null){
             gmap = new ConstGroup(group);
             put(group,gmap);
             }
-        gmap.put(new ConstValue(group,constName,title,className,constId));
+        gmap.put(value);
         }
     //------------------------------------------------------------------------------------------------------
     public void createConstList(Class cl) {
@@ -47,9 +51,11 @@ public class ConstMap extends HashMap<String, ConstGroup>{
                     vv = fd.getInt(oo);
                 } catch (Exception e) {
                     vv=0;
-                }
+                    }
+                ConstValue value = new ConstValue(about.group(),mname,about.title(),about.className(),vv);
+                constList.add(value);
                 //System.out.println(about.group()+":"+mname + " ="+vv+" "+about.title());
-                put(about.group(),vv,about.title(),about.className(),mname);
+                put(value);
             }
         }
     }
