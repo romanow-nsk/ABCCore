@@ -33,11 +33,14 @@ public class TypeDouble extends TypeFace {
     @Override
     public void parse(String ss) throws ScriptException {
         try {
-            setRealValue(Double.parseDouble(ss));
-        } catch (Exception ee){
-            throwFormat("Формат вещественного: "+ss);
+            if (ss.endsWith("!"))
+                throwFormat("Формат вещественного: "+ss);
+            else
+                setRealValue(Double.parseDouble(ss));
+            } catch (Exception ee){
+                throwFormat("Формат вещественного: "+ss);
+                }
             }
-        }
     @Override
     public double toDouble() throws ScriptException {
         return getRealValue();

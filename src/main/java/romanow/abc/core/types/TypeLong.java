@@ -38,7 +38,10 @@ public class TypeLong extends TypeFace {
     @Override
     public void parse(String ss) throws ScriptException {
         try {
-            setIntValue(Long.parseLong(ss));
+            if (ss.endsWith("!"))
+                setIntValue(Long.parseLong(ss.substring(0,ss.length()-1),16));
+            else
+                setIntValue(Long.parseLong(ss));
             } catch (Exception ee){
                 throwFormat("Формат целого: "+ss);
                 }

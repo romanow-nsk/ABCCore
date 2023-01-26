@@ -19,7 +19,11 @@ public class TypeInt extends TypeLong {
     @Override
     public void parse(String ss) throws ScriptException {
         try {
-            setIntValue(Integer.parseInt(ss));
+            if (ss.endsWith("!"))
+                setIntValue(Integer.parseInt(ss.substring(0,ss.length()-1),16));
+            else
+                setIntValue(Integer.parseInt(ss));
+
             } catch (Exception ee){
                 throwFormat("Формат целого: "+ss);
                 }

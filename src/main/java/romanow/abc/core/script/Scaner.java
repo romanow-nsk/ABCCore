@@ -69,7 +69,10 @@ public class Scaner {
                 case 'F': return state1;
                 case '.': return state6;
                 }
-            return new Lexem('c',1,"const");
+            if (sym=='!')
+                return new Lexem('c',0,"const");
+            else
+                return new Lexem('c',1,"const");
             }
         };
     public final static LexState state6 = new LexState() {
