@@ -213,33 +213,27 @@ public class ValuesBase {
             @Override
             public User superUser() {
                 return new User(ValuesBase.UserSuperAdminType, "Система", "", "", "ABCDataserver", "pi31415926", "9130000000");
-            }
-
+                }
             @Override
             public Class applicationClass(int classType) throws UniException {
                 return createApplicationClass(classType, abcClassNames);
-            }
-
+                }
             @Override
             public Object applicationObject(int classType) throws UniException {
                 return createApplicationObject(classType, abcClassNames);
-            }
-
+                }
             @Override
             public String applicationName(int nameNype) {
                 return abcAppNames[nameNype];
             }
-
             @Override
             public String applicationClassName(int classType) {
                 return abcClassNames[classType];
             }
-
             @Override
             public int releaseNumber() {
                 return abcReleaseNumber;
             }
-
             @Override
             public WorkSettingsBase currentWorkSettings() {
                 return new WorkSettingsBase();
