@@ -89,6 +89,8 @@ public class Person extends Entity {
         return super.toFullString()+lastName+" "+firstName+" "+middleName + " ["+post+","+phone+","+mail+"] ";
     }
     public String shortUserName(){
+        if (lastName.length()==0)
+            return "...";
         String out = lastName;
         if (firstName.length()==0) return out;
         out+=" "+firstName.substring(0,1)+".";
