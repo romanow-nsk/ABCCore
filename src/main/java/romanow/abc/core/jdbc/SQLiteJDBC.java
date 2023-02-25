@@ -71,7 +71,9 @@ public class SQLiteJDBC  extends MySQLJDBC{
             testConnect();
             stm.executeQuery(sql);
             return 0;
-            } catch (SQLException ee){ throw UniException.sql(ee); }
+            } catch (SQLException ee){
+                throw UniException.sql(ee);
+                }
         }
     @Override
     public boolean canGenerateKey() {
