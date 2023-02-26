@@ -82,9 +82,15 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     }
     //--------------------------------------------------------------------------------------------------------
     public ArrayList<EntityField> getFields() throws UniException {
+        return getFields(false);
+        }
+    public ArrayList<EntityField> getFields(boolean noTable) throws UniException {
         if (fld!=null)
             return fld;
-        table = ValuesBase.EntityFactory().getItemForSimpleName(getClass().getSimpleName());
+        if (noTable)
+            table = new TableItem(getClass().getSimpleName(),getClass());
+        else
+            table = ValuesBase.EntityFactory().getItemForSimpleName(getClass().getSimpleName());
         fld = table.getFields();
         return fld;
         }
@@ -342,9 +348,9 @@ public class DAO implements I_ExcelRW, I_MongoRW {
             "@Serializable\n";
     public final static String classHeader = importHeader+ "class ";
     public final static String openClassHeader = importHeader+ "open class ";
-    public String createKotlinClassSource() throws UniException {
+    public String createKotlinClassSource(boolean noTable) throws UniException {
         String className =getClass().getSimpleName();
-        getFields();
+        getFields(noTable);
         String out = classHeader+className;
         out+="{\n";
         if (table.isTable){

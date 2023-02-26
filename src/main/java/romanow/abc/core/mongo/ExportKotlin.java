@@ -4,6 +4,7 @@ import retrofit2.http.*;
 import romanow.abc.core.API.RestAPIBase;
 import romanow.abc.core.ErrorList;
 import romanow.abc.core.Utils;
+import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.TableItem;
 import romanow.abc.core.constants.ValuesBase;
 
@@ -67,11 +68,11 @@ public class ExportKotlin {
         for (TableItem item : tables){
             try {
                 DAO dao = (DAO)item.clazz.newInstance();
-                String ss =  dao.createKotlinClassSource();
+                String ss =  dao.createKotlinClassSource(false);
                 createKotlinClassFile(path,outPackage,dao.getClass().getSimpleName(),ss);
             } catch (Exception e) {
                 errors.addError("Ошибка создания "+item.name+": "+e.toString());
-            }
+                }
         }
     }
     //-----------------------------------------------------------------------------------------------------------------
