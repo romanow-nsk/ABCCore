@@ -346,8 +346,11 @@ public class DAO implements I_ExcelRW, I_MongoRW {
         String className =getClass().getSimpleName();
         getFields();
         String out = classHeader+className;
-        if (table.isTable) out+=":Entity";
         out+="{\n";
+        if (table.isTable){
+            out+="    var oid:Long=0\n";
+            out+="    var valid:Boolean=false\n";
+            }
         EntityField ff=new EntityField();
         try {
             HashMap<Integer, I_DAOAccess> map = ValuesBase.getOne().getDaoAccessFactory().getClassMap();

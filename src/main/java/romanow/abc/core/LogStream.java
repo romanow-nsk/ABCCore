@@ -35,7 +35,14 @@ public class LogStream extends OutputStream {
         fiter.add("Content-Length:");
         fiter.add("Access-Control");
         fiter.add("Content-Type:");
-        }
+        fiter.add("Accept:");
+        fiter.add("Origin:");
+        fiter.add("Referer:");
+        fiter.add("Sec-Fetch");
+        fiter.add("sec-ch");
+        fiter.add("Accept-Language");
+        fiter.add("sessiontoken:");
+    }
     public void setStringFIFO(StringFIFO fifo0){
         fifo = fifo0;
         }
