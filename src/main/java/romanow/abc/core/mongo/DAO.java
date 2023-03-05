@@ -351,6 +351,8 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     public String createKotlinClassSource(boolean noTable) throws UniException {
         String className =getClass().getSimpleName();
         getFields(noTable);
+        if (noTable && className.startsWith("Meta2"))
+            className = className.substring(5);
         String out = classHeader+className;
         out+="{\n";
         if (table.isTable){
