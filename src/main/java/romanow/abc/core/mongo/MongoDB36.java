@@ -19,6 +19,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -365,12 +366,10 @@ public class MongoDB36 extends I_MongoDB {
     @Override
     public String clearDB(){
         clearCash();
-        Object olist[] = ValuesBase.EntityFactory().classList().toArray();
+        ArrayList<TableItem> list = ValuesBase.EntityFactory().classList(true,false);
         String out="";
-        TableItem item=null;
-        for(int i=0;i<olist.length;i++){
+        for(TableItem item : list){
             try {
-                item = (TableItem)olist[i];
                 if (!item.isTable)
                     continue;
                 Entity ent = (Entity)(item.clazz.newInstance());
@@ -383,9 +382,9 @@ public class MongoDB36 extends I_MongoDB {
                 for(String ss : item.indexes)
                     createIndex(ent,ss);
             } catch (Exception ee){
-                String ss = "Не могу создать "+ ValuesBase.EntityFactory().get(item.clazz.getSimpleName())+"\n"+ee.toString();
+                String ss = "Не могу создать "+ item.clazz.getSimpleName()+": "+ee.toString();
                 System.out.println(ss);
-                out+=ss;
+                out+=ss+"\n";
                 }
             }
         return out;
