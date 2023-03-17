@@ -3,7 +3,6 @@ package romanow.abc.dataserver;
 import com.google.gson.Gson;
 import romanow.abc.core.API.RestAPIBase;
 import romanow.abc.core.DBRequest;
-import romanow.abc.core.constants.ConstList;
 import romanow.abc.core.constants.ConstValue;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.EntityList;
