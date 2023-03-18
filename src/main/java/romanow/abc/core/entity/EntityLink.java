@@ -43,6 +43,10 @@ public class EntityLink<T extends Entity>{
             ref = ref0;
             }
         }
+    public void setOidByRef(){
+        if (ref!=null)
+            oid = ref.getOid();
+        }
     //------------------------------------------------------------------------------------------------------------------
     public Class getTypeT() {
         return typeT; }
