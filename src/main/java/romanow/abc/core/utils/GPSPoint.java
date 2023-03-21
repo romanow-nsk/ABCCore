@@ -103,6 +103,18 @@ public class GPSPoint extends EntityBack {
         double dy=(geoy-T.geoy)*gradus*1000;
         return (int)Math.sqrt(dy*dy+dx*dx);
         }
+    public double diffY(GPSPoint T){        // В метрах
+        if (state== GeoNone || T.state== GeoNone)
+            return 0;
+        double dy=(geoy-T.geoy)*gradus*1000;
+        return dy;
+        }
+    public double diffX(GPSPoint T){        // В метрах
+        if (state== GeoNone || T.state== GeoNone)
+            return 0;
+        double dx=(geox-T.geox)*gradus*1000*Math.cos(Math.PI*geoy/180);
+        return dx;
+        }
     public String toString(){
         if (state== GeoNone)
             return "";
