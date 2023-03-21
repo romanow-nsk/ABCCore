@@ -114,10 +114,6 @@ public class ValuesBase {
     public final static User superUser=new User(ValuesBase.UserSuperAdminType, "Система", "", "", "UnityDataserver", "schwanensee1969","9139877277");
     private static TypeFactory DataTypes;
     public static TypeFactory dataTypes(){ return DataTypes; }
-    public final static int TraceModeNone=0;
-    public final static int TraceModeMin=1;
-    public final static int TraceModeMid=2;
-    public final static int TraceModeMax=3;
     //------------------------------------------------------------------------------------------------------
     public static Object createEntityByType(String group,int type,String pack) throws UniException {
         ConstValue constValue = init().getConstMap().getGroupMapByValue(group).get(type);
@@ -700,6 +696,15 @@ public class ValuesBase {
     public final static int SFCos = 2;
     @CONST(group = "ScriptFunStd", title = "alert", className="FStdAlert")
     public final static int SFAlert = 3;
+    //-----------------------------------------------------------------------------------------------------------
+    @CONST(group = "TraceLevel", title = "Нет")
+    public final static int TraceModeNone=0;
+    @CONST(group = "TraceLevel", title = "Мин.")
+    public final static int TraceModeMin=1;
+    @CONST(group = "TraceLevel", title = "Сред.")
+    public final static int TraceModeMid=2;
+    @CONST(group = "TraceLevel", title = "Макс.")
+    public final static int TraceModeMax=3;
     //-----------------------------------------------------------------------------------------------------------
     public final static int ColorNone=0;
     public final static int ColorRed=1;
