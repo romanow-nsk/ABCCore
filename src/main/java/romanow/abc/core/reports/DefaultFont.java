@@ -51,16 +51,21 @@ public class DefaultFont implements Font {
     @Override
     public void setCharSet(int i) { }
     @Override
-    public short getIndex() {
+    public int getIndex() {
         return 0; }
     @Override
-    public void setBoldweight(short i) { }
+    public int getIndexAsInt() {
+        return 0;
+        }
+
     //@Override
-    //public void setBold(boolean b) { }
+    //public void setBoldweight(short i) { }
     @Override
-    public short getBoldweight() {
-        return 0; }
+    public void setBold(boolean b) { }
     //@Override
-    //public boolean getBold() {
-    //    return false; }
+    //public short getBoldweight() {
+    //    return 0; }
+    @Override
+    public boolean getBold() {
+        return false; }
 }
