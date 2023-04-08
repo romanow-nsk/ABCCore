@@ -21,7 +21,7 @@ public class OwnTime extends DAO implements I_XStream, I_MongoRW, I_ExcelRW {
         xs.alias("Time",OwnTime.class);
         xs.useAttributeFor("timeInMS",OwnDateTime.class);
         }
-    public String toString(){
+    public static String toString(long timeInMS){
         long tt = timeInMS/1000;
         String out = String.format(":%02d",tt%60);
         tt/=60;
@@ -31,6 +31,9 @@ public class OwnTime extends DAO implements I_XStream, I_MongoRW, I_ExcelRW {
         if (timeInMS%1000!=0)
             out+=String.format(".%04d",timeInMS%1000);
         return out;
+        }
+    public String toString(){
+        return toString(timeInMS);
         }
     public double toXLSFormat(){
         return timeInMS==0 ? 0 : 24.*60*60*1000/timeInMS;
