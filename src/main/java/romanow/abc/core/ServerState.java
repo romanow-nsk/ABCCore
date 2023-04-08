@@ -5,9 +5,6 @@ import romanow.abc.core.entity.Entity;
 
 public class ServerState extends Entity {
     private boolean serverRun=false;
-    private int lastMailNumber=0;                   // Номер последнего письма
-    private boolean asteriskMailOn=false;           // Вклчюение asterisk-почты
-    private boolean asrteiskDialOn=false;           // Включение asterisk-дозвона
     private boolean locked=false;                   // Блокирован для выполнения админ. операций
     private int requestNum=0;                       // Кол-во обрабатываемых запросов
     private int sessionCount=0;                     // Кол-во активных сессий
@@ -70,18 +67,6 @@ public class ServerState extends Entity {
         timeMax=0;
         timeMin=0;
         }
-    public boolean isAsteriskMailOn() {
-        return asteriskMailOn; }
-    public void setAsteriskMailOn(boolean asteriskMailOn) {
-        this.asteriskMailOn = asteriskMailOn; }
-    public boolean isAsrteiskDialOn() {
-        return asrteiskDialOn; }
-    public void setAsrteiskDialOn(boolean asrteiskDialOn) {
-        this.asrteiskDialOn = asrteiskDialOn; }
-    public int getLastMailNumber() {
-        return lastMailNumber; }
-    public void setLastMailNumber(int lastMailNumber) {
-        this.lastMailNumber = lastMailNumber; }
     public boolean isServerRun() {
         return serverRun; }
     public void setServerRun(boolean serverRun) {
@@ -89,7 +74,7 @@ public class ServerState extends Entity {
     public int getReleaseNumber() {
         return releaseNumber; }
     public String toString(){
-        return "Сервер="+serverRun+" Почта="+asteriskMailOn+" Дозвон="+asrteiskDialOn+" Писем="+lastMailNumber;
+        return "Сервер="+serverRun;
         }
     public int getTotalGetCount() {
         return totalGetCount; }
