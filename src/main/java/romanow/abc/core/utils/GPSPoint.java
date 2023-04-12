@@ -120,6 +120,11 @@ public class GPSPoint extends EntityBack {
             return "";
         return toStr(geoy)+","+toStr(geox)+"["+gpsTime+"]";
         }
+    public String toTimeString(){
+        if (state== GeoNone)
+            return "";
+        return toStr(geoy)+","+toStr(geox)+"["+gpsTime.timeFullToString()+"]";
+    }
     public String toShortString(){
         if (state== GeoNone)
             return "";
