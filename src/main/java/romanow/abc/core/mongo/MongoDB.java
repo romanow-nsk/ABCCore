@@ -4,6 +4,7 @@ import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
+import lombok.Setter;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import romanow.abc.core.UniException;
@@ -19,6 +20,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class MongoDB extends I_MongoDB {
+    @Setter private String network = ValuesBase.mongoServerIP;
     public MongoDB(){
         }
     private MongoClient mongo = null;
@@ -45,7 +47,7 @@ public class MongoDB extends I_MongoDB {
         clearCash();
         try {
             boolean auth=false;
-            connect();
+            connect(network);
             if (testDB(port)){
                 //MongoDatabase mongoDB = mongo.getDatabase(ValuesBase.mongoDBName+port);
                 I_Environment env = ValuesBase.env();
@@ -75,9 +77,10 @@ public class MongoDB extends I_MongoDB {
         return isOpen();
         }
     */
-    private void connect() throws UniException {
+    private void connect(String network) throws UniException {
         try {
-            mongo = new MongoClient(ValuesBase.mongoServerIP, ValuesBase.mongoServerPort);
+            System.out.println("Имя сети: "+network);
+            mongo = new MongoClient(network, ValuesBase.mongoServerPort);
             } catch (Exception e) {
                 throw UniException.sql(e);
                 }

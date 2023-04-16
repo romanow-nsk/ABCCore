@@ -12,6 +12,7 @@ import java.util.StringTokenizer;
 
 public abstract class I_MongoDB {
     public abstract String getDriverName();
+    public abstract void setNetwork(String network);
     public abstract boolean openDB(int port) throws UniException;
     public abstract boolean isOpen();
     public abstract void closeDB();

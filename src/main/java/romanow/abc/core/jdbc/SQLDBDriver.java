@@ -3,6 +3,7 @@ package romanow.abc.core.jdbc;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import lombok.Setter;
 import romanow.abc.core.ParamList;
 import romanow.abc.core.UniException;
 import romanow.abc.core.constants.TableItem;
@@ -22,6 +23,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public class SQLDBDriver extends I_MongoDB {
+    @Setter private String network = ValuesBase.mongoServerIP;
     private I_JDBCConnector jdbc=null;
     public SQLDBDriver(I_JDBCConnector connector){
         jdbc = connector;
