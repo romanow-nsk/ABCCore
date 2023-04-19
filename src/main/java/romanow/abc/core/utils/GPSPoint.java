@@ -1,5 +1,7 @@
 package romanow.abc.core.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.EntityBack;
 
@@ -22,6 +24,9 @@ public class GPSPoint extends EntityBack {
     public OwnDateTime geoTime(){ return gpsTime; }
     public void setCurrentTime(){ gpsTime = new OwnDateTime(); }
     public GPSPoint(){ state = GeoNone; }
+    public void setGpsTime(long tt){
+        gpsTime = new OwnDateTime(tt);
+        }
     public GPSPoint(String y0,String x0, boolean exact){
         try {
             geoy=fromStr(y0); geox=fromStr(x0);
