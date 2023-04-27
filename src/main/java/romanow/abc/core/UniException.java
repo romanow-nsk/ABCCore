@@ -32,7 +32,9 @@ public class UniException extends Exception{
     private String sysMessage="";
     private String userMessage="";
     private int type=0;
+    public int errorCode=0;
     //--------------------------------------------------------------------------
+    public int getErrorCode() { return errorCode;}
     public String getSysMessage() {
         return sysMessage;
     }
@@ -43,13 +45,19 @@ public class UniException extends Exception{
         return type;
     }
     public String toString(){
-        return exceptLevel[type]+":"+userMessage+"\n"+sysMessage;
-    }
+        return exceptLevel[type]+":"+(errorCode!=0 ? errorCode : "")+" "+userMessage+"\n"+sysMessage;
+        }
     //--------------------------------------------------------------------------
     public UniException(int type, String message, String sysMessage){
         this.type=type;
         this.userMessage=message;
         this.sysMessage=sysMessage;
+        }
+    public UniException(int type, String message, String sysMessage, int code){
+        this.type=type;
+        this.userMessage=message;
+        this.sysMessage=sysMessage;
+        errorCode = code;
     }
     public UniException(int type, String message, Throwable ee, boolean stackTrace){
         this.type=type;
@@ -102,6 +110,9 @@ public class UniException extends Exception{
     }
     public static UniException format(String mes){
         return new UniException(bug,format,mes);
+    }
+    public static UniException format(String mes, int code){
+        return new UniException(bug,format,mes,code);
     }
     public static UniException userFormat(String mes){
         return new UniException(bug,format,mes);
