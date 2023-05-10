@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: F:\LEP500\lep500-2\app\libs
-
