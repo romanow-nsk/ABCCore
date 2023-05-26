@@ -461,7 +461,7 @@ public class MongoDB36 extends I_MongoDB {
         }
     @Override
     public String getDriverName() {
-        return "MongoDB 3.6";
+        return "MongoDB3.6";
     }
 
 }

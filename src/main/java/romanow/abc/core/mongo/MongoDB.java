@@ -39,7 +39,7 @@ public class MongoDB extends I_MongoDB {
 
     @Override
     public String getDriverName() {
-        return "MongoDB 3.0";
+        return "MongoDB3.0";
         }
 
     @Override
