@@ -52,12 +52,14 @@ public class MongoDB extends I_MongoDB {
                 //MongoDatabase mongoDB = mongo.getDatabase(ValuesBase.mongoDBName+port);
                 I_Environment env = ValuesBase.env();
                 mongoDB = mongo.getDB(env.applicationName(ValuesBase.AppNameDBName)+port);
-                mongoDB.addUser(env.applicationName(ValuesBase.AppNameDBUser), env.applicationName(ValuesBase.AppNameDBPass).toCharArray());
+                //mongoDB.addUser(env.applicationName(ValuesBase.AppNameDBUser), env.applicationName(ValuesBase.AppNameDBPass).toCharArray());
                 }
             else{
                 return false;
                 }
-            } catch (Exception ee){ System.out.println(ee); return false; }
+            } catch (Exception ee){
+                System.out.println(ee); return false;
+                }
         return isOpen();
         }
     /*
