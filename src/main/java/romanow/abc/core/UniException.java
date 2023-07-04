@@ -38,6 +38,9 @@ public class UniException extends Exception{
     public String getSysMessage() {
         return sysMessage;
     }
+    public void addSysMessage(String ss) {
+        sysMessage+=" "+ss;
+    }
     public String getUserMessage() {
         return userMessage;
     }
@@ -58,7 +61,7 @@ public class UniException extends Exception{
         this.userMessage=message;
         this.sysMessage=sysMessage;
         errorCode = code;
-    }
+        }
     public UniException(int type, String message, Throwable ee, boolean stackTrace){
         this.type=type;
         this.userMessage=message;
