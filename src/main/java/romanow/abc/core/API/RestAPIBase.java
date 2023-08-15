@@ -21,6 +21,7 @@ import romanow.abc.core.entity.users.Account;
 import romanow.abc.core.entity.users.User;
 import romanow.abc.core.utils.Address;
 import romanow.abc.core.utils.GPSPoint;
+import romanow.abc.core.utils.Pair;
 
 import java.util.ArrayList;
 
@@ -104,6 +105,9 @@ public interface RestAPIBase {
     /** Получить count последних строк лога */
     @GET("/api/debug/consolelog")
     Call<StringList> getConsoleLog(@Header("SessionToken") String token, @Query("count") int count);
+    /** Получить лог опросом */
+    @GET("/api/debug/consolelog/polling")
+    Call<Pair<Long,StringList>> getConsoleLogPolling(@Header("SessionToken") String token, @Query("lastnum") long lastNum);
     /** Добавить объект - описатель бага */
     @POST("/api/bug/add")
     Call<JLong> sendBug(@Header("SessionToken") String token, @Body BugMessage bug);
