@@ -41,6 +41,9 @@ public class ValuesBase {
     @Getter private DAOAccessFactory daoAccessFactory = new DAOAccessFactory();// Фабрика объектов доступа DAO
     @Getter private HashMap<String,ConstValue> daoClassMap = new HashMap<>();
     //--------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------
+    public final static int ScreenDesktopHeight=720;        // Размерности панели в Dektop
+    public final static int ScreenDesktopWidth=960;
     public final static HashMap<String,ConstValue> daoClassMap(){ return init().daoClassMap; }
     public final static ErrorList errorList(){ return init().errorList; }
     public final static ConstMap constMap(){ return init().getConstMap(); }
