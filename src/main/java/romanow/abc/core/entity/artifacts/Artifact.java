@@ -7,7 +7,7 @@ import romanow.abc.core.utils.OwnDateTime;
 import org.joda.time.format.DateTimeFormat;
 
 public class Artifact extends EntityBack {
-    private int type= ValuesBase.UndefinedType;      // Тип файла
+    private int type= ValuesBase.UndefinedType; // Тип файла
     private String name="";                     // Название артефакта
     private FileNameExt original = new FileNameExt("","");
     private OwnDateTime date=new OwnDateTime(); // Дата/время создания
