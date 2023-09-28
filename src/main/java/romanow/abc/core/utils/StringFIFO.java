@@ -12,21 +12,22 @@ public class StringFIFO {
         sz=sz0;
         seqNum = 1;
         }
-    public void add(String ss){
+    public synchronized void add(String ss){
         seqNum++;
         if(fifo.size()==sz)
             fifo.remove(0);
         fifo.add(ss);
         }
-    public StringList getStrings(int lnt){
+    public synchronized StringList getStrings(int lnt){
         StringList out = new StringList();
-        if (lnt > sz)
-            lnt = sz;
-        for(int i=sz-1; lnt!=0; i--, lnt--)
+        int curSz = fifo.size();
+        if (lnt > curSz)
+            lnt = curSz;
+        for(int i=curSz-lnt; i<curSz; i++)          // 79 - косячок чтения лога (в прямом направлении, размерность)
             out.add(fifo.get(i));
         return out;
         }
-    public Pair<Long,StringList> getStringsWithLastNum(long lastNum){
+    public synchronized Pair<Long,StringList> getStringsWithLastNum(long lastNum){
         StringList out = new StringList();
         if (fifo.size()==0)
             return new Pair<Long,StringList>(0L,out);
