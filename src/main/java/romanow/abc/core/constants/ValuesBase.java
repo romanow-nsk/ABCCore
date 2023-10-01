@@ -41,9 +41,6 @@ public class ValuesBase {
     @Getter private DAOAccessFactory daoAccessFactory = new DAOAccessFactory();// Фабрика объектов доступа DAO
     @Getter private HashMap<String,ConstValue> daoClassMap = new HashMap<>();
     //--------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------
-    public final static int ScreenDesktopHeight=720;        // Размерности панели в Dektop
-    public final static int ScreenDesktopWidth=960;
     public final static HashMap<String,ConstValue> daoClassMap(){ return init().daoClassMap; }
     public final static ErrorList errorList(){ return init().errorList; }
     public final static ConstMap constMap(){ return init().getConstMap(); }
@@ -106,6 +103,11 @@ public class ValuesBase {
     public final static int PopupMessageDelay=6;                // Тайм-аут всплывающего окна
     public final static int PopupLongDelay=20;                  // Тайм-аут всплывающего окна
     public final static int SparkThreadPoolSize=20;             // Размер буферного пула потоков Spark
+    //-------------------------------------------------------------------------------------
+    public final static int ScreenDesktopHeight=720;        // Размерности панели в Dektop
+    public final static int ScreenDesktopWidth=960;
+    public final static int ScreenDesktopX0 = 200;
+    public final static int ScreenDesktopY0 = 30;
 
     public final static String SQLDBUser="UnityDataServer";
     public final static String SQLDBPass="Fireplace311";
