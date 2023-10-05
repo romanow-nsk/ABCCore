@@ -106,7 +106,7 @@ public class ValuesBase {
     //-------------------------------------------------------------------------------------
     public final static int ScreenDesktopHeight=720;        // Размерности панели в Dektop
     public final static int ScreenDesktopWidth=960;
-    public final static int ScreenDesktopX0 = 200;
+    public final static int ScreenDesktopX0 = 30;
     public final static int ScreenDesktopY0 = 30;
 
     public final static String SQLDBUser="UnityDataServer";
