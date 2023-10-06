@@ -41,9 +41,10 @@ class DAOEntityLink implements I_DAOAccess {
                 return;
             two = (Entity) link.getTypeT().newInstance();
             if (!mongo.getById(two, link.getOid(), level - 1)) {
+                long oid = link.getOid();
                 link.setOid(0);
                 link.setRef(null);
-                throw UniException.user("Не найден "+dao.getClass().getSimpleName()+" "+ff.name+" id="+ link.getOid());
+                throw UniException.user("Не найден "+dao.getClass().getSimpleName()+" "+ff.name+" id="+ oid);
                 }
             else{
                 link.setRef(two);
