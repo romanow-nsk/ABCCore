@@ -701,6 +701,8 @@ public class ValuesBase {
     public final static int SFCos = 2;
     @CONST(group = "ScriptFunStd", title = "alert", className="FStdAlert")
     public final static int SFAlert = 3;
+    @CONST(group = "ScriptFunStd", title = "alertBool", className="FStdAlertBool")
+    public final static int SFAlertBool = 4;
     //-----------------------------------------------------------------------------------------------------------
     @CONST(group = "TraceLevel", title = "Нет")
     public final static int TraceModeNone=0;
