@@ -34,6 +34,15 @@ public abstract class TypeFace {
             return symbolValue;
         return "???";
         }
+    public long valueToInt(){
+        if (isLogical())
+            return boolValue ? 1 : 0;
+        if (isInteger())
+            return intValue;
+        if (isReal())
+            return (long)realValue;
+        return 0;
+        }
     public TypeFace(){}
     public TypeFace cloneVar() throws ScriptException{
         TypeFace two = null;
