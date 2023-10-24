@@ -30,6 +30,7 @@ public class FStdAlert extends FunctionCall {
             TypeFace par0 = stack.pop();
             title = par0.getSymbolValue();
             value = par1.getRealValue();
+            System.out.println("Скрипт: "+context.getScriptTime()+" "+title+"="+value+" время: "+context.getScriptTime()+" мс");
             } catch (Exception ee){
                 throw new ScriptException(ValuesBase.SEBug,"Исключение: "+ee.toString());
                 }

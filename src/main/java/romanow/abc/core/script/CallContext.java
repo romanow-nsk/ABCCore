@@ -16,6 +16,8 @@ import java.util.HashMap;
 public class CallContext {
     public final FunctionCode code;
     @Getter @Setter private TypeFace result = new TypeInt(0);
+    private long startTimeStamp;
+    @Getter @Setter private String scriptName="???";
     @Getter private Object callEnvironment;
     @Getter private ErrorList errorList = new ErrorList();
     @Getter private StringBuffer traceList = new StringBuffer();
@@ -57,6 +59,7 @@ public class CallContext {
         reset();
     }
     public void call(boolean trace) throws ScriptException {
+        startTimeStamp = System.currentTimeMillis();
         while(!isFinish()){
             Operation operation = code.get(ip);
             String mes = "ip="+ip+" oper="+operation.toString();
@@ -77,6 +80,10 @@ public class CallContext {
                     throw e.clone(mes);
                 }
             }
+        trace("Время исполнения: "+(System.currentTimeMillis()-startTimeStamp)+" мc");
+        }
+    public long getScriptTime(){
+        return System.currentTimeMillis()-startTimeStamp;
         }
     public FunctionCode getCode() {
         return code; }
