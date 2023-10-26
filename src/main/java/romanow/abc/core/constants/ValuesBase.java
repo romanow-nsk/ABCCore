@@ -103,6 +103,7 @@ public class ValuesBase {
     public final static int PopupMessageDelay=6;                // Тайм-аут всплывающего окна
     public final static int PopupLongDelay=20;                  // Тайм-аут всплывающего окна
     public final static int SparkThreadPoolSize=20;             // Размер буферного пула потоков Spark
+    public final static String FontName="Arial Narrow";         // Arial Cyr
     //-------------------------------------------------------------------------------------
     public final static int ScreenDesktopHeight=720;        // Размерности панели в Dektop
     public final static int ScreenDesktopWidth=960;
