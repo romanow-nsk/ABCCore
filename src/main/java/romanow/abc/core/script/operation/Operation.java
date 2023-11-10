@@ -10,7 +10,7 @@ import static romanow.abc.core.constants.ValuesBase.*;
 public abstract class Operation {
     public final int code;
     public final String name;
-    private String trace="";
+    protected String trace="";
     public abstract void exec(OperationStack stack, CallContext context,boolean trace) throws ScriptException;
     public void throwException(CallContext context, int code, String str) throws ScriptException{
         ConstValue cc  = context.getErrorsMap().get(code);

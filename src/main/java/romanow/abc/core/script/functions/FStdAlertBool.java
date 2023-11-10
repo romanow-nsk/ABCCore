@@ -19,7 +19,7 @@ public class FStdAlertBool extends FunctionCall {
         return new int[]{ ValuesBase.DTString,ValuesBase.DTBoolean };
         }
     @Override
-    public void call(CallContext context) throws ScriptException{
+    public void call(CallContext context, boolean trace) throws ScriptException{
         OperationStack stack = context.getStack();
         String title;
         String value;

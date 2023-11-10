@@ -18,7 +18,7 @@ public class OperationCall extends Operation{
         FunctionCall call = context.getFunctionMap().get(funName);
         if (call==null)
             throwException(context,ValuesBase.SEIllegalDT, "Недопустимый ТД  " + funName);
-        call.call(context);
+        call.call(context, trace);
         }
     @Override
     public Operation clone() {

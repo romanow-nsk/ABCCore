@@ -14,5 +14,5 @@ public abstract class FunctionCall {
         }
     public abstract int getResultType();                                    // Тип результа
     public abstract int []getParamTypes();                                  // Типы параметров
-    public abstract void call(CallContext context) throws ScriptException;  // Параметры и результат в стеке
+    public abstract void call(CallContext context, boolean trace) throws ScriptException;  // Параметры и результат в стеке
 }

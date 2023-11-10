@@ -20,7 +20,7 @@ public class FStdCos extends FunctionCall {
         return new int[]{ ValuesBase.DTDouble };
         }
     @Override
-    public void call(CallContext context) throws ScriptException{
+    public void call(CallContext context, boolean trace) throws ScriptException{
         OperationStack stack = context.getStack();
         TypeFace par0 = stack.pop();
         double dd = Math.cos(par0.toDouble());
