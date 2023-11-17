@@ -344,6 +344,8 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     public final static String importHeader="import kotlinx.serialization.Serializable\n" +
             "import kotlinx.serialization.decodeFromString\n" +
             "import kotlinx.serialization.json.Json\n" +
+            "import abc.core.subjectarea.Artifact\n"+
+            "import abc.core.subjectarea.EntityLink\n"+
             "\n" +
             "@Serializable\n";
     public final static String classHeader = importHeader+ "class ";
@@ -351,8 +353,8 @@ public class DAO implements I_ExcelRW, I_MongoRW {
     public String createKotlinClassSource(boolean noTable) throws UniException {
         String className =getClass().getSimpleName();
         getFields(noTable);
-        if (noTable && className.startsWith("Meta2"))
-            className = className.substring(5);
+        //if (noTable   && className.startsWith("Meta2"))
+        //    className = className.substring(5);
         String out = classHeader+className;
         out+="{\n";
         if (table.isTable){

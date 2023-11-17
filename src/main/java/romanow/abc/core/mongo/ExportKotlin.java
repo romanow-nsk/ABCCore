@@ -37,6 +37,7 @@ public class ExportKotlin {
             createKotlinClassFile(path,outPackage,"OidString",DAO.classHeader+"OidString {\n    val mes: String = \"\"\n    val oid: Long = 0\n    val errorCount = 0\n}\n");
             createKotlinClassFile(path,outPackage,"ErrorList",DAO.openClassHeader+"ErrorList {\n    val errCount = 0\n    val info = \"\"\n}\n");
             createKotlinClassFile(path,outPackage,"CallResult",DAO.classHeader+"CallResult : ErrorList() {\n    val state = 0\n}\n");
+            createKotlinClassFile(path,outPackage,"CallResult2",DAO.classHeader+"CallResult2 : ErrorList() {\n    val art : Artifact = Artifact()\n}\n");
             createKotlinClassFile(path,outPackage,"ResponseBody",DAO.classHeader+"ResponseBody {}\n");
             createKotlinClassFile(path,outPackage,"JEmpty",DAO.classHeader+"JEmpty {}\n");
             createKotlinClassFile(path,outPackage,"JInt",DAO.classHeader+"JInt { var value = 0 }\n");
@@ -92,6 +93,8 @@ public class ExportKotlin {
             "import kotlinx.serialization.Serializable\n" +
             "import kotlinx.serialization.decodeFromString\n" +
             "import kotlinx.serialization.json.Json\n" +
+            "import abc.core.subjectarea.Artifact\n"+
+            "import abc.core.subjectarea.EntityLink\n"+
             "\n";
     //-------------------------------------------------------------------------------------------------------------------
     private static String stripOne(String ss){
