@@ -98,6 +98,12 @@ public class ExportKotlin {
             "\n";
     //-------------------------------------------------------------------------------------------------------------------
     private static String stripOne(String ss){
+        int idx=ss.indexOf(",");
+        if (idx==-1)
+            return stripOne0(ss);
+        return stripOne0(ss.substring(0,idx))+","+stripOne(ss.substring(idx+1));
+        }
+    private static String stripOne0(String ss){
         int idx = ss.lastIndexOf(".");
         if (idx!=-1)
             ss = ss.substring(idx+1);
