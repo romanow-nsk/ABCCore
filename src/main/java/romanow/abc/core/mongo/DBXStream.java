@@ -4,6 +4,10 @@ import com.thoughtworks.xstream.XStream;
 
 public class DBXStream extends XStream {
     public DBXStream(){
+        ignoreUnknownElements();
+        allowTypesByWildcard(new String[] {
+                "romanow.abc.core.mongo.**",
+            });
         alias("QList", DBQueryList.class);
         alias("QInt", DBQueryInt.class);
         alias("QLong", DBQueryLong.class);
