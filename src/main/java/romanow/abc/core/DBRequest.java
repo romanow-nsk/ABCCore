@@ -1,13 +1,14 @@
 package romanow.abc.core;
 
 import com.google.gson.Gson;
+import lombok.Getter;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.Entity;
 import romanow.abc.core.mongo.DAO;
 
 public class DBRequest extends DAO {
     private String className="";
-    private String jsonObject="";
+    @Getter private String jsonObject="";
     public DBRequest(String className, String jsonObject) {
         this.className = className;
         this.jsonObject = jsonObject;
