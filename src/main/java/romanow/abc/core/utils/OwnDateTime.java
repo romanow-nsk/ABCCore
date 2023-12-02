@@ -150,6 +150,9 @@ public class OwnDateTime extends DAO implements I_XStream, I_MongoRW, I_ExcelRW 
     public String toStringMark(){
         refresh();
         return !dateTimeValid() ? "---" : dd.toString(DateTimeFormat.forPattern("yyyyMMddHHmmss")); }
+    public String toStringMarkPoints(){
+        refresh();
+        return !dateTimeValid() ? "---" : dd.toString(DateTimeFormat.forPattern("yyyy.MM.dd.HH.mm.ss")); }
     public String toStringSec(){
         return toStringSec("-","."); }
     public int year(){ refresh(); return !dateTimeValid() ? 0 : dd.getYear(); }
