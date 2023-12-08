@@ -57,9 +57,9 @@ class DAOEntityLinkList implements I_DAOAccess {
                     throw UniException.bug(ee);
                     }
             if (!mongo.getById(two, link2.getOid(), level - 1, ValuesBase.DeleteMode, path, statistic)) {
-                System.out.println("Не найден " + list.getTypeT().getSimpleName() + " id=" + link2.getOid());
                 link2.setOid(0);
                 link2.setRef(null);
+                throw UniException.user("Не найден: oid="+out.get("oid").toString()+" "+dao.getClass().getSimpleName()+"."+ff.name+"("+list.getTypeT().getSimpleName() + ") id=" + link2.getOid());
                 }
             else{
                 link2.setRef(two);
@@ -104,9 +104,9 @@ class DAOEntityLinkList implements I_DAOAccess {
                     continue;
                 Entity two = (Entity)list.getTypeT().newInstance();
                 if (!mongo.getById(two,link3.getOid(),level-1,null)) {
-                    System.out.println("Не найден " + list.getTypeT().getSimpleName() + " id=" + link3.getOid());
                     link3.setOid(0);
                     link3.setRef(null);
+                    throw UniException.user("Не найден " + list.getTypeT().getSimpleName() + " id=" + link3.getOid());
                     }
                 else
                     link3.setRef(two);

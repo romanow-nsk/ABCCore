@@ -44,7 +44,7 @@ class DAOEntityLink implements I_DAOAccess {
                 long oid = link.getOid();
                 link.setOid(0);
                 link.setRef(null);
-                throw UniException.user("Не найден "+dao.getClass().getSimpleName()+" "+ff.name+" id="+ oid);
+                throw UniException.user("Не найден: oid="+out.get("oid").toString()+" "+dao.getClass().getSimpleName()+"."+ff.name+"("+cname+") id="+ oid);
                 }
             else{
                 link.setRef(two);
