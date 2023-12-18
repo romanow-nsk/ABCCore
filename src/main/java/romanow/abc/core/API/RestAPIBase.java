@@ -285,6 +285,8 @@ public interface RestAPIBase {
     /** Записать строку в текстовый файл */
     @POST("/api/artifact/fromstring")
     Call<Artifact> createArtifactFromString(@Header("SessionToken") String token,@Query("fileName") String fileName, @Query("text") String text);
+    @POST("/api/artifact/fromstring2")
+    Call<Artifact> createArtifactFromString2(@Header("SessionToken") String token,@Query("fileName") String fileName, @Body JString text);
     //----------------- Для тестирования ----------------------------------------------------------------------
     @Streaming
     @GET ("/api/file/load2")
