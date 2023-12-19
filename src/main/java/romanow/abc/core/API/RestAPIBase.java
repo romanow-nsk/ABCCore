@@ -286,7 +286,7 @@ public interface RestAPIBase {
     @POST("/api/artifact/fromstring/bug")
     Call<Artifact> createArtifactFromStringBug(@Header("SessionToken") String token,@Query("fileName") String fileName, @Query("text") String text);
     @POST("/api/artifact/fromstring")
-    Call<Artifact> createArtifactFromString(@Header("SessionToken") String token,@Query("fileName") String fileName, @Body JString text);
+    Call<Artifact> createArtifactFromString(@Header("SessionToken") String token,@Query("fileName") String fileName, @Query("base64") boolean base64, @Body JString text);
     //----------------- Для тестирования ----------------------------------------------------------------------
     @Streaming
     @GET ("/api/file/load2")
