@@ -80,6 +80,9 @@ public interface RestAPIBase {
     /** получить последние объекты - имя класса-количество */
     @GET("/api/entity/list/last")
     Call<ArrayList<DBRequest>> getEntityListLast(@Header("SessionToken") String token, @Query("classname") String classname, @Query("number") int number, @Query("level") int level);
+    /** получить объекты из диапазона oid */
+    @GET("/api/entity/list/byoid")
+    Call<ArrayList<DBRequest>> getEntityListByOid(@Header("SessionToken") String token, @Query("classname") String classname, @Query("firstOid") long firstOid, @Query("lastOid") long lastOid, @Query("level") int level);
     /** получить объекты - имя класса-XML-запрос */
     @GET("/api/entity/list/query")
     Call<ArrayList<DBRequest>> getEntityListByQuery(@Header("SessionToken") String token, @Query("classname") String classname, @Query("xmlquery") String xmlQuery, @Query("level") int level);
