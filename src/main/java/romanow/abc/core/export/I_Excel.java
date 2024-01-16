@@ -6,6 +6,8 @@ import romanow.abc.core.entity.Entity;
 import romanow.abc.core.mongo.I_MongoDB;
 import romanow.abc.core.utils.FileNameExt;
 
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,4 +20,5 @@ public interface I_Excel {
     public void save(String fullName) throws UniException;
     public String load(FileNameExt fspec, I_MongoDB mongo);
     public String load(String fullName, I_MongoDB mongo);
+    public void save(OutputStream out) throws UniException;
 }

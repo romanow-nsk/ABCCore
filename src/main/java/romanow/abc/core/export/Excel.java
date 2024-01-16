@@ -12,10 +12,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -102,18 +99,24 @@ public class Excel implements I_Excel {
             String ss = Utils.createFatalMessage(ee);
             System.out.println(ss);
             return ss+"\n";
+            }
         }
-    }
     @Override
     public void save(FileNameExt fspec) throws UniException{
         save(fspec.fullName());
-    }
+        }
     @Override
     public void save(String fullName) throws UniException{
         try (FileOutputStream out = new FileOutputStream(new File(fullName))) {
             workbook.write(out);
-        } catch (IOException e) { UniException.io(e); }
-    }
+            } catch (IOException e) { UniException.io(e); }
+        }
+    @Override
+    public void save(OutputStream out) throws UniException{
+        try {
+            workbook.write(out);
+            } catch (IOException e) { UniException.io(e); }
+        }
     @Override
     public String load(FileNameExt fspec, I_MongoDB mongo) {
         return load(fspec.fullName(),mongo);

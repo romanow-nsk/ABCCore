@@ -14,10 +14,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,8 +38,13 @@ public class ExcelX implements I_Excel{
         ent.putHeader("",head);
         for(String ss : head)
             hd.createCell(hdCnt.getIdx()).setCellValue(ss);
-    }
-
+        }
+    @Override
+    public void save(OutputStream out) throws UniException{
+        try {
+            workbook.write(out);
+            } catch (IOException e) { UniException.io(e); }
+        }
     public int sheetCount(){
         return workbook.getNumberOfSheets();
     }
