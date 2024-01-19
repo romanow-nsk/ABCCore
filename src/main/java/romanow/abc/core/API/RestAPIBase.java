@@ -98,7 +98,10 @@ public interface RestAPIBase {
     Call<JString> debugToken(@Query("pass") String pass);
     /** Инициализировать БД сервера */
     @GET("/api/admin/cleardb")
+    /** Очистить файлы */
     Call<JString> clearDB(@Header("SessionToken") String token,@Query("pass") String pass);
+    @GET("/api/admin/clearfiles")
+    Call<JString> clearFiles(@Header("SessionToken") String token,@Query("pass") String pass);
     /** Инициализировать таблицу БД по имени класса бизнес-сущности */
     @GET("/api/admin/cleartable")
     Call<JString> clearTable(@Header("SessionToken") String token,@Query("table") String table, @Query("pass") String pass);
