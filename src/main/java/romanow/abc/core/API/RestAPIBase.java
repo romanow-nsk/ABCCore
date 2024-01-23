@@ -51,6 +51,9 @@ public interface RestAPIBase {
     /** Обновить boolean-поле настроек по имени */
     @POST("/api/worksettings/update/boolean")
     Call<JEmpty> updateWorkSettings(@Header("SessionToken") String token, @Query("field") String field, @Query("value") boolean value);
+    /** Получить время сервера */
+    @GET("/api/server/clock")
+    Call<JLong> getServerClock(@Header("SessionToken") String token);
     //========================== Универсальный интерфейс бизнес-объектов БД ===================
     /** добавить объект - имя класса-JSON */
     @POST("/api/entity/add")

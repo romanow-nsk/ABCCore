@@ -1,36 +1,26 @@
 package romanow.abc.core;
 
+import lombok.Getter;
+import lombok.Setter;
+import romanow.abc.core.constants.I_Environment;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.Entity;
 
 public class ServerState extends Entity {
-    private boolean serverRun=false;
-    private boolean locked=false;                   // Блокирован для выполнения админ. операций
-    private int requestNum=0;                       // Кол-во обрабатываемых запросов
-    private int sessionCount=0;                     // Кол-во активных сессий
-    private long timeSum=0;
-    private long timeMin=0;
-    private long timeMax=0;
-    private long timeCount=0;
-    private long pid=0;
-    private int releaseNumber = 0;
-    private int totalGetCount=0;                    // Количество операций чтения
-    private int cashGetCount=0;                     // Количество операций чтения из кэша
-    private boolean сashEnabled=false;             // Режим кэширования
-    public boolean isСashEnabled() {
-        return сashEnabled; }
-    public void setСashEnabled(boolean сasheEnabled) {
-        this.сashEnabled = сasheEnabled; }
-    public synchronized int getSessionCount() {
-        return sessionCount; }
-    public synchronized void setSessionCount(int sessionCount) {
-        this.sessionCount = sessionCount; }
-    public synchronized boolean isLocked() {
-        return locked; }
-    public synchronized void setLocked(boolean locked) {
-        this.locked = locked; }
-    public synchronized int getRequestNum() {
-        return requestNum; }
+    @Getter @Setter private boolean serverRun=false;
+    @Getter @Setter private boolean locked=false;                   // Блокирован для выполнения админ. операций
+    @Getter @Setter private int requestNum=0;                       // Кол-во обрабатываемых запросов
+    @Getter @Setter private int sessionCount=0;                     // Кол-во активных сессий
+    @Getter @Setter private long timeSum=0;
+    @Getter @Setter private long timeMin=0;
+    @Getter @Setter private long timeMax=0;
+    @Getter @Setter private long timeCount=0;
+    @Getter @Setter private long pid=0;
+    @Getter @Setter private int releaseNumber = 0;
+    @Getter @Setter private String version="";
+    @Getter @Setter private int totalGetCount=0;                   // Количество операций чтения
+    @Getter @Setter private int cashGetCount=0;                    // Количество операций чтения из кэша
+    @Getter @Setter private boolean сashEnabled=false;             // Режим кэширования
     public synchronized void incRequestNum() {
         requestNum++; }
     public synchronized void decRequestNum() {
@@ -45,19 +35,12 @@ public class ServerState extends Entity {
         timeSum += tt;
         timeCount++;
         }
-    public long getPID() {
-        return pid;
-        }
     public void setPid() {
         pid = Utils.getPID();
-        releaseNumber = ValuesBase.env().releaseNumber();
+        I_Environment env =  ValuesBase.env();
+        releaseNumber = env.releaseNumber();
+        version = env.applicationName(ValuesBase.AppNameSubjectArea)+": "+env.applicationName(ValuesBase.AppNameTitle);
         }
-    public long getTimeMin() {
-        return timeMin; }
-    public long getTimeMax() {
-        return timeMax; }
-    public long getTimeCount() {
-        return timeCount; }
     public long getTimeMiddle() {
         return timeCount==0 ? 0 : timeSum/timeCount; }
     public ServerState(){}
@@ -67,25 +50,7 @@ public class ServerState extends Entity {
         timeMax=0;
         timeMin=0;
         }
-    public boolean isServerRun() {
-        return serverRun; }
-    public void setServerRun(boolean serverRun) {
-        this.serverRun = serverRun; }
-    public int getReleaseNumber() {
-        return releaseNumber; }
     public String toString(){
         return "Сервер="+serverRun;
         }
-    public int getTotalGetCount() {
-        return totalGetCount; }
-    public void setTotalGetCount(int totalGetCount) {
-        this.totalGetCount = totalGetCount; }
-
-    public int getCashGetCount() {
-        return cashGetCount;
-    }
-
-    public void setCashGetCount(int cashGetCount) {
-        this.cashGetCount = cashGetCount;
-    }
 }
