@@ -22,6 +22,7 @@ public class WorkSettingsBase extends Entity {
     @Getter @Setter private boolean mailNotifycation=false;
     @Getter @Setter private String nodeName="noname";
     @Getter @Setter private int traceLevel=0;                       // Режим трассировки
+    @Getter @Setter private int logDepthInDay=30;                   // Глубина архива в днях
     //------------------------------------------------------------------------------------------------------------------
     public boolean isMainServer(){ return false; }
     public static void main(String ss[]){
