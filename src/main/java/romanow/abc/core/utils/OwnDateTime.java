@@ -141,6 +141,9 @@ public class OwnDateTime extends DAO implements I_XStream, I_MongoRW, I_ExcelRW 
     public String fullToString(){
         refresh();
         return !dateTimeValid() ? "---" : dd.toString(DateTimeFormat.forPattern("dd-MM-yyyy HH:mm:ss")); }
+    public String fullTimeToString(){
+        refresh();
+        return !dateTimeValid() ? "---" : dd.toString(DateTimeFormat.forPattern("HH:mm:ss"))+":"+timeInMS%1000; }
     public String dateTimeToString2(){
         refresh();
         return !dateTimeValid() ? "---" : dd.toString(DateTimeFormat.forPattern("dd-MM HH:mm")); }
