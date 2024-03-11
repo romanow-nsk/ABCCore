@@ -21,8 +21,9 @@ public class WorkSettingsBase extends Entity {
     @Getter @Setter private String mailToSend="romanow@ngs.ru";
     @Getter @Setter private boolean mailNotifycation=false;
     @Getter @Setter private String nodeName="noname";
-    @Getter @Setter private int traceLevel=0;                       // Режим трассировки
-    @Getter @Setter private int logDepthInDay=30;                   // Глубина архива в днях
+    @Getter @Setter private int traceLevel=0;               // Режим трассировки
+    @Getter @Setter private int logDepthInDay=30;           // Глубина архива в днях
+    @Getter @Setter transient private int timeZoneHours=0;  // Смещение часового пояса относительно сервера установки
     //------------------------------------------------------------------------------------------------------------------
     public boolean isMainServer(){ return false; }
     public static void main(String ss[]){

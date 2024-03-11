@@ -1,5 +1,6 @@
 package romanow.abc.core.entity.artifacts;
 
+import org.joda.time.DateTime;
 import romanow.abc.core.constants.ValuesBase;
 import romanow.abc.core.entity.EntityBack;
 import romanow.abc.core.utils.FileNameExt;
@@ -52,19 +53,20 @@ public class Artifact extends EntityBack {
         fileSize = fsize;
         original = new FileNameExt("",name);
         }
-    public String createArtifactServerPath(){
-        return type()+"_"+directoryName()+"/"+createArtifactFileName();
+    public String createArtifactServerPath(int timeZoneHour){
+        return type()+"_"+directoryName()+"/"+createArtifactFileName(timeZoneHour);
         }
     public String createArtifactServerDir(){
         return type()+"_"+directoryName();
     }
-    public String createArtifactFileName(){
-        return date.date().toString(DateTimeFormat.forPattern("yyyyMMdd_HHmmss"))+"_"+getOid()+"("+original.fileName()+")"+"."+original.getExt();
+    public String createArtifactFileName(int timeZoneHour){
+        DateTime dd = timeZoneHour==0 ? date.date() :  new DateTime(date.timeInMS()+timeZoneHour*60*60*1000);
+        return dd.toString(DateTimeFormat.forPattern("yyyyMMdd_HHmmss"))+"_"+getOid()+"("+original.fileName()+")"+"."+original.getExt();
         }
     public void setDate(OwnDateTime date) {
         this.date = date; }
-    public String toString(){ return name +" "+ typeName()+"_"+createArtifactFileName()+" ["+fileSize+"]"; }
-    public String toFullString(){ return super.toFullString()+name +" "+ typeName()+"_"+createArtifactFileName()+" ["+fileSize+"]"; }
+    public String toString(int timeZoneHour){ return name +" "+ typeName()+"_"+createArtifactFileName(timeZoneHour)+" ["+fileSize+"]"; }
+    public String toFullString(int timeZoneHour){ return super.toFullString()+name +" "+ typeName()+"_"+createArtifactFileName(timeZoneHour)+" ["+fileSize+"]"; }
     public boolean isFile(){ return true; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
