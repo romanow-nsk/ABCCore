@@ -60,11 +60,12 @@ public class Artifact extends EntityBack {
         return type()+"_"+directoryName();
     }
     public String createArtifactFileName(int timeZoneHour){
-        DateTime dd = timeZoneHour==0 ? date.date() :  new DateTime(date.timeInMS()+timeZoneHour*60*60*1000);
+        DateTime dd = timeZoneHour==0 ? date.date() :  new DateTime(date.timeInMS()-timeZoneHour*60*60*1000);
         return dd.toString(DateTimeFormat.forPattern("yyyyMMdd_HHmmss"))+"_"+getOid()+"("+original.fileName()+")"+"."+original.getExt();
         }
     public void setDate(OwnDateTime date) {
         this.date = date; }
+    public String toString(){ return toString(0); }
     public String toString(int timeZoneHour){ return name +" "+ typeName()+"_"+createArtifactFileName(timeZoneHour)+" ["+fileSize+"]"; }
     public String toFullString(int timeZoneHour){ return super.toFullString()+name +" "+ typeName()+"_"+createArtifactFileName(timeZoneHour)+" ["+fileSize+"]"; }
     public boolean isFile(){ return true; }
