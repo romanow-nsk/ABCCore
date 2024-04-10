@@ -32,7 +32,19 @@ public class EntityRefList<T extends Entity> extends ArrayList<T> {
         }
     public T getByName(String key){
         return nameMap==null ? null : nameMap.get(key);
-    }
+        }
+    public T getByNameNoMap(String key){
+        for(Entity entity : this)
+            if (entity.getName().equals(key))
+                return (T)entity;
+        return null;
+        }
+    public T getByNumberNoMap(long key){
+        for(Entity entity : this)
+            if (entity.getKeyNum()==key)
+                return (T)entity;
+        return null;
+        }
     public EntityRefList(EntityRefList<T> src){
         clear();
         for(Entity ff : src){
