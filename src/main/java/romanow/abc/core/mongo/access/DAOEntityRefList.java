@@ -19,9 +19,9 @@ class DAOEntityRefList implements I_DAOAccess {
         try {
             EntityRefList list2 = (EntityRefList) ff.field.get(dao);
             Class cc = list2.getTypeT();
-            String cname = cc.getSimpleName();
             if (cc == null)
                 return;
+            String cname = cc.getSimpleName();
             boolean bb = level != 0 && cc != null && !(path != null && path.get(cname) == null);
             if (!bb)
                 return;      // Имя поля = EntityLink совпадает с именем класса, на который ссылается
