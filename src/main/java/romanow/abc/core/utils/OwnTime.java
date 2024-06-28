@@ -39,7 +39,7 @@ public class OwnTime extends DAO implements I_XStream, I_MongoRW, I_ExcelRW {
         return timeInMS==0 ? 0 : 24.*60*60*1000/timeInMS;
         }
     public static double toXLSFormat(long timeInMS){
-        return timeInMS/(24.*60*60*1000);
+        return timeInMS/(24.*60*60*1000)+70*365+(int)(70/4)+2+7.0/24;      // 1.1.1900 на 1.1.1970 + 7 часов ?????
         }
     public void fromXLSFormat(double dd){
         timeInMS = (long) (dd*24.*60*60*1000);
